@@ -2,7 +2,7 @@
 All'apertura vengono mostrate due categorie di finestra: <i>Crea</i> oppure <i>Visualizza e modifica</i>.
 
 ## Crea
-La data della prova da creare non deve essere già presente nel database (in caso lo fosse viene visualizzato un avviso).
+La data della prova da creare non deve essere già presente nel [database](Database/README.md) (in caso lo fosse viene visualizzato un avviso).
 
 Ogni tab appartiene ad una categoria di movimenti di cassa.
 
