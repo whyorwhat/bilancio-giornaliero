@@ -47,6 +47,8 @@ Contiene la tabella tutti i dati della prova giornaliera, con la data che è la 
 | commenti | TEXT |
 | PRIMARY KEY(data) |
 
+Il formato DATE non è direttamente riconosciuto da [SQLite](https://www.sqlite.org/datatype3.html), ma è formattato come YYY-MM-DD, in modo che le date si possano ordinare.
+
 ### liste
 Contiene le varie liste per ogni giorno.
 Non ha primary key siccome per ogni giorno possono esserci molteplici liste. Ha chiaramente il vincolo della chiave esterna per la data.
