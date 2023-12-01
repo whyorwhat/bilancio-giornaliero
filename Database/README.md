@@ -1,7 +1,11 @@
 # Database
 ## File
 Il database è un file unico chiamato database.db (usare più anni creerebbe il problema di accedere alle date precedenti alla fine dell'anno, ma è fattibile).
-test.py è un file temporaneo per collegarsi al database ed eseguire semplici query
+test.py è un file temporaneo per collegarsi al database ed eseguire semplici query.
+Il percorso del file di database va definito all'inizio del codice
+```sh
+percorso_applicazione = "/Percorso alla cartella dell'applicazione/"
+```
 
 ## Tabelle
 Per il nuovo database va eseguito

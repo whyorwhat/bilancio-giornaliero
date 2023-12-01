@@ -10,14 +10,17 @@ import webbrowser
 #import faulthandler
 #faulthandler.enable()
 #import numpy as np
+percorso_applicazione = "/Users/simonecotardo/GitHub/Bilancio-giornaliero/"
+percorso_database = "/Users/simonecotardo/Downloads/Database.db"
+percorso_documenti = "/Users/simonecotardo/Documents/Documenti di contabilità/"
 
 #Import images
-bin_icon = ctk.CTkImage(Image.open(r"/Users/simonecotardo/Documents/Progetti/Contabilita/bin_icon.png"))
-upload_icon = ctk.CTkImage(Image.open(r"/Users/simonecotardo/Documents/Progetti/Contabilita/upload_icon.png"))
-edit_icon = ctk.CTkImage(Image.open(r"/Users/simonecotardo/Documents/Progetti/Contabilita/edit_icon.png"))
-warning_icon = ctk.CTkImage(Image.open(r"/Users/simonecotardo/Documents/Progetti/Contabilita/warning_icon.png"), size=(40, 40))
-check_icon = ctk.CTkImage(Image.open(r"/Users/simonecotardo/Documents/Progetti/Contabilita/check_icon.png"), size=(40, 40))
-error_icon = ctk.CTkImage(Image.open(r"/Users/simonecotardo/Documents/Progetti/Contabilita/error_icon.png"), size=(40, 40))
+bin_icon = ctk.CTkImage(Image.open(percorso_applicazione+"bin_icon.png"))
+upload_icon = ctk.CTkImage(Image.open(percorso_applicazione+"upload_icon.png"))
+edit_icon = ctk.CTkImage(Image.open(percorso_applicazione+"edit_icon.png"))
+warning_icon = ctk.CTkImage(Image.open(percorso_applicazione+"warning_icon.png"), size=(40, 40))
+check_icon = ctk.CTkImage(Image.open(percorso_applicazione+"check_icon.png"), size=(40, 40))
+error_icon = ctk.CTkImage(Image.open(percorso_applicazione+"error_icon.png"), size=(40, 40))
 
 #Set application colors
 ctk.set_appearance_mode("system")
@@ -101,7 +104,7 @@ def createNuovaProvaView():
         data_converted = (today_date_formatted.get()).split('-')
         data_converted_text=""
         data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
-        connection = sqlite3.connect('/Users/simonecotardo/Documents/Progetti/Contabilita/Database/Database.db')
+        connection = sqlite3.connect(percorso_database)
         cursor = connection.cursor()
         cursor.execute("SELECT data, fondo_cassa_da_riportare FROM prova WHERE data<'"+data_converted_text+"' ORDER BY data DESC LIMIT 1")
         connection.commit()
@@ -1239,10 +1242,10 @@ def createNuovaProvaView():
         #Splitta data
         dataperfile = (today_date_formatted.get()).split('-')
         #Controlla se la cartella del giorno esiste, in caso creala
-        if not os.path.exists("/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]):     
-            os.makedirs("/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0])
-        path = '/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/'+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]    #DEVE ESSERE IL PERCORSO COMPLETO PER FAR FUNZIONARE WEBBROWSER
-        webbrowser.open('file:///' + path)        
+        if not os.path.exists(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]):     
+            os.makedirs(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0])
+        path = percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]    #DEVE ESSERE IL PERCORSO COMPLETO PER FAR FUNZIONARE WEBBROWSER
+        webbrowser.open('file:///' + path)
 
     apri_cartella_documenti = ctk.CTkButton(tabview.tab("Documenti"), text='Apri documenti', command=apriDocumenti)
     apri_cartella_documenti.pack(padx=20, pady=(20,0))
@@ -1263,19 +1266,19 @@ def createNuovaProvaView():
             print(tail)
             dataperfile = (today_date_formatted.get()).split('-')
             #Se la cartella della categoria non esiste, creala
-            if not os.path.exists("/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()):     
-                os.makedirs("/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get())
+            if not os.path.exists(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()):     
+                os.makedirs(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get())
             #Se dai un nuovo nome al file
             if(new_filename != ""):
-                #os.rename(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
-                #os.replace(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
-                shutil.move(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
+                #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
+                #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
+                shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
                 print("File caricato")
             #Altrimenti spostalo con lo stesso nome
             else:
-                #os.rename(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
-                #os.replace(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
-                shutil.move(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
+                #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
+                #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
+                shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
                 print("File caricato")
             showConfirmMessage(creaprova, "Successo","Documento correttamente caricato", "check", False)
             frame.destroy()
@@ -1298,7 +1301,7 @@ def createNuovaProvaView():
 
 
     def sendToDatabase():
-        conn = sqlite3.connect('/Users/simonecotardo/Documents/Progetti/Contabilita/Database/Database.db')
+        conn = sqlite3.connect(percorso_database)
         c = conn.cursor()
         c.execute("PRAGMA foreign_keys = ON;")
         conn.commit()
@@ -2229,7 +2232,7 @@ def visualizzaProva():
     
 
     def getDataFromDatabase():
-        conn = sqlite3.connect('/Users/simonecotardo/Documents/Progetti/Contabilita/Database/Database.db')
+        conn = sqlite3.connect(percorso_database)
         c = conn.cursor()
 
         saveData("totale_incassi_vittoria", entry_incassi_vittoria, totale_incassi_vittoria, c)
@@ -2377,7 +2380,7 @@ def visualizzaProva():
         bottone_conferma.pack_forget()
 
         #Controlla se il giorno selezionato è nel database
-        conn = sqlite3.connect('/Users/simonecotardo/Documents/Progetti/Contabilita/Database/Database.db')
+        conn = sqlite3.connect(percorso_database)
         c = conn.cursor()
         #Converti data
         data_converted = (calendar.get_date()).split('-')
@@ -2443,7 +2446,7 @@ def visualizzaProva():
 
     def coloraGiorniCompletati():
         #Get completed days from database
-        conn = sqlite3.connect('/Users/simonecotardo/Documents/Progetti/Contabilita/Database/Database.db')
+        conn = sqlite3.connect(percorso_database)
         c = conn.cursor()
         c.execute("SELECT data FROM prova WHERE completato='true'")
         conn.commit()
@@ -2910,9 +2913,9 @@ def visualizzaProva():
             #Splitta data
             dataperfile = (calendar.get_date()).split('-')
             #Controlla se la cartella delgiorno esiste, in caso creala
-            if not os.path.exists("/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]):     
-                os.makedirs("/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0])
-            path = '/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/'+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]    #FULL PATH
+            if not os.path.exists(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]):     
+                os.makedirs(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0])
+            path = percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]    #FULL PATH
             webbrowser.open('file:///' + path)        
 
     apri_cartella_documenti = ctk.CTkButton(tabview.tab("Documenti"), text='Apri documenti', command=apriDocumenti)
@@ -2934,8 +2937,8 @@ def visualizzaProva():
             head, tail = os.path.split(original_path)
             dataperfile = (calendar.get_date()).split('-')
             #Se la cartella della categoria non esiste, creala
-            if not os.path.exists("/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()):     
-                os.makedirs("/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get())
+            if not os.path.exists(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()):     
+                os.makedirs(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get())
             #Controlla se è un versamento. Se si, il nome del file deve essere uguale ad una causale esistente e poi lo carica. Altrimenti manda un avviso
             if entry_outputcategory.get() == "Versamenti":
                 causale_trovata = False
@@ -2945,7 +2948,7 @@ def visualizzaProva():
                         if new_filename == item.get():
                             causale_trovata = True                                
                     if causale_trovata == True:
-                        shutil.move(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
+                        shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
                         print("File caricato")
                         showConfirmMessage(visualizzaprova,"Successo","Documento correttamente caricato", "check", False)
                         frame.destroy()
@@ -2960,7 +2963,7 @@ def visualizzaProva():
                         if tail[:-4] == item.get():
                             causale_trovata = True  
                     if causale_trovata == True:
-                        shutil.move(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
+                        shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
                         print("File caricato")
                         showConfirmMessage(visualizzaprova,"Successo","Documento correttamente caricato", "check", False)
                         frame.destroy()
@@ -2970,17 +2973,17 @@ def visualizzaProva():
             else:
                 #Se dai un nuovo nome al file
                 if(new_filename != ""):
-                    #os.rename(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
-                    #os.replace(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
-                    shutil.move(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
+                    #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
+                    #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
+                    shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
                     print("File caricato")
                     showConfirmMessage(visualizzaprova,"Successo","Documento correttamente caricato", "check", False)
                     frame.destroy()
                 #Altrimenti spostalo con lo stesso nome
                 else:
-                    #os.rename(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
-                    #os.replace(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
-                    shutil.move(original_path, "/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
+                    #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
+                    #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
+                    shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
                     print("File caricato")
                     showConfirmMessage(visualizzaprova,"Successo","Documento correttamente caricato", "check", False)
                     frame.destroy()
@@ -3015,10 +3018,10 @@ def visualizzaProva():
     #Bottone di conferma
     def confermaProva(*args):
         dataperfile = (calendar.get_date()).split('-')
-        if not os.path.exists("/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/Versamenti"):     
-            os.makedirs("/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/Versamenti")
+        if not os.path.exists(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/Versamenti"):     
+            os.makedirs(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/Versamenti")
         causali_trovate = 0
-        file_versamenti_list = os.listdir(path="/Users/simonecotardo/Documents/Progetti/Contabilita/Documenti/"+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/Versamenti")
+        file_versamenti_list = os.listdir(path=percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/Versamenti")
         #Togli l'estensione dal nome dei file (estensione è lunga 4 caratteri: .pdf)
         for i in range(len(file_versamenti_list)):
             file_versamenti_list[i] = file_versamenti_list[i][:-4]
@@ -3032,7 +3035,7 @@ def visualizzaProva():
             data_converted = (calendar.get_date()).split('-')
             data_converted_text=""
             data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
-            conn = sqlite3.connect('/Users/simonecotardo/Documents/Progetti/Contabilita/Database/Database.db')
+            conn = sqlite3.connect(percorso_database)
             c = conn.cursor()
             c.execute("SELECT * FROM prova WHERE data='"+data_converted_text+"'")
             conn.commit()
@@ -3121,7 +3124,7 @@ def visualizzaProva():
         data_converted = (calendar.get_date()).split('-')
         data_converted_text=""
         data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
-        conn = sqlite3.connect('/Users/simonecotardo/Documents/Progetti/Contabilita/Database/Database.db')
+        conn = sqlite3.connect(percorso_database)
         c = conn.cursor()
         c.execute("PRAGMA foreign_keys = ON;")
         conn.commit()
