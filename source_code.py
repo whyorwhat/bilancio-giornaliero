@@ -13,9 +13,9 @@ percorso_database = "/Users/simonecotardo/Documents/Progetti/Contabilita/Databas
 percorso_documenti = "/Users/simonecotardo/Documents/Documenti di contabilità/"
 
 #Import images
-bin_icon = ctk.CTkImage(Image.open(percorso_applicazione+"bin_icon.png"))
-upload_icon = ctk.CTkImage(Image.open(percorso_applicazione+"upload_icon.png"))
-edit_icon = ctk.CTkImage(Image.open(percorso_applicazione+"edit_icon.png"))
+bin_icon = ctk.CTkImage(Image.open(percorso_applicazione+"bin_icon.png"), size=(20,20))
+upload_icon = ctk.CTkImage(Image.open(percorso_applicazione+"upload_icon.png"), size=(20,20))
+edit_icon = ctk.CTkImage(Image.open(percorso_applicazione+"edit_icon.png"), size=(20,20))
 warning_icon = ctk.CTkImage(Image.open(percorso_applicazione+"warning_icon.png"), size=(40, 40))
 check_icon = ctk.CTkImage(Image.open(percorso_applicazione+"check_icon.png"), size=(40, 40))
 error_icon = ctk.CTkImage(Image.open(percorso_applicazione+"error_icon.png"), size=(40, 40))
