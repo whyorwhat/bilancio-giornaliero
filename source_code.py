@@ -9,7 +9,7 @@ import webbrowser
 
 #Percorsi alle cartelle
 percorso_applicazione = "/Users/simonecotardo/GitHub/Bilancio-giornaliero/"
-percorso_database = "/Users/simonecotardo/Downloads/Database.db"
+percorso_database = "/Users/simonecotardo/Documents/Progetti/Contabilita/Database/"+"Database.db"
 percorso_documenti = "/Users/simonecotardo/Documents/Documenti di contabilità/"
 
 #Import images
