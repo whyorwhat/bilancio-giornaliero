@@ -1,4 +1,3 @@
-#from CTkMessagebox import CTkMessagebox
 import customtkinter as ctk
 from datetime import date
 from tkcalendar import Calendar
@@ -7,9 +6,8 @@ import os
 from PIL import Image
 import shutil
 import webbrowser
-#import faulthandler
-#faulthandler.enable()
-#import numpy as np
+
+#Percorsi alle cartelle
 percorso_applicazione = "/Users/simonecotardo/GitHub/Bilancio-giornaliero/"
 percorso_database = "/Users/simonecotardo/Downloads/Database.db"
 percorso_documenti = "/Users/simonecotardo/Documents/Documenti di contabilità/"
