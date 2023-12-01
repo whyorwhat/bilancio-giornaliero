@@ -1,5 +1,6 @@
 # Bilancio-giornaliero
 All'apertura vengono mostrate due categorie di finestra: <i>Crea</i> oppure <i>Visualizza e modifica</i>.
+
 Il percorso alla cartella di risorse dell'app va definito all'inizio del codice:
 ```sh
 percorso_documenti = "/Percorso alla cartella dei documenti/"
