@@ -59,3 +59,14 @@ pip install pytest-shutil
 ```sh
 pip install webbrowser
 ```
+
+## Creare app con pyinstaller
+```sh
+pyinstaller source_code.py --icon="app_icon.py" --onefile --name "Bilancio giornaliero" --noconsole --hidden-import babel.numbers
+```
+<i>Nota:</i>
+Invece che inserire <i>--hidden-import babel.numbers</i> nel codice pyinstaller, è possibile modificare il file <i>.spec</i> aggiungendo
+```sh
+hiddenimports=["babel.numbers"]
+```
+nella sezione <i>a = Analysis</i>. Una volta fatto reinstallare il file <i>.spec</i> con pyinstaller.
