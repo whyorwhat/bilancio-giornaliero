@@ -1299,201 +1299,219 @@ def createNuovaProvaView():
 
 
     def sendToDatabase():
-        conn = sqlite3.connect(percorso_database)
-        c = conn.cursor()
-        c.execute("PRAGMA foreign_keys = ON;")
-        conn.commit()
-        #Crea tabelle se non esistono
-        c.execute("""CREATE TABLE IF NOT EXISTS prova(
-            data DATE,
-            totale_incassi_vittoria DOUBLE,
-            incasso_per_conto DOUBLE,
-            incasso_das DOUBLE,
-            totale_bonifici DOUBLE,
-            incasso_polizze_bonifici DOUBLE,
-            totale_carte_pos DOUBLE,
-            incasso_polizze_carte_pos DOUBLE,
-            totale_sospesi DOUBLE,
-            totale_parziale_1 DOUBLE,
-            fondo_cassa_precedente DOUBLE,
-            incassi_contante DOUBLE,
-            totale_parziale_2 DOUBLE,
-            totale_recupero_sospesi_contanti DOUBLE,
-            totale_recupero_sospesi_carte_pos DOUBLE,
-            totale_recupero_sospesi_bonifici DOUBLE,
-            totale_recupero_sospesi DOUBLE,
-            totale_cassa_contante DOUBLE,
-            totale_abbuoni DOUBLE,
-            totale_uscite_varie DOUBLE,
-            totale_uscite_versamenti DOUBLE,
-            totale_generale_uscite DOUBLE,
-            fondo_cassa_da_riportare DOUBLE,
-            totale_marchirolo DOUBLE,
-            saldo_cassa DOUBLE,
-            completato TEXT,
-            incasso_assegni DOUBLE,
-            incasso_contante DOUBLE,
-            saldo_sospesi DOUBLE,
-            punti_viva DOUBLE,
-            commenti TEXT,
-            PRIMARY KEY(data)
-            )"""
-        )
-        conn.commit()
-        c.execute("""CREATE TABLE IF NOT EXISTS liste(
-            data DATE,
-            categoria TEXT,
-            valore DOUBLE,
-            causale TEXT,
-            CONSTRAINT fk_sospesi_prova FOREIGN KEY (data) REFERENCES prova(data)
-            );
-            """
-        )
-        conn.commit()
+        def causaleVuota(nome_frame):
+            isvalore = False
+            #Controlla che le causali dei versamenti non siano vuote
+            for child in nome_frame.winfo_children():     #Per ogni child nel frame_versamenti
+                if isinstance(child, ctk.CTkFrame):             #Se è un frame
+                    for child2 in child.winfo_children():       #per figlio nel frame (child)
+                        if isinstance(child2, ctk.CTkEntry):    #se è una entry
+                            if isvalore==True:                     #se è la causale
+                                if child2.get() == "":          #se la causale non è vuota
+                                    return(True)
+                            else:
+                                isvalore = True
+            return(False)
 
-        #Converti data
-        data_converted = (today_date_formatted.get()).split('-')
-        data_converted_text=""
-        data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
-
-        #Controlla se la data esiste già
-        c.execute("SELECT data FROM prova WHERE data='"+data_converted_text+"'")
-        maybe_exists = c.fetchall()
-        conn.commit()
-        if (len(maybe_exists)!=0):
-            showConfirmMessage(creaprova, "Attenzione", "Il giorno che stai tentando di creare esiste già", "cancel", False) 
-            conn.close()
+        if causaleVuota(frame_versamenti):
+            showConfirmMessage(creaprova, "Attenzione", "La causale dei versamenti non può essere vuota", "warning", False) 
         else:
 
-            def safeLoad(input):
-                try:
-                    output = input.get()
-                except:
-                    output = 0
-                return output
-            #Aggiungi tutte le entry
-            c.execute("INSERT INTO prova VALUES ('"+data_converted_text+"', "
-                    +str(safeLoad(totale_incassi_vittoria))+", "
-                    +str(safeLoad(incasso_per_conto))+", "
-                    +str(safeLoad(incasso_das))+", "
-                    +str(safeLoad(totale_bonifici))+", "
-                    +str(safeLoad(incasso_polizze_bonifici))+", "
-                    +str(safeLoad(totale_carte_pos))+", "
-                    +str(safeLoad(incasso_polizze_carte_pos))+", "
-                    +str(safeLoad(totale_sospesi))+", "
-                    +str(safeLoad(totale_parziale_1))+", "
-                    +str(safeLoad(fondo_cassa_precedente))+", "
-                    +str(safeLoad(incassi_contante))+", "
-                    +str(safeLoad(totale_parziale_2))+", "
-                    +str(safeLoad(totale_recupero_sospesi_contanti))+", "
-                    +str(safeLoad(totale_recupero_sospesi_carte_pos))+", "
-                    +str(safeLoad(totale_recupero_sospesi_bonifici))+", "
-                    +str(safeLoad(totale_recupero_sospesi))+", "
-                    +str(safeLoad(totale_cassa_contante))+", "
-                    +str(safeLoad(totale_abbuoni))+", "
-                    +str(safeLoad(totale_uscite_varie))+", "
-                    +str(safeLoad(totale_uscite_versamenti))+", "
-                    +str(safeLoad(totale_generale_uscite))+", "
-                    +str(safeLoad(fondo_cassa_da_riportare))+", "
-                    +str(safeLoad(totale_marchirolo))+", "
-                    +str(safeLoad(saldo_cassa))+
-                    ", 'false', "
-                    +str(safeLoad(incasso_assegni))+", "
-                    +str(safeLoad(incasso_contante))+", "
-                    +str(safeLoad(saldo_sospesi))+", "
-                    +str(safeLoad(punti_viva))+", "
-                    +"'"+str(entry_commenti.get('0.0','end'))+"'"+")"
+            conn = sqlite3.connect(percorso_database)
+            c = conn.cursor()
+            c.execute("PRAGMA foreign_keys = ON;")
+            conn.commit()
+            #Crea tabelle se non esistono
+            c.execute("""CREATE TABLE IF NOT EXISTS prova(
+                data DATE,
+                totale_incassi_vittoria DOUBLE,
+                incasso_per_conto DOUBLE,
+                incasso_das DOUBLE,
+                totale_bonifici DOUBLE,
+                incasso_polizze_bonifici DOUBLE,
+                totale_carte_pos DOUBLE,
+                incasso_polizze_carte_pos DOUBLE,
+                totale_sospesi DOUBLE,
+                totale_parziale_1 DOUBLE,
+                fondo_cassa_precedente DOUBLE,
+                incassi_contante DOUBLE,
+                totale_parziale_2 DOUBLE,
+                totale_recupero_sospesi_contanti DOUBLE,
+                totale_recupero_sospesi_carte_pos DOUBLE,
+                totale_recupero_sospesi_bonifici DOUBLE,
+                totale_recupero_sospesi DOUBLE,
+                totale_cassa_contante DOUBLE,
+                totale_abbuoni DOUBLE,
+                totale_uscite_varie DOUBLE,
+                totale_uscite_versamenti DOUBLE,
+                totale_generale_uscite DOUBLE,
+                fondo_cassa_da_riportare DOUBLE,
+                totale_marchirolo DOUBLE,
+                saldo_cassa DOUBLE,
+                completato TEXT,
+                incasso_assegni DOUBLE,
+                incasso_contante DOUBLE,
+                saldo_sospesi DOUBLE,
+                punti_viva DOUBLE,
+                commenti TEXT,
+                PRIMARY KEY(data)
+                )"""
             )
             conn.commit()
-            
-            #Aggiungi liste
-            for valore, causale in zip(lista_sospesi_values, lista_sospesi_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'sospesi', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
+            c.execute("""CREATE TABLE IF NOT EXISTS liste(
+                data DATE,
+                categoria TEXT,
+                valore DOUBLE,
+                causale TEXT,
+                CONSTRAINT fk_sospesi_prova FOREIGN KEY (data) REFERENCES prova(data)
+                );
+                """
+            )
             conn.commit()
-            for valore, causale in zip(lista_recupero_contanti, lista_recupero_contanti_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'recupero_contanti', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(lista_recupero_cartepos, lista_recupero_cartepos_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'recupero_cartepos', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(lista_recupero_bonifici, lista_recupero_bonifici_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'recupero_bonifici', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(lista_uscite_varie, lista_uscite_varie_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'uscite_varie', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(lista_versamenti, lista_versamenti_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'uscite_versamenti', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(lista_marchirolo, lista_marchirolo_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'marchirolo', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()  
 
-            conn.close()
-            showConfirmMessage(creaprova, "Caricamento completato", "Dati correttamente aggiunti al database", "check", True)
+            #Converti data
+            data_converted = (today_date_formatted.get()).split('-')
+            data_converted_text=""
+            data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
+
+            #Controlla se la data esiste già
+            c.execute("SELECT data FROM prova WHERE data='"+data_converted_text+"'")
+            maybe_exists = c.fetchall()
+            conn.commit()
+            if (len(maybe_exists)!=0):
+                showConfirmMessage(creaprova, "Attenzione", "Il giorno che stai tentando di creare esiste già", "cancel", False) 
+                conn.close()
+            else:
+
+                def safeLoad(input):
+                    try:
+                        output = input.get()
+                    except:
+                        output = 0
+                    return output
+                #Aggiungi tutte le entry
+                c.execute("INSERT INTO prova VALUES ('"+data_converted_text+"', "
+                        +str(safeLoad(totale_incassi_vittoria))+", "
+                        +str(safeLoad(incasso_per_conto))+", "
+                        +str(safeLoad(incasso_das))+", "
+                        +str(safeLoad(totale_bonifici))+", "
+                        +str(safeLoad(incasso_polizze_bonifici))+", "
+                        +str(safeLoad(totale_carte_pos))+", "
+                        +str(safeLoad(incasso_polizze_carte_pos))+", "
+                        +str(safeLoad(totale_sospesi))+", "
+                        +str(safeLoad(totale_parziale_1))+", "
+                        +str(safeLoad(fondo_cassa_precedente))+", "
+                        +str(safeLoad(incassi_contante))+", "
+                        +str(safeLoad(totale_parziale_2))+", "
+                        +str(safeLoad(totale_recupero_sospesi_contanti))+", "
+                        +str(safeLoad(totale_recupero_sospesi_carte_pos))+", "
+                        +str(safeLoad(totale_recupero_sospesi_bonifici))+", "
+                        +str(safeLoad(totale_recupero_sospesi))+", "
+                        +str(safeLoad(totale_cassa_contante))+", "
+                        +str(safeLoad(totale_abbuoni))+", "
+                        +str(safeLoad(totale_uscite_varie))+", "
+                        +str(safeLoad(totale_uscite_versamenti))+", "
+                        +str(safeLoad(totale_generale_uscite))+", "
+                        +str(safeLoad(fondo_cassa_da_riportare))+", "
+                        +str(safeLoad(totale_marchirolo))+", "
+                        +str(safeLoad(saldo_cassa))+
+                        ", 'false', "
+                        +str(safeLoad(incasso_assegni))+", "
+                        +str(safeLoad(incasso_contante))+", "
+                        +str(safeLoad(saldo_sospesi))+", "
+                        +str(safeLoad(punti_viva))+", "
+                        +"'"+str(entry_commenti.get('0.0','end'))+"'"+")"
+                )
+                conn.commit()
+                
+                #Aggiungi liste
+                for valore, causale in zip(lista_sospesi_values, lista_sospesi_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'sospesi', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()
+                for valore, causale in zip(lista_recupero_contanti, lista_recupero_contanti_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'recupero_contanti', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()
+                for valore, causale in zip(lista_recupero_cartepos, lista_recupero_cartepos_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'recupero_cartepos', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()
+                for valore, causale in zip(lista_recupero_bonifici, lista_recupero_bonifici_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'recupero_bonifici', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()
+                for valore, causale in zip(lista_uscite_varie, lista_uscite_varie_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'uscite_varie', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()
+                for valore, causale in zip(lista_versamenti, lista_versamenti_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'uscite_versamenti', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()
+                for valore, causale in zip(lista_marchirolo, lista_marchirolo_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'marchirolo', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()  
+
+                conn.close()
+                showConfirmMessage(creaprova, "Caricamento completato", "Dati correttamente aggiunti al database", "check", True)
 
     #----SAVE BUTTON----
     save_btn = ctk.CTkButton(creaprova, text='Salva', fg_color="#809d5f", hover_color="#B7C019", command=sendToDatabase)
@@ -3117,157 +3135,174 @@ def visualizzaProva():
         #Show SAVE BUTTON
         save_btn.pack(side="bottom", pady=(0,5), padx=20)
     def saveButton():
-        #Converti data
-        data_converted = (calendar.get_date()).split('-')
-        data_converted_text=""
-        data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
-        conn = sqlite3.connect(percorso_database)
-        c = conn.cursor()
-        c.execute("PRAGMA foreign_keys = ON;")
-        conn.commit()
-        #Elimina oggi
-        c.execute("DELETE FROM liste WHERE data='"+data_converted_text+"'")
-        conn.commit()
-        c.execute("DELETE FROM prova WHERE data='"+data_converted_text+"'")
-        conn.commit()
-        #Nota: si può risolvere con UPDATE CASCADE
+        def causaleVuota(nome_frame):
+            isvalore = False
+            #Controlla che le causali dei versamenti non siano vuote
+            for child in nome_frame.winfo_children():     #Per ogni child nel frame_versamenti
+                if isinstance(child, ctk.CTkFrame):             #Se è un frame
+                    for child2 in child.winfo_children():       #per figlio nel frame (child)
+                        if isinstance(child2, ctk.CTkEntry):    #se è una entry
+                            if isvalore==True:                     #se è la causale
+                                if child2.get() == "":          #se la causale non è vuota
+                                    return(True)
+                            else:
+                                isvalore = True
+            return(False)
+        
+        if causaleVuota(frame_versamenti):
+            showConfirmMessage(visualizzaprova, "Attenzione", "La causale dei versamenti non può essere vuota", "warning", False) 
+        else:
+            #Converti data
+            data_converted = (calendar.get_date()).split('-')
+            data_converted_text=""
+            data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
+            conn = sqlite3.connect(percorso_database)
+            c = conn.cursor()
+            c.execute("PRAGMA foreign_keys = ON;")
+            conn.commit()
+            #Elimina oggi
+            c.execute("DELETE FROM liste WHERE data='"+data_converted_text+"'")
+            conn.commit()
+            c.execute("DELETE FROM prova WHERE data='"+data_converted_text+"'")
+            conn.commit()
+            #Nota: si può risolvere con UPDATE CASCADE
 
-        def safeLoad(input):
-            try:
-                output = input.get()
-            except:
-                output = 0
-            return output
-        #Aggiungi tutte le entry
-        c.execute("INSERT INTO prova VALUES ('"+data_converted_text+"', "
-                  +str(safeLoad(totale_incassi_vittoria))+", "
-                  +str(safeLoad(incasso_per_conto))+", "
-                  +str(safeLoad(incasso_das))+", "
-                  +str(safeLoad(totale_bonifici))+", "
-                  +str(safeLoad(incasso_polizze_bonifici))+", "
-                  +str(safeLoad(totale_carte_pos))+", "
-                  +str(safeLoad(incasso_polizze_carte_pos))+", "
-                  +str(safeLoad(totale_sospesi))+", "
-                  +str(safeLoad(totale_parziale_1))+", "
-                  +str(safeLoad(fondo_cassa_precedente))+", "
-                  +str(safeLoad(incassi_contante))+", "
-                  +str(safeLoad(totale_parziale_2))+", "
-                  +str(safeLoad(totale_recupero_sospesi_contanti))+", "
-                  +str(safeLoad(totale_recupero_sospesi_carte_pos))+", "
-                  +str(safeLoad(totale_recupero_sospesi_bonifici))+", "
-                  +str(safeLoad(totale_recupero_sospesi))+", "
-                  +str(safeLoad(totale_cassa_contante))+", "
-                  +str(safeLoad(totale_abbuoni))+", "
-                  +str(safeLoad(totale_uscite_varie))+", "
-                  +str(safeLoad(totale_uscite_versamenti))+", "
-                  +str(safeLoad(totale_generale_uscite))+", "
-                  +str(safeLoad(fondo_cassa_da_riportare))+", "
-                  +str(safeLoad(totale_marchirolo))+", "
-                  +str(safeLoad(saldo_cassa))+", '"
-                  +str(completato.get())+"', "
-                  +str(safeLoad(incasso_assegni))+", "
-                  +str(safeLoad(incasso_contante))+", "
-                  +str(safeLoad(saldo_sospesi))+", "
-                  +str(safeLoad(punti_viva))+", "
-                  +"'"+str(entry_commenti.get('0.0','end'))+"'"+")"
-        )
-        conn.commit()
-        #Aggiungi liste
-        for valore, causale in zip(new_lista_sospesi_values, new_lista_sospesi_causali):
-            try:
-                if valore.get() != "" and causale.get() != "":
-                    c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                            +"'sospesi', "
-                            +str(valore.get())+", '"
-                            +causale.get()+
-                            "')"
-                    )
-            except:
+            def safeLoad(input):
+                try:
+                    output = input.get()
+                except:
+                    output = 0
+                return output
+            #Aggiungi tutte le entry
+            c.execute("INSERT INTO prova VALUES ('"+data_converted_text+"', "
+                    +str(safeLoad(totale_incassi_vittoria))+", "
+                    +str(safeLoad(incasso_per_conto))+", "
+                    +str(safeLoad(incasso_das))+", "
+                    +str(safeLoad(totale_bonifici))+", "
+                    +str(safeLoad(incasso_polizze_bonifici))+", "
+                    +str(safeLoad(totale_carte_pos))+", "
+                    +str(safeLoad(incasso_polizze_carte_pos))+", "
+                    +str(safeLoad(totale_sospesi))+", "
+                    +str(safeLoad(totale_parziale_1))+", "
+                    +str(safeLoad(fondo_cassa_precedente))+", "
+                    +str(safeLoad(incassi_contante))+", "
+                    +str(safeLoad(totale_parziale_2))+", "
+                    +str(safeLoad(totale_recupero_sospesi_contanti))+", "
+                    +str(safeLoad(totale_recupero_sospesi_carte_pos))+", "
+                    +str(safeLoad(totale_recupero_sospesi_bonifici))+", "
+                    +str(safeLoad(totale_recupero_sospesi))+", "
+                    +str(safeLoad(totale_cassa_contante))+", "
+                    +str(safeLoad(totale_abbuoni))+", "
+                    +str(safeLoad(totale_uscite_varie))+", "
+                    +str(safeLoad(totale_uscite_versamenti))+", "
+                    +str(safeLoad(totale_generale_uscite))+", "
+                    +str(safeLoad(fondo_cassa_da_riportare))+", "
+                    +str(safeLoad(totale_marchirolo))+", "
+                    +str(safeLoad(saldo_cassa))+", '"
+                    +str(completato.get())+"', "
+                    +str(safeLoad(incasso_assegni))+", "
+                    +str(safeLoad(incasso_contante))+", "
+                    +str(safeLoad(saldo_sospesi))+", "
+                    +str(safeLoad(punti_viva))+", "
+                    +"'"+str(entry_commenti.get('0.0','end'))+"'"+")"
+            )
+            conn.commit()
+            #Aggiungi liste
+            for valore, causale in zip(new_lista_sospesi_values, new_lista_sospesi_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'sospesi', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
+                        print("Entries vuote non caricate")
+            conn.commit()
+            for valore, causale in zip(new_lista_recupero_contanti, new_lista_recupero_contanti_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'recupero_contanti', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
                     print("Entries vuote non caricate")
-        conn.commit()
-        for valore, causale in zip(new_lista_recupero_contanti, new_lista_recupero_contanti_causali):
-            try:
-                if valore.get() != "" and causale.get() != "":
-                    c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                            +"'recupero_contanti', "
-                            +str(valore.get())+", '"
-                            +causale.get()+
-                            "')"
-                    )
-            except:
-                print("Entries vuote non caricate")
-        conn.commit()
-        for valore, causale in zip(new_lista_recupero_cartepos, new_lista_recupero_cartepos_causali):
-            try:
-                if valore.get() != "" and causale.get() != "":
-                    c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                            +"'recupero_cartepos', "
-                            +str(valore.get())+", '"
-                            +causale.get()+
-                            "')"
-                    )
-            except:
-                print("Entries vuote non caricate")
-        conn.commit()
-        for valore, causale in zip(new_lista_recupero_bonifici, new_lista_recupero_bonifici_causali):
-            try:
-                if valore.get() != "" and causale.get() != "":
-                    c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                            +"'recupero_bonifici', "
-                            +str(valore.get())+", '"
-                            +causale.get()+
-                            "')"
-                    )
-            except:
-                print("Entries vuote non caricate")
-        conn.commit()
-        for valore, causale in zip(new_lista_uscite_varie, new_lista_uscite_varie_causali):
-            try:
-                if valore.get() != "" and causale.get() != "":
-                    c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                            +"'uscite_varie', "
-                            +str(valore.get())+", '"
-                            +causale.get()+
-                            "')"
-                    )
-            except:
-                print("Entries vuote non caricate")
-        conn.commit()
-        for valore, causale in zip(new_lista_versamenti, new_lista_versamenti_causali):
-            try:
-                if valore.get() != "" and causale.get() != "":
-                    c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                            +"'uscite_versamenti', "
-                            +str(valore.get())+", '"
-                            +causale.get()+
-                            "')"
-                    )
-            except:
-                print("Entries vuote non caricate")
-        conn.commit()
-        for valore, causale in zip(new_lista_marchirolo, new_lista_marchirolo_causali):
-            try:
-                if valore.get() != "" and causale.get() != "":
-                    c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                            +"'marchirolo', "
-                            +str(valore.get())+", '"
-                            +causale.get()+
-                            "')"
-                    )
-            except:
-                print("Entries vuote non caricate")
-        conn.commit()
+            conn.commit()
+            for valore, causale in zip(new_lista_recupero_cartepos, new_lista_recupero_cartepos_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'recupero_cartepos', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
+                    print("Entries vuote non caricate")
+            conn.commit()
+            for valore, causale in zip(new_lista_recupero_bonifici, new_lista_recupero_bonifici_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'recupero_bonifici', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
+                    print("Entries vuote non caricate")
+            conn.commit()
+            for valore, causale in zip(new_lista_uscite_varie, new_lista_uscite_varie_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'uscite_varie', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
+                    print("Entries vuote non caricate")
+            conn.commit()
+            for valore, causale in zip(new_lista_versamenti, new_lista_versamenti_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'uscite_versamenti', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
+                    print("Entries vuote non caricate")
+            conn.commit()
+            for valore, causale in zip(new_lista_marchirolo, new_lista_marchirolo_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'marchirolo', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
+                    print("Entries vuote non caricate")
+            conn.commit()
 
-        conn.close()
-        showConfirmMessage(visualizzaprova,"Caricamento completato", "Dati correttamente aggiunti al database", "check", False)
+            conn.close()
+            showConfirmMessage(visualizzaprova,"Caricamento completato", "Dati correttamente aggiunti al database", "check", False)
 
-        removeButtons()
-        #Add disable option
-        setEnableDisable("disabled")
-        #Hide SAVE and CANCELLA BUTTON
-        save_btn.pack_forget()
-        cancel_btn.pack_forget()
-        edit_button.pack(side="bottom", pady=(0,5))
+            removeButtons()
+            #Add disable option
+            setEnableDisable("disabled")
+            #Hide SAVE and CANCELLA BUTTON
+            save_btn.pack_forget()
+            cancel_btn.pack_forget()
+            edit_button.pack(side="bottom", pady=(0,5))
     def cancelButton():
         #Elimina entry all'interno di un frame lista
         def deleteEntryInsideFrame(frame_name):
