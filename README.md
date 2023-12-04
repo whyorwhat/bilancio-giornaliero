@@ -15,7 +15,7 @@ La lista <i>Marchirolo</i>, quando viene inserita una data nella entry in alto, 
 
 Lo stesso succede per <i>Fondo cassa precedente</i> al quale viene mostrato a fianco il giorno al quale fa riferimento.
 
-<b>🚨DA FARE: </b>La lista delle causali dei versamenti non può essere vuota per non creare problemi con il check dei file relativi
+La lista delle causali dei versamenti non può essere vuota per non creare problemi con il check dei file relativi (viene visualizzato avviso dopo aver cliccato il tasto <i>Invia</i>)
 
 Il pulsante <i>Apri documenti</i> apre, se esiste, la cartella del giorno situata nella cartella principale [Documenti](Documenti/README.md), altrimenti la crea e la apre.
 
