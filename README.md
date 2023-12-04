@@ -35,6 +35,27 @@ Il vincolo del nome del file riduce di molto il rischio di errore.
 
 Nel caricamento dei file di versamento, i nomi devono combaciare con i nomi delle causali inserite nella sezione <i>Versamenti</i>, in modo da facilitare il riconoscimento dei versamenti nel momento della conferma della prova. Viene mostrata una finestra di errore quando i nomi non vengono riconosciuti.
 
-## Possibili miglioramenti
-* Creare una piccola cache che carica i dati dell'ultima settimana per accederci più facilmente, essendo quelli più utilizzati
-* La lista delle <u>causali</u> dei versamenti non può essere vuota per non creare problemi con il check dei file relativi
+## Possibili miglioramenti 
+* 🔜 Creare una piccola cache che carica i dati dell'ultima settimana per accederci più facilmente, essendo quelli più utilizzati
+* 🔜 La lista delle <u>causali</u> dei versamenti non può essere vuota per non creare problemi con il check dei file relativi
+
+## Librerie esterne da installare
+```sh
+pip install customtkinter
+```
+
+```sh
+pip install tkcalendar
+```
+
+```sh
+pip install Pillow
+```
+
+```sh
+pip install pytest-shutil
+```
+
+```sh
+pip install webbrowser
+```
