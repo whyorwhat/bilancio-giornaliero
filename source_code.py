@@ -2136,11 +2136,10 @@ def visualizzaProva():
         data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
         c.execute("SELECT "+database_entry+" FROM prova WHERE data='"+data_converted_text+"'")
         row = c.fetchall()
-        ctk_entry.configure(state='normal')
-        ctk_entry.delete('0.0','end')
-        ctk_entry.insert('0.0', row)
-        ctk_entry.configure(state='disabled')
-        ctk_entry.get('0.0', 'end')
+        for item in row:
+            ctk_entry.configure(state='normal')
+            ctk_entry.insert('0.0', "\n".join(item))
+            ctk_entry.configure(state='disabled')
 
 
     '''def ricercaPosizioneEntry(frame_name, nome_entry):
