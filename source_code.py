@@ -7,10 +7,13 @@ from PIL import Image
 import shutil
 import webbrowser
 
-#Percorsi alle cartelle
-percorso_applicazione = "/Users/simonecotardo/GitHub/Bilancio-giornaliero/"
-percorso_database = "/Users/simonecotardo/Documents/Progetti/Contabilita/Database/"+"Database.db"
-percorso_documenti = "/Users/simonecotardo/Documents/Documenti di contabilità/"
+# Apro il file delle posizioni in modalità lettura
+with open('posizioni.txt', 'r') as file:
+    # Leggo le tre righe dal file e le sarvo nelle loro variabili
+    percorso_applicazione = file.readline().replace('Percorso app: ', '').strip()
+    percorso_database = file.readline().replace('Percorso database: ', '').strip()
+    percorso_documenti = file.readline().replace('Percorso documenti: ', '').strip()
+
 
 #Import images
 bin_icon = ctk.CTkImage(Image.open(percorso_applicazione+"bin_icon.png"), size=(20,20))
