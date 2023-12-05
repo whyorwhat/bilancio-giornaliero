@@ -209,7 +209,11 @@ def createNuovaProvaView():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: k=incasso_contante.get()
+        except: k=0
+        try: l=incasso_assegni.get()
+        except: l=0
+        result=a+b+c+k+l-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -243,7 +247,11 @@ def createNuovaProvaView():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: g=incasso_contante.get()
+        except: g=0
+        try: h=incasso_assegni.get()
+        except: h=0
+        result=a+b+c+g+h-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -262,7 +270,11 @@ def createNuovaProvaView():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: g=incasso_contante.get()
+        except: g=0
+        try: h=incasso_assegni.get()
+        except: h=0
+        result=a+b+c+g+h-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -281,7 +293,11 @@ def createNuovaProvaView():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: i=incasso_contante.get()
+        except: i=0
+        try: j=incasso_assegni.get()
+        except: j=0
+        result=a+b+c+i+j-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -338,7 +354,11 @@ def createNuovaProvaView():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: i=incasso_contante.get()
+        except: i=0
+        try: j=incasso_assegni.get()
+        except: j=0
+        result=a+b+c+i+j-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -650,7 +670,11 @@ def createNuovaProvaView():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: k=incasso_contante.get()
+        except: k=0
+        try: l=incasso_assegni.get()
+        except: l=0
+        result=a+b+c+k+l-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -697,13 +721,51 @@ def createNuovaProvaView():
         entry_tot_generaleuscite.insert('end', "{:.2f}".format(result))
         entry_tot_generaleuscite.configure(state='disabled')
     def updateAssegni(*args):
-        print("Entry assegni cambiata")
-        #Aggiorna
-    
+        #Aggiorna totale parziale 1
+        try: a=totale_incassi_vittoria.get()
+        except: a=0
+        try: b=incasso_per_conto.get()
+        except: b=0
+        try: c=incasso_das.get()
+        except: c=0
+        try: d=totale_bonifici.get()
+        except: d=0
+        try: e=totale_carte_pos.get()
+        except: e=0
+        try: f=totale_sospesi.get()
+        except: f=0
+        try: g=incasso_contante.get()
+        except: g=0
+        try: h=incasso_assegni.get()
+        except: h=0
+        result=a+b+c+g+h-d-e-f
+        entry_tot_parziale_1.configure(state='normal')
+        entry_tot_parziale_1.delete(0,'end')
+        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
+        entry_tot_parziale_1.configure(state='disabled')
     def updateIncassoContante(*args):
-        print("Entry incasso contanti cambiata")
-        #Aggiorna
-
+        #Aggiorna totale parziale 1
+        try: a=totale_incassi_vittoria.get()
+        except: a=0
+        try: b=incasso_per_conto.get()
+        except: b=0
+        try: c=incasso_das.get()
+        except: c=0
+        try: d=totale_bonifici.get()
+        except: d=0
+        try: e=totale_carte_pos.get()
+        except: e=0
+        try: f=totale_sospesi.get()
+        except: f=0
+        try: g=incasso_contante.get()
+        except: g=0
+        try: h=incasso_assegni.get()
+        except: h=0
+        result=a+b+c+g+h-d-e-f
+        entry_tot_parziale_1.configure(state='normal')
+        entry_tot_parziale_1.delete(0,'end')
+        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
+        entry_tot_parziale_1.configure(state='disabled')
     def updateSaldoSospesi(*args):
         print("Entry saldo sospesi cambiata")
         #Aggiorna
@@ -1561,7 +1623,11 @@ def visualizzaProva():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: k=incasso_contante.get()
+        except: k=0
+        try: l=incasso_assegni.get()
+        except: l=0
+        result=a+b+c+k+l-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -1595,7 +1661,11 @@ def visualizzaProva():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: g=incasso_contante.get()
+        except: g=0
+        try: h=incasso_assegni.get()
+        except: h=0
+        result=a+b+c+g+h-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -1614,7 +1684,11 @@ def visualizzaProva():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: g=incasso_contante.get()
+        except: g=0
+        try: h=incasso_assegni.get()
+        except: h=0
+        result=a+b+c+g+h-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -1633,7 +1707,11 @@ def visualizzaProva():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: i=incasso_contante.get()
+        except: i=0
+        try: j=incasso_assegni.get()
+        except: j=0
+        result=a+b+c+i+j-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -1690,7 +1768,11 @@ def visualizzaProva():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: i=incasso_contante.get()
+        except: i=0
+        try: j=incasso_assegni.get()
+        except: j=0
+        result=a+b+c+i+j-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -2002,7 +2084,11 @@ def visualizzaProva():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result=a+b+c-d-e-f
+        try: k=incasso_contante.get()
+        except: k=0
+        try: l=incasso_assegni.get()
+        except: l=0
+        result=a+b+c+k+l-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
@@ -2047,13 +2133,51 @@ def visualizzaProva():
         entry_tot_generaleuscite.insert('end', "{:.2f}".format(result))
         entry_tot_generaleuscite.configure(state='disabled')
     def updateAssegni(*args):
-        print("Entry assegni cambiata")
-        #Aggiorna
-
+        #Aggiorna totale parziale 1
+        try: a=totale_incassi_vittoria.get()
+        except: a=0
+        try: b=incasso_per_conto.get()
+        except: b=0
+        try: c=incasso_das.get()
+        except: c=0
+        try: d=totale_bonifici.get()
+        except: d=0
+        try: e=totale_carte_pos.get()
+        except: e=0
+        try: f=totale_sospesi.get()
+        except: f=0
+        try: g=incasso_contante.get()
+        except: g=0
+        try: h=incasso_assegni.get()
+        except: h=0
+        result=a+b+c+g+h-d-e-f
+        entry_tot_parziale_1.configure(state='normal')
+        entry_tot_parziale_1.delete(0,'end')
+        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
+        entry_tot_parziale_1.configure(state='disabled')
     def updateIncassoContante(*args):
-        print("Entry incasso contanti cambiata")
-        #Aggiorna
-
+        #Aggiorna totale parziale 1
+        try: a=totale_incassi_vittoria.get()
+        except: a=0
+        try: b=incasso_per_conto.get()
+        except: b=0
+        try: c=incasso_das.get()
+        except: c=0
+        try: d=totale_bonifici.get()
+        except: d=0
+        try: e=totale_carte_pos.get()
+        except: e=0
+        try: f=totale_sospesi.get()
+        except: f=0
+        try: g=incasso_contante.get()
+        except: g=0
+        try: h=incasso_assegni.get()
+        except: h=0
+        result=a+b+c+g+h-d-e-f
+        entry_tot_parziale_1.configure(state='normal')
+        entry_tot_parziale_1.delete(0,'end')
+        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
+        entry_tot_parziale_1.configure(state='disabled')
     def updateSaldoSospesi(*args):
         print("Entry saldo sospesi cambiata")
         #Aggiorna
