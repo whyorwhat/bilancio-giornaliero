@@ -2583,11 +2583,12 @@ def visualizzaProva():
                         showweeknumbers=False,
                         showothermonthdays=False,
                         background = "#eeeeee",
-                        foreground = "black",
-                        selectbackground = "#CFCFCF", 
+                        foreground = "#333333",
+                        selectbackground = "#147da3", 
                         selectforeground = "black",
-                        normalforeground = "#CFCFCF",
-                        weekendforeground = "#CFCFCF")
+                        normalforeground = "#333333",
+                        weekendforeground = "#333333",
+                        weekendbackground = "white")
     calendar.pack(pady=20)
     calendar.bind('<<CalendarSelected>>', chooseDate)
 
@@ -2605,7 +2606,7 @@ def visualizzaProva():
             data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
             dt = Calendar.datetime.strptime(data_converted_text, "%d-%m-%Y").date()
             calendar.calevent_create(date=dt, text='Giorno completato', tags= "Completata")
-            calendar.tag_config("Completata", background='red', foreground='#809d5f')
+            calendar.tag_config("Completata", background='#809d5f', foreground='black')
 
         conn.commit()
         conn.close()
