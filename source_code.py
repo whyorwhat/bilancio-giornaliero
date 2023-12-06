@@ -14,6 +14,58 @@ with open('posizioni.txt', 'r') as file:
     percorso_database = file.readline().replace('Percorso database: ', '').strip()
     percorso_documenti = file.readline().replace('Percorso documenti: ', '').strip()
 
+conn = sqlite3.connect(percorso_database)
+c = conn.cursor()
+c.execute("PRAGMA foreign_keys = ON;")
+conn.commit()
+#Crea tabelle se non esistono
+c.execute("""CREATE TABLE IF NOT EXISTS prova(
+    data DATE,
+    totale_incassi_vittoria DOUBLE,
+    incasso_per_conto DOUBLE,
+    incasso_das DOUBLE,
+    totale_bonifici DOUBLE,
+    incasso_polizze_bonifici DOUBLE,
+    totale_carte_pos DOUBLE,
+    incasso_polizze_carte_pos DOUBLE,
+    totale_sospesi DOUBLE,
+    totale_parziale_1 DOUBLE,
+    fondo_cassa_precedente DOUBLE,
+    incassi_contante DOUBLE,
+    totale_parziale_2 DOUBLE,
+    totale_recupero_sospesi_contanti DOUBLE,
+    totale_recupero_sospesi_carte_pos DOUBLE,
+    totale_recupero_sospesi_bonifici DOUBLE,
+    totale_recupero_sospesi DOUBLE,
+    totale_cassa_contante DOUBLE,
+    totale_abbuoni DOUBLE,
+    totale_uscite_varie DOUBLE,
+    totale_uscite_versamenti DOUBLE,
+    totale_generale_uscite DOUBLE,
+    fondo_cassa_da_riportare DOUBLE,
+    totale_marchirolo DOUBLE,
+    saldo_cassa DOUBLE,
+    completato TEXT,
+    incasso_assegni DOUBLE,
+    incasso_contante DOUBLE,
+    saldo_sospesi DOUBLE,
+    punti_viva DOUBLE,
+    commenti TEXT,
+    PRIMARY KEY(data)
+    )"""
+)
+conn.commit()
+c.execute("""CREATE TABLE IF NOT EXISTS liste(
+    data DATE,
+    categoria TEXT,
+    valore DOUBLE,
+    causale TEXT,
+    CONSTRAINT fk_sospesi_prova FOREIGN KEY (data) REFERENCES prova(data)
+    );
+    """
+)
+conn.commit()
+conn.close()
 
 #Import images
 bin_icon = ctk.CTkImage(Image.open(percorso_applicazione+"bin_icon.png"), size=(20,20))
@@ -1381,57 +1433,9 @@ def createNuovaProvaView():
         if causaleVuota(frame_versamenti):
             showConfirmMessage(creaprova, "Attenzione", "La causale dei versamenti non può essere vuota", "warning", False) 
         else:
-
             conn = sqlite3.connect(percorso_database)
             c = conn.cursor()
             c.execute("PRAGMA foreign_keys = ON;")
-            conn.commit()
-            #Crea tabelle se non esistono
-            c.execute("""CREATE TABLE IF NOT EXISTS prova(
-                data DATE,
-                totale_incassi_vittoria DOUBLE,
-                incasso_per_conto DOUBLE,
-                incasso_das DOUBLE,
-                totale_bonifici DOUBLE,
-                incasso_polizze_bonifici DOUBLE,
-                totale_carte_pos DOUBLE,
-                incasso_polizze_carte_pos DOUBLE,
-                totale_sospesi DOUBLE,
-                totale_parziale_1 DOUBLE,
-                fondo_cassa_precedente DOUBLE,
-                incassi_contante DOUBLE,
-                totale_parziale_2 DOUBLE,
-                totale_recupero_sospesi_contanti DOUBLE,
-                totale_recupero_sospesi_carte_pos DOUBLE,
-                totale_recupero_sospesi_bonifici DOUBLE,
-                totale_recupero_sospesi DOUBLE,
-                totale_cassa_contante DOUBLE,
-                totale_abbuoni DOUBLE,
-                totale_uscite_varie DOUBLE,
-                totale_uscite_versamenti DOUBLE,
-                totale_generale_uscite DOUBLE,
-                fondo_cassa_da_riportare DOUBLE,
-                totale_marchirolo DOUBLE,
-                saldo_cassa DOUBLE,
-                completato TEXT,
-                incasso_assegni DOUBLE,
-                incasso_contante DOUBLE,
-                saldo_sospesi DOUBLE,
-                punti_viva DOUBLE,
-                commenti TEXT,
-                PRIMARY KEY(data)
-                )"""
-            )
-            conn.commit()
-            c.execute("""CREATE TABLE IF NOT EXISTS liste(
-                data DATE,
-                categoria TEXT,
-                valore DOUBLE,
-                causale TEXT,
-                CONSTRAINT fk_sospesi_prova FOREIGN KEY (data) REFERENCES prova(data)
-                );
-                """
-            )
             conn.commit()
 
             #Converti data
