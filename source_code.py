@@ -99,7 +99,6 @@ def showConfirmMessage(frame, titolo, messaggio, icon_image, kill_app_after_clic
     message_window.geometry('%dx%d+%d+%d' % (350, 150, x, y))
     message_window.minsize(350, 150)
     message_window.maxsize(350, 150)
-    
     match icon_image:
         case "check":
             icon = ctk.CTkLabel(message_window, text="", image=check_icon)
@@ -107,7 +106,6 @@ def showConfirmMessage(frame, titolo, messaggio, icon_image, kill_app_after_clic
             icon = ctk.CTkLabel(message_window, text="", image=error_icon)
         case "warning":
             icon = ctk.CTkLabel(message_window, text="", image=warning_icon)
-    message_window.iconbitmap(percorso_applicazione+icon)
     icon.pack(pady=(15,0), padx=20)
     message = ctk.CTkLabel(message_window, text=messaggio, font=("Helvetica",14))
     message.pack(pady=(0,10), padx=20)
