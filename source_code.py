@@ -111,9 +111,6 @@ def showConfirmMessage(frame, titolo, messaggio, icon_image, kill_app_after_clic
     message.pack(pady=(0,10), padx=20)
     message_button = ctk.CTkButton(message_window, text="Ok", width=50, command=destroy)
     message_button.pack(pady=(15,5), padx=20)
-    #msg = CTkMessagebox(master=frame, title=titolo, message=messaggio, icon=icon_image, fade_in_duration=150, font=("Helvetica", 13), cancel_button="None", option_1 ="Ok")
-    #if msg.get() == "Ok":
-    #    frame.destroy()
     
 
 #****CREA NUOVA PROVA VIEW****
