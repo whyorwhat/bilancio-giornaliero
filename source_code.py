@@ -89,6 +89,7 @@ def showConfirmMessage(frame, titolo, messaggio, icon_image, kill_app_after_clic
         if kill_app_after_click==True:
             frame.destroy()
     message_window = ctk.CTkToplevel(frame)
+    message_window.grab_set()   #Setta finestra sopra il frame principale
     message_window.title(titolo)
     #message_window.geometry("350x150")
     ws = message_window.winfo_screenwidth()
