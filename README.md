@@ -49,14 +49,6 @@ pip install tkcalendar
 pip install Pillow
 ```
 
-```sh
-pip install pytest-shutil
-```
-
-```sh
-pip install webbrowser
-```
-
 ## Creare app con pyinstaller
 ```sh
 pyinstaller source_code.py --icon="app_icon.py" --onefile --name "Bilancio giornaliero" --noconsole --hidden-import babel.numbers
