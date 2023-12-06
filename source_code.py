@@ -164,6 +164,7 @@ def createNuovaProvaView():
         data=cursor.fetchall()
         if (len(data)==0):
             label_daybefore.configure(text="Non trovato")
+            data_precedente=""
         else:
             for data_precedente, fondo_cassa_da_riportare_precedente in data:
                 entry_cassaprecedente.configure(state='normal')
