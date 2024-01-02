@@ -1,7 +1,9 @@
 # Bilancio-giornaliero
-All'apertura vengono mostrate due categorie di finestra: <i>Crea</i> oppure <i>Visualizza e modifica</i>.
+Il file .zip può essere scaricato da [qui](https://www.mediafire.com/file/u9iygsn034gcjel/Bilancio_giornaliero.zip/file).
 
-I percorsi alle cartelle di risorsa dell'app vanno definiti nel file esterno [posizioni.txt](posizioni.txt).
+I percorsi alle cartelle di risorsa dell'app vanno definiti nel file esterno [posizioni.txt](posizioni.txt), prima di eseguire l'applicazione.
+
+All'apertura vengono mostrate due categorie di finestra: <i>Crea</i> oppure <i>Visualizza e modifica</i>.
 
 ## Crea
 La data della prova da creare non deve essere già presente nel [database](Database/README.md) (in caso lo fosse viene visualizzato un avviso).
