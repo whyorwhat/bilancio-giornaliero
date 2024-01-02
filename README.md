@@ -53,9 +53,12 @@ pip install Pillow
 
 ## Creare app con pyinstaller
 ```sh
-pyinstaller source_code.py --icon="app_icon.ico" --onefile --name "Bilancio giornaliero" --noconsole --hidden-import babel.numbers
+pyinstaller source_code.py --icon="app_icon.ico" --onedir --name "Bilancio giornaliero" --noconsole --hidden-import babel.numbers
 ```
 <i>Nota:</i>
+Creato il file, va spostato il contenuto della cartella <i>dist</i> nella cartella principale.
+
+<i>Nota 2:</i>
 Invece che inserire <i>--hidden-import babel.numbers</i> nel codice pyinstaller, è possibile modificare il file <i>.spec</i> aggiungendo
 ```sh
 hiddenimports=["babel.numbers"]
