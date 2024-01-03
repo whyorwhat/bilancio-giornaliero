@@ -38,6 +38,7 @@ Nel caricamento dei file di versamento, i nomi devono combaciare con i nomi dell
 * 🔜 Creare una piccola cache che carica i dati dell'ultima settimana per accederci più facilmente, essendo quelli più utilizzati
 * 🔜 La lista delle <u>causali</u> dei versamenti non può essere vuota per non creare problemi con il check dei file relativi
 * 🔜 Esportazione PDF
+* 🔜 Icone caricamento
 * ⚠️ BUG DA RISOLVERE: dopo aver aggiunto un versamento, salvato, modifica, cancellato il nuovo versamento, il saldo cassa visualizza ancora il valore con i 2 versamenti, anziché con 1 versamento come dovrebbe essere
 * ⚠️ Manca l'icona dell'applicazione nella finestra di avviso
 
