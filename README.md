@@ -1,7 +1,7 @@
 # Bilancio-giornaliero
 Il file .zip può essere scaricato da [qui](https://www.mediafire.com/file/u9iygsn034gcjel/Bilancio_giornaliero.zip/file).
 
-I percorsi alle cartelle di risorsa dell'app vanno definiti nel file esterno [posizioni.txt](posizioni.txt), prima di eseguire l'applicazione.
+I percorsi alle cartelle di risorsa dell'app vanno definiti nel file esterno [posizioni.txt](posizioni.txt), <u>prima</u> di eseguire l'applicazione. Nota che va inserito "/" (macOS) oppure "\" (Windows) alla fine del percorso.
 
 All'apertura vengono mostrate due categorie di finestra: <i>Crea</i> oppure <i>Visualizza e modifica</i>.
 
@@ -37,7 +37,10 @@ Nel caricamento dei file di versamento, i nomi devono combaciare con i nomi dell
 ## Possibili miglioramenti 
 * 🔜 Cache: https://medium.com/@55swimmer55/the-power-of-caching-an-introduction-to-caching-within-python-sql-code-5cc29af4803d
 * 🔜 La lista delle <u>causali</u> dei versamenti non può essere vuota per non creare problemi con il check dei file relativi
+* 🔜 Esportazione PDF
+* 🔜 Icone caricamento
 * ⚠️ BUG DA RISOLVERE: dopo aver aggiunto un versamento, salvato, modifica, cancellato il nuovo versamento, il saldo cassa visualizza ancora il valore con i 2 versamenti, anziché con 1 versamento come dovrebbe essere
+* ⚠️ Manca l'icona dell'applicazione nella finestra di avviso
 
 ## Librerie esterne da installare
 ```sh
