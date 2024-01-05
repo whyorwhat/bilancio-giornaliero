@@ -1611,7 +1611,7 @@ def createNuovaProvaView():
     #----SAVE BUTTON----
     save_btn = ctk.CTkButton(creaprova, text='Salva', fg_color="#809d5f", hover_color="#B7C019", command=sendToDatabase)
     #save_btn.pack()
-    save_btn.pack(side="bottom", pady=(0,5))
+    save_btn.pack(side="right", pady=(0,5), padx=(0,20))
     #------FINE CREAZIONE GUI------
 
     #Ottieni fondo cassa dal giorno precedente
@@ -2573,7 +2573,7 @@ def visualizzaProva():
         else:
             label_date_picked.configure(text="🗓️ Prova giornaliera del " + calendar.get_date())
             getDataFromDatabase()
-            edit_button.pack(side="bottom", pady=(0,5))
+            edit_button.pack(side="right", pady=(0,5), padx=(0,20))
             c.execute("SELECT completato FROM prova WHERE data='"+data_converted_text+"'")
             check_completato=c.fetchall()
             conn.commit()
@@ -3291,10 +3291,10 @@ def visualizzaProva():
         addButtons()
         #Hide MODIFICA BUTTON
         edit_button.pack_forget()
-        #Show CANCELLA BUTTON
-        cancel_btn.pack(side="top", pady=(0,5), padx=20)
         #Show SAVE BUTTON
-        save_btn.pack(side="bottom", pady=(0,5), padx=20)
+        save_btn.pack(side="right", pady=(0,5), padx=(0,20))
+        #Show CANCELLA BUTTON
+        cancel_btn.pack(side="right", pady=(0,5), padx=(0,20))
         visualizzaprova.protocol('WM_DELETE_WINDOW', close_window)
     def saveButton():
         def causaleVuota(nome_frame):
@@ -3464,7 +3464,7 @@ def visualizzaProva():
             #Hide SAVE and CANCELLA BUTTON
             save_btn.pack_forget()
             cancel_btn.pack_forget()
-            edit_button.pack(side="bottom", pady=(0,5))
+            edit_button.pack(side="right", pady=(0,5), padx=(0,20))
             visualizzaprova.protocol('WM_DELETE_WINDOW', destroy_window)
 
     def cancelButton():
@@ -3491,7 +3491,7 @@ def visualizzaProva():
         #Hide SAVE and CANCELLA BUTTON
         save_btn.pack_forget()
         cancel_btn.pack_forget()
-        edit_button.pack(side="bottom", pady=(0,5))
+        edit_button.pack(side="right", pady=(0,5), padx=(0,20))
         visualizzaprova.protocol('WM_DELETE_WINDOW', destroy_window)
 
     #----SALVA, MODIFICA E CANCELLA BUTTONS----
