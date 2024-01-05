@@ -111,6 +111,32 @@ def showConfirmMessage(frame, titolo, messaggio, icon_image, kill_app_after_clic
     message.pack(pady=(0,10), padx=20)
     message_button = ctk.CTkButton(message_window, text="Ok", width=50, command=destroy)
     message_button.pack(pady=(15,5), padx=20)
+
+def exitFromApp(frame):
+    def destroy():
+        message_window.destroy()
+        frame.destroy()
+    def stay():
+        message_window.destroy()
+    message_window = ctk.CTkToplevel(frame)
+    message_window.grab_set()   #Setta finestra sopra il frame principale
+    message_window.title("Attenzione")
+    #message_window.geometry("350x150")
+    ws = message_window.winfo_screenwidth()
+    hs = message_window.winfo_screenheight()
+    x = (ws/2) - (350/2)
+    y = (hs/2) - (150/2)
+    message_window.geometry('%dx%d+%d+%d' % (350, 150, x, y))
+    message_window.minsize(350, 150)
+    message_window.maxsize(350, 150)
+    icon = ctk.CTkLabel(message_window, text="", image=warning_icon)
+    icon.pack(pady=(15,0), padx=20)
+    message = ctk.CTkLabel(message_window, text="Se hai effettuato modifiche, non saranno salvate", font=("Helvetica",14))
+    message.pack(pady=(0,10), padx=20)
+    no_button = ctk.CTkButton(message_window, text="Resta", width=50, command=stay)
+    no_button.pack(side="left", pady=(0,5), padx=(110,0))
+    yes_button = ctk.CTkButton(message_window, text="Esci", fg_color="#A52A2A", hover_color="#EC3737", width=50, command=destroy)
+    yes_button.pack(side="right", pady=(0,5), padx=(0,110))
     
 
 #****CREA NUOVA PROVA VIEW****
@@ -1591,7 +1617,9 @@ def createNuovaProvaView():
     #Ottieni fondo cassa dal giorno precedente
     updateData()
 
-    #Show window
+    def close_window():
+        exitFromApp(creaprova)
+    creaprova.protocol('WM_DELETE_WINDOW', close_window)
     creaprova.mainloop()
 
 
@@ -3267,6 +3295,7 @@ def visualizzaProva():
         cancel_btn.pack(side="top", pady=(0,5), padx=20)
         #Show SAVE BUTTON
         save_btn.pack(side="bottom", pady=(0,5), padx=20)
+        visualizzaprova.protocol('WM_DELETE_WINDOW', close_window)
     def saveButton():
         def causaleVuota(nome_frame):
             isvalore = False
@@ -3436,6 +3465,8 @@ def visualizzaProva():
             save_btn.pack_forget()
             cancel_btn.pack_forget()
             edit_button.pack(side="bottom", pady=(0,5))
+            visualizzaprova.protocol('WM_DELETE_WINDOW', destroy_window)
+
     def cancelButton():
         #Elimina entry all'interno di un frame lista
         def deleteEntryInsideFrame(frame_name):
@@ -3461,6 +3492,7 @@ def visualizzaProva():
         save_btn.pack_forget()
         cancel_btn.pack_forget()
         edit_button.pack(side="bottom", pady=(0,5))
+        visualizzaprova.protocol('WM_DELETE_WINDOW', destroy_window)
 
     #----SALVA, MODIFICA E CANCELLA BUTTONS----
     #Create SAVE and CANCEL buttons
@@ -3469,8 +3501,12 @@ def visualizzaProva():
     #Show MODIFICA BUTTON
     edit_button = ctk.CTkButton(master=visualizzaprova, image=edit_icon, text="Modifica", command=editProva)
 
-
-
+    #Definizione funzioni per notificare conferma chiusura app
+    def close_window():
+        exitFromApp(visualizzaprova)
+    def destroy_window():
+        visualizzaprova.destroy()
+    
     visualizzaprova.mainloop()
 
 
