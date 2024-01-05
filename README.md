@@ -40,7 +40,7 @@ Nel caricamento dei file di versamento, i nomi devono combaciare con i nomi dell
 * 🔜 Esportazione PDF
 * 🔜 Icone caricamento
 * ⚠️ BUG DA RISOLVERE: dopo aver aggiunto un versamento, salvato, modifica, cancellato il nuovo versamento, il saldo cassa visualizza ancora il valore con i 2 versamenti, anziché con 1 versamento come dovrebbe essere
-* ⚠️ Manca l'icona dell'applicazione nella finestra di avviso
+* ✅ Manca l'icona dell'applicazione nella finestra di avviso
 
 ## Librerie esterne da installare
 ```sh
