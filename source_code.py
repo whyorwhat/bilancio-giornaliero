@@ -80,7 +80,7 @@ ctk.set_appearance_mode("system")
 ctk.set_default_color_theme("dark-blue")
 
 #Set app size
-app_width = 1100
+app_width = 850
 app_height = 800
 
 def showConfirmMessage(frame, titolo, messaggio, icon_image, kill_app_after_click):
@@ -149,7 +149,7 @@ def createNuovaProvaView():
     #Set window size
     app_size = str(app_width)+str(app_height)
     creaprova.geometry(app_size)
-    creaprova.minsize(app_width-50, app_height)
+    creaprova.minsize(app_width-20, app_height)
     creaprova.iconbitmap(percorso_applicazione+"app_icon.ico")
 
     #Place window in center of screen
@@ -1632,7 +1632,7 @@ def visualizzaProva():
 
     app_size = str(app_width)+str(app_height)
     visualizzaprova.geometry(app_size)
-    visualizzaprova.minsize(app_width-250, app_height)
+    visualizzaprova.minsize(app_width-20, app_height)
     visualizzaprova.iconbitmap(percorso_applicazione+"app_icon.ico")
 
     #Place window in center of screen
