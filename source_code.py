@@ -91,7 +91,7 @@ def showConfirmMessage(frame, titolo, messaggio, icon_image, kill_app_after_clic
     message_window = ctk.CTkToplevel(frame)
     message_window.grab_set()   #Setta finestra sopra il frame principale
     message_window.title(titolo)
-    #message_window.geometry("350x150")
+    message_window.iconbitmap(percorso_applicazione+"app_icon.ico")
     ws = message_window.winfo_screenwidth()
     hs = message_window.winfo_screenheight()
     x = (ws/2) - (350/2)
@@ -121,7 +121,7 @@ def exitFromApp(frame):
     message_window = ctk.CTkToplevel(frame)
     message_window.grab_set()   #Setta finestra sopra il frame principale
     message_window.title("Attenzione")
-    #message_window.geometry("350x150")
+    message_window.iconbitmap(percorso_applicazione+"app_icon.ico")
     ws = message_window.winfo_screenwidth()
     hs = message_window.winfo_screenheight()
     x = (ws/2) - (350/2)
