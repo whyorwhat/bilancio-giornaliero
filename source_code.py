@@ -361,7 +361,7 @@ def createNuovaProvaView():
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
         entry_tot_parziale_1.configure(state='disabled')
-    def updateTotaleBonifici(*args):
+    def updateMovimentiBancari(*args):
         #print("Aggiorna totale parziale 1")
         try: a=premiolordo.get()
         except: a=0
@@ -877,7 +877,7 @@ def createNuovaProvaView():
     incasso_das = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
     incasso_das.trace("w", updateIncassoDAS)
     totale_bonifici = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
-    totale_bonifici.trace("w", updateTotaleBonifici)
+    totale_bonifici.trace("w", updateMovimentiBancari)
     incasso_polizze_bonifici = ctk.DoubleVar(creaprova, "{:.2f}".format(0))   
     incasso_polizze_bonifici.trace("w", updateIncassoPolizzeBonifici)
     totale_carte_pos = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
@@ -951,11 +951,11 @@ def createNuovaProvaView():
     label_incasso_das.grid(row=2, column=0, pady=10, padx=20, sticky="ne")
     entry_incasso_das = ctk.CTkEntry(frame_incassi, textvariable=incasso_das, width=100)
     entry_incasso_das.grid(row=2, column=1, pady=10, padx=20, sticky="nw")
-    #Incasso bonifici
-    label_incasso_bonifici = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
-    label_incasso_bonifici.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
-    entry_incasso_bonifici = ctk.CTkEntry(frame_incassi, textvariable=totale_bonifici, width=100)
-    entry_incasso_bonifici.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
+    #Movimenti bancari
+    label_movimentibancari = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
+    label_movimentibancari.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    entry_movimentibancari = ctk.CTkEntry(frame_incassi, textvariable=totale_bonifici, width=100)
+    entry_movimentibancari.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze bonifici
     label_incasso_polizzebonifici = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze bonifici:", font=("Helvetica",14,"bold"))
     label_incasso_polizzebonifici.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
@@ -1734,7 +1734,7 @@ def visualizzaProva():
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
         entry_tot_parziale_1.configure(state='disabled')
-    def updateTotaleBonifici(*args):
+    def updateMovimentiBancari(*args):
         #print("Aggiorna totale parziale 1")
         try: a=premiolordo.get()
         except: a=0
@@ -2246,7 +2246,7 @@ def visualizzaProva():
     incasso_das = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
     incasso_das.trace("w", updateIncassoDAS)
     totale_bonifici = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    totale_bonifici.trace("w", updateTotaleBonifici)
+    totale_bonifici.trace("w", updateMovimentiBancari)
     incasso_polizze_bonifici = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))   #totale_bonifici-totale_recupero_sospesi_bonifici
     incasso_polizze_bonifici.trace("w", updateIncassoPolizzeBonifici)
     totale_carte_pos = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
@@ -2418,7 +2418,7 @@ def visualizzaProva():
         saveData("premiolordo", entry_premiolordo, premiolordo, c)
         saveData("incasso_per_conto", entry_incasso_conto, incasso_per_conto, c)
         saveData("incasso_das", entry_incasso_das, incasso_das, c)
-        saveData("totale_bonifici", entry_incasso_bonifici, totale_bonifici, c)
+        saveData("totale_bonifici", entry_movimentibancari, totale_bonifici, c)
         saveData("incasso_polizze_bonifici", entry_incasso_polizzebonifici, incasso_polizze_bonifici, c)
         saveData("totale_carte_pos", entry_incasso_cartepos, totale_carte_pos, c)
         saveData("incasso_polizze_carte_pos", entry_incasso_polizzecartepos, incasso_polizze_carte_pos, c)
@@ -2506,7 +2506,7 @@ def visualizzaProva():
         resetEntry(entry_premiolordo)
         resetEntry(entry_incasso_conto)
         resetEntry(entry_incasso_das)
-        resetEntry(entry_incasso_bonifici)
+        resetEntry(entry_movimentibancari)
         resetEntry(entry_incasso_polizzebonifici)
         resetEntry(entry_incasso_cartepos)
         resetEntry(entry_incasso_polizzecartepos)
@@ -2665,10 +2665,10 @@ def visualizzaProva():
     entry_incasso_das = ctk.CTkEntry(frame_incassi, textvariable=incasso_das, state='disabled', width=100)
     entry_incasso_das.grid(row=2, column=1, pady=10, padx=20, sticky="nw")
     #Incasso bonifici
-    label_incasso_bonifici = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
-    label_incasso_bonifici.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
-    entry_incasso_bonifici = ctk.CTkEntry(frame_incassi, textvariable=totale_bonifici, state='disabled', width=100)
-    entry_incasso_bonifici.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
+    label_movimentibancari = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
+    label_movimentibancari.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    entry_movimentibancari = ctk.CTkEntry(frame_incassi, textvariable=totale_bonifici, state='disabled', width=100)
+    entry_movimentibancari.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze bonifici
     label_incasso_polizzebonifici = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze bonifici:", font=("Helvetica",14,"bold"))
     label_incasso_polizzebonifici.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
@@ -3259,7 +3259,7 @@ def visualizzaProva():
         entry_premiolordo.configure(state=new_state)
         entry_incasso_conto.configure(state=new_state)
         entry_incasso_das.configure(state=new_state)
-        entry_incasso_bonifici.configure(state=new_state)
+        entry_movimentibancari.configure(state=new_state)
         entry_incasso_cartepos.configure(state=new_state)
         entry_abbuoni.configure(state=new_state)
         entry_incasso_contante.configure(state=new_state)
