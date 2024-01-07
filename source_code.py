@@ -21,7 +21,7 @@ conn.commit()
 #Crea tabelle se non esistono
 c.execute("""CREATE TABLE IF NOT EXISTS prova(
     data DATE,
-    premiolordo DOUBLE,
+    totale_incassi_vittoria DOUBLE,
     incasso_per_conto DOUBLE,
     incasso_das DOUBLE,
     totale_bonifici DOUBLE,
@@ -74,10 +74,9 @@ edit_icon = ctk.CTkImage(Image.open(percorso_applicazione+"edit_icon.png"), size
 warning_icon = ctk.CTkImage(Image.open(percorso_applicazione+"warning_icon.png"), size=(40, 40))
 check_icon = ctk.CTkImage(Image.open(percorso_applicazione+"check_icon.png"), size=(40, 40))
 error_icon = ctk.CTkImage(Image.open(percorso_applicazione+"error_icon.png"), size=(40, 40))
-info_icon = ctk.CTkImage(Image.open(percorso_applicazione+"info_icon.png"), size=(20, 20))
 
 #Set application colors
-ctk.set_appearance_mode("light")
+ctk.set_appearance_mode("system")
 ctk.set_default_color_theme("dark-blue")
 
 #Set app size
@@ -277,9 +276,9 @@ def createNuovaProvaView():
     tabview.add("Documenti")
 
     #UPDATE VALUES DECLARATION
-    def updatePremioLordo(*args):
+    def updateIncassiVittoria(*args):
         #print("Aggiorna totale parziale 1")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -302,7 +301,7 @@ def createNuovaProvaView():
         entry_tot_parziale_1.configure(state='disabled')
 
         #print("Aggiorna Incasso contanti")
-        try: g=premiolordo.get()
+        try: g=totale_incassi_vittoria.get()
         except: g=0
         try: h=incasso_polizze_bonifici.get()
         except: h=0
@@ -317,7 +316,7 @@ def createNuovaProvaView():
         entry_incassicontante.configure(state='disabled')
     def updateIncassoPerConto(*args):
         #print("Aggiorna totale parziale 1")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -340,7 +339,7 @@ def createNuovaProvaView():
         entry_tot_parziale_1.configure(state='disabled')
     def updateIncassoDAS(*args):
         #print("Aggiorna totale parziale 1")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -361,9 +360,9 @@ def createNuovaProvaView():
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
         entry_tot_parziale_1.configure(state='disabled')
-    def updateMovimentiBancari(*args):
+    def updateTotaleBonifici(*args):
         #print("Aggiorna totale parziale 1")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -409,7 +408,7 @@ def createNuovaProvaView():
 
         #Aggiorna Incasso contanti
         #print("Aggiorna Incasso contanti")
-        try: c=premiolordo.get()
+        try: c=totale_incassi_vittoria.get()
         except: c=0
         try: d=incasso_polizze_bonifici.get()
         except: d=0
@@ -424,7 +423,7 @@ def createNuovaProvaView():
         entry_incassicontante.configure(state='disabled')
     def updateTotaleCartePOS(*args):
         #print("Aggiorna totale parziale 1")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -458,7 +457,7 @@ def createNuovaProvaView():
         entry_incasso_polizzecartepos.configure(state='disabled')
     def updateIncassoPolizzeCartePOS(*args):
         #print("Aggiorna Incasso contanti")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_polizze_bonifici.get()
         except: b=0
@@ -740,7 +739,7 @@ def createNuovaProvaView():
         entry_saldocassa.configure(state='disabled')
     def updateTotaleSospesi(*args):
         #Aggiorna totale parziale 1
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -763,7 +762,7 @@ def createNuovaProvaView():
         entry_tot_parziale_1.configure(state='disabled')
 
         #print("Aggiorna Incasso contanti")
-        try: g=premiolordo.get()
+        try: g=totale_incassi_vittoria.get()
         except: g=0
         try: h=incasso_polizze_bonifici.get()
         except: h=0
@@ -804,7 +803,7 @@ def createNuovaProvaView():
         entry_tot_generaleuscite.configure(state='disabled')
     def updateAssegni(*args):
         #Aggiorna totale parziale 1
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -827,7 +826,7 @@ def createNuovaProvaView():
         entry_tot_parziale_1.configure(state='disabled')
     def updateIncassoContante(*args):
         #Aggiorna totale parziale 1
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -870,14 +869,14 @@ def createNuovaProvaView():
 
 
     #VARIABLES DECLARATION
-    premiolordo = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
-    premiolordo.trace("w", updatePremioLordo)
+    totale_incassi_vittoria = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
+    totale_incassi_vittoria.trace("w", updateIncassiVittoria)
     incasso_per_conto = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
     incasso_per_conto.trace("w", updateIncassoPerConto)
     incasso_das = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
     incasso_das.trace("w", updateIncassoDAS)
     totale_bonifici = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
-    totale_bonifici.trace("w", updateMovimentiBancari)
+    totale_bonifici.trace("w", updateTotaleBonifici)
     incasso_polizze_bonifici = ctk.DoubleVar(creaprova, "{:.2f}".format(0))   
     incasso_polizze_bonifici.trace("w", updateIncassoPolizzeBonifici)
     totale_carte_pos = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
@@ -886,11 +885,11 @@ def createNuovaProvaView():
     incasso_polizze_carte_pos.trace("w", updateIncassoPolizzeCartePOS)
     totale_sospesi = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
     totale_sospesi.trace("w", updateTotaleSospesi)
-    totale_parziale_1 = ctk.DoubleVar(creaprova, "{:.2f}".format(0))                   #premiolordo+incasso_per_conto+incasso_das-totale_bonifici-totale_carte_pos-totale_sospesi
+    totale_parziale_1 = ctk.DoubleVar(creaprova, "{:.2f}".format(0))                   #totale_incassi_vittoria+incasso_per_conto+incasso_das-totale_bonifici-totale_carte_pos-totale_sospesi
     totale_parziale_1.trace("w", updateTotaleParziale1)
     fondo_cassa_precedente = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
     fondo_cassa_precedente.trace("w", updateFondoCassaPrecedente)
-    incassi_contante = ctk.DoubleVar(creaprova, "{:.2f}".format(0))                    #premiolordo - incasso_polizze_bonifici - incasso_polizze_carte_pos - totale_sospesi
+    incassi_contante = ctk.DoubleVar(creaprova, "{:.2f}".format(0))                    #totale_incassi_vittoria - incasso_polizze_bonifici - incasso_polizze_carte_pos - totale_sospesi
     totale_parziale_2 = ctk.DoubleVar(creaprova, "{:.2f}".format(0))                   #totale_parziale_2 + fondo_cassa_precedente
     totale_parziale_2.trace("w", updateTotaleParziale2)
     totale_recupero_sospesi_contanti = ctk.DoubleVar(creaprova, "{:.2f}".format(0))    #somma array recupero_sospesi_contanti
@@ -933,14 +932,10 @@ def createNuovaProvaView():
     frame_incassi = ctk.CTkFrame(master=tabview.tab("Incassi"))
     frame_incassi.pack(pady=(20,0))
     #Incassi Vittoria
-    label_premiolordo = ctk.CTkLabel(master=frame_incassi, text="Premio lordo:")
-    label_premiolordo.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
-    entry_premiolordo = ctk.CTkEntry(frame_incassi, textvariable=premiolordo, width=100)
-    entry_premiolordo.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
-    #info_premiolordo = ctk.CTkButton(frame_incassi, image=info_icon, text="", width=20, fg_color="#e6e6e6", hover_color="#e6e6e6")
-    #info_premiolordo.grid(row=0, column=2, padx=0)
-    #info_premiolordo.bind("<Enter>", info_enter, add="+")
-    #info_premiolordo.bind("<Leave>", info_leave, add="+")
+    label_incassi_vittoria = ctk.CTkLabel(master=frame_incassi, text="Premio lordo:")
+    label_incassi_vittoria.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    entry_incassi_vittoria = ctk.CTkEntry(frame_incassi, textvariable=totale_incassi_vittoria, width=100)
+    entry_incassi_vittoria.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
     #Incasso per conto
     label_incasso_conto = ctk.CTkLabel(master=frame_incassi, text="Incasso per conto:")
     label_incasso_conto.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
@@ -951,11 +946,11 @@ def createNuovaProvaView():
     label_incasso_das.grid(row=2, column=0, pady=10, padx=20, sticky="ne")
     entry_incasso_das = ctk.CTkEntry(frame_incassi, textvariable=incasso_das, width=100)
     entry_incasso_das.grid(row=2, column=1, pady=10, padx=20, sticky="nw")
-    #Movimenti bancari
-    label_movimentibancari = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
-    label_movimentibancari.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
-    entry_movimentibancari = ctk.CTkEntry(frame_incassi, textvariable=totale_bonifici, width=100)
-    entry_movimentibancari.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
+    #Incasso bonifici
+    label_incasso_bonifici = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
+    label_incasso_bonifici.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    entry_incasso_bonifici = ctk.CTkEntry(frame_incassi, textvariable=totale_bonifici, width=100)
+    entry_incasso_bonifici.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze bonifici
     label_incasso_polizzebonifici = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze bonifici:", font=("Helvetica",14,"bold"))
     label_incasso_polizzebonifici.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
@@ -1160,13 +1155,18 @@ def createNuovaProvaView():
 
 
     #Frame totali
-    frame_saldo_sospesi = ctk.CTkFrame(master=tabview.tab("Recupero sospesi"))
-    frame_saldo_sospesi.pack(pady=(20,0))
-    #Saldo sospesi
-    label_saldo_sospesi = ctk.CTkLabel(master=frame_saldo_sospesi, text="Saldo sospesi:", font=("Helvetica",14,"bold"))
-    label_saldo_sospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
-    entry_saldo_sospesi = ctk.CTkEntry(frame_saldo_sospesi, textvariable=saldo_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_saldo_sospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
+    frame_recuperosospesi_totali = ctk.CTkFrame(master=tabview.tab("Recupero sospesi"))
+    frame_recuperosospesi_totali.pack(pady=(20,0))
+    #--Totale recupero sospesi--
+    label_tot_recuperosospesi = ctk.CTkLabel(master=frame_recuperosospesi_totali, text="Totale recupero sospesi:", font=("Helvetica",14,"bold"))
+    label_tot_recuperosospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    entry_tot_recuperosospesi = ctk.CTkEntry(frame_recuperosospesi_totali, textvariable=totale_recupero_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_tot_recuperosospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
+    #--Totale cassa contanti--
+    label_tot_cassacontanti = ctk.CTkLabel(master=frame_recuperosospesi_totali, text="Totale cassa contanti:", font=("Helvetica",14,"bold"))
+    label_tot_cassacontanti.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
+    entry_tot_cassacontanti = ctk.CTkEntry(frame_recuperosospesi_totali, textvariable=totale_cassa_contante, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_tot_cassacontanti.grid(row=1, column=1, pady=10, padx=20, sticky="nw")
 
     #----TAB USCITE----
     frame_uscite_abbuoniviva = ctk.CTkFrame(master=tabview.tab("Uscite"))
@@ -1336,6 +1336,13 @@ def createNuovaProvaView():
     entry_incassicontante.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     explain_incassi_contante = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 2 + tot. rec. sosp. contante", text_color="#969595", font=("Helvetica",13))
     explain_incassi_contante.grid(row=3, column=2, pady=10, padx=20, sticky="nw")
+    #Saldo sospesi
+    label_saldo_sospesi = ctk.CTkLabel(master=frame_resoconto, text="Saldo sospesi:", font=("Helvetica",14,"bold"))
+    label_saldo_sospesi.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
+    entry_saldo_sospesi = ctk.CTkEntry(frame_resoconto, textvariable=saldo_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_saldo_sospesi.grid(row=4, column=1, pady=10, padx=20, sticky="nw")
+    explain_saldo_sospesi = ctk.CTkLabel(master=frame_resoconto, text="Sospesi - rec. sospesi", text_color="#969595", font=("Helvetica",13))
+    explain_saldo_sospesi.grid(row=4, column=2, pady=10, padx=20, sticky="nw")
     #Totale parziale 2
     label_tot_parziale_2 = ctk.CTkLabel(master=frame_resoconto, text="Totale parziale 2:", font=("Helvetica",14,"bold"))
     label_tot_parziale_2.grid(row=5, column=0, pady=10, padx=20, sticky="ne")
@@ -1479,7 +1486,7 @@ def createNuovaProvaView():
                     return output
                 #Aggiungi tutte le entry
                 c.execute("INSERT INTO prova VALUES ('"+data_converted_text+"', "
-                        +str(safeLoad(premiolordo))+", "
+                        +str(safeLoad(totale_incassi_vittoria))+", "
                         +str(safeLoad(incasso_per_conto))+", "
                         +str(safeLoad(incasso_das))+", "
                         +str(safeLoad(totale_bonifici))+", "
@@ -1638,9 +1645,9 @@ def visualizzaProva():
 
 
     #UPDATE VALUES DECLARATION
-    def updatePremioLordo(*args):
+    def updateIncassiVittoria(*args):
         #print("Aggiorna totale parziale 1")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -1663,7 +1670,7 @@ def visualizzaProva():
         entry_tot_parziale_1.configure(state='disabled')
 
         #print("Aggiorna Incasso contanti")
-        try: g=premiolordo.get()
+        try: g=totale_incassi_vittoria.get()
         except: g=0
         try: h=incasso_polizze_bonifici.get()
         except: h=0
@@ -1678,7 +1685,7 @@ def visualizzaProva():
         entry_incassicontante.configure(state='disabled')
     def updateIncassoPerConto(*args):
         #print("Aggiorna totale parziale 1")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -1701,7 +1708,7 @@ def visualizzaProva():
         entry_tot_parziale_1.configure(state='disabled')
     def updateIncassoDAS(*args):
         #print("Aggiorna totale parziale 1")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -1722,9 +1729,9 @@ def visualizzaProva():
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
         entry_tot_parziale_1.configure(state='disabled')
-    def updateMovimentiBancari(*args):
+    def updateTotaleBonifici(*args):
         #print("Aggiorna totale parziale 1")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -1770,7 +1777,7 @@ def visualizzaProva():
 
         #Aggiorna Incasso contanti
         #print("Aggiorna Incasso contanti")
-        try: c=premiolordo.get()
+        try: c=totale_incassi_vittoria.get()
         except: c=0
         try: d=incasso_polizze_bonifici.get()
         except: d=0
@@ -1785,7 +1792,7 @@ def visualizzaProva():
         entry_incassicontante.configure(state='disabled')
     def updateTotaleCartePOS(*args):
         #print("Aggiorna totale parziale 1")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -1819,7 +1826,7 @@ def visualizzaProva():
         entry_incasso_polizzecartepos.configure(state='disabled')
     def updateIncassoPolizzeCartePOS(*args):
         #print("Aggiorna Incasso contanti")
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_polizze_bonifici.get()
         except: b=0
@@ -2101,7 +2108,7 @@ def visualizzaProva():
         entry_saldocassa.configure(state='disabled')
     def updateTotaleSospesi(*args):
         #Aggiorna totale parziale 1
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -2124,7 +2131,7 @@ def visualizzaProva():
         entry_tot_parziale_1.configure(state='disabled')
 
         #print("Aggiorna Incasso contanti")
-        try: g=premiolordo.get()
+        try: g=totale_incassi_vittoria.get()
         except: g=0
         try: h=incasso_polizze_bonifici.get()
         except: h=0
@@ -2163,7 +2170,7 @@ def visualizzaProva():
         entry_tot_generaleuscite.configure(state='disabled')
     def updateAssegni(*args):
         #Aggiorna totale parziale 1
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -2186,7 +2193,7 @@ def visualizzaProva():
         entry_tot_parziale_1.configure(state='disabled')
     def updateIncassoContante(*args):
         #Aggiorna totale parziale 1
-        try: a=premiolordo.get()
+        try: a=totale_incassi_vittoria.get()
         except: a=0
         try: b=incasso_per_conto.get()
         except: b=0
@@ -2227,14 +2234,14 @@ def visualizzaProva():
         entry_tot_generaleuscite.configure(state='disabled')
 
     #VARIABLES DECLARATION
-    premiolordo = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    premiolordo.trace("w", updatePremioLordo)
+    totale_incassi_vittoria = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
+    totale_incassi_vittoria.trace("w", updateIncassiVittoria)
     incasso_per_conto = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
     incasso_per_conto.trace("w", updateIncassoPerConto)
     incasso_das = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
     incasso_das.trace("w", updateIncassoDAS)
     totale_bonifici = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    totale_bonifici.trace("w", updateMovimentiBancari)
+    totale_bonifici.trace("w", updateTotaleBonifici)
     incasso_polizze_bonifici = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))   #totale_bonifici-totale_recupero_sospesi_bonifici
     incasso_polizze_bonifici.trace("w", updateIncassoPolizzeBonifici)
     totale_carte_pos = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
@@ -2243,11 +2250,11 @@ def visualizzaProva():
     incasso_polizze_carte_pos.trace("w", updateIncassoPolizzeCartePOS)
     totale_sospesi = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                      #somma array sospesi
     totale_sospesi.trace("w", updateTotaleSospesi)
-    totale_parziale_1 = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                   #premiolordo+incasso_per_conto+incasso_das-totale_bonifici-totale_carte_pos-totale_sospesi
+    totale_parziale_1 = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                   #totale_incassi_vittoria+incasso_per_conto+incasso_das-totale_bonifici-totale_carte_pos-totale_sospesi
     totale_parziale_1.trace("w", updateTotaleParziale1)
     fondo_cassa_precedente = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
     fondo_cassa_precedente.trace("w", updateFondoCassaPrecedente)
-    incassi_contante = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                    #premiolordo - incasso_polizze_bonifici - incasso_polizze_carte_pos - totale_sospesi
+    incassi_contante = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                    #totale_incassi_vittoria - incasso_polizze_bonifici - incasso_polizze_carte_pos - totale_sospesi
     totale_parziale_2 = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                   #totale_parziale_2 + fondo_cassa_precedente
     totale_parziale_2.trace("w", updateTotaleParziale2)
     totale_recupero_sospesi_contanti = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))    #somma array recupero_sospesi_contanti
@@ -2403,10 +2410,10 @@ def visualizzaProva():
         conn = sqlite3.connect(percorso_database)
         c = conn.cursor()
 
-        saveData("premiolordo", entry_premiolordo, premiolordo, c)
+        saveData("totale_incassi_vittoria", entry_incassi_vittoria, totale_incassi_vittoria, c)
         saveData("incasso_per_conto", entry_incasso_conto, incasso_per_conto, c)
         saveData("incasso_das", entry_incasso_das, incasso_das, c)
-        saveData("totale_bonifici", entry_movimentibancari, totale_bonifici, c)
+        saveData("totale_bonifici", entry_incasso_bonifici, totale_bonifici, c)
         saveData("incasso_polizze_bonifici", entry_incasso_polizzebonifici, incasso_polizze_bonifici, c)
         saveData("totale_carte_pos", entry_incasso_cartepos, totale_carte_pos, c)
         saveData("incasso_polizze_carte_pos", entry_incasso_polizzecartepos, incasso_polizze_carte_pos, c)
@@ -2491,10 +2498,10 @@ def visualizzaProva():
             entry_name.configure(state='normal')
             entry_name.delete('0.0','end')
             entry_name.configure(state='disabled')
-        resetEntry(entry_premiolordo)
+        resetEntry(entry_incassi_vittoria)
         resetEntry(entry_incasso_conto)
         resetEntry(entry_incasso_das)
-        resetEntry(entry_movimentibancari)
+        resetEntry(entry_incasso_bonifici)
         resetEntry(entry_incasso_polizzebonifici)
         resetEntry(entry_incasso_cartepos)
         resetEntry(entry_incasso_polizzecartepos)
@@ -2638,10 +2645,10 @@ def visualizzaProva():
     frame_incassi = ctk.CTkFrame(master=tabview.tab("Incassi"))
     frame_incassi.pack(pady=(20,0))
     #Incassi Vittoria
-    label_premiolordo = ctk.CTkLabel(master=frame_incassi, text="Premio lordo:")
-    label_premiolordo.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
-    entry_premiolordo = ctk.CTkEntry(frame_incassi, textvariable=premiolordo, state='disabled', width=100)
-    entry_premiolordo.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
+    label_incassi_vittoria = ctk.CTkLabel(master=frame_incassi, text="Premio lordo:")
+    label_incassi_vittoria.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    entry_incassi_vittoria = ctk.CTkEntry(frame_incassi, textvariable=totale_incassi_vittoria, state='disabled', width=100)
+    entry_incassi_vittoria.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
     #Incasso per conto
     label_incasso_conto = ctk.CTkLabel(master=frame_incassi, text="Incasso per conto:")
     label_incasso_conto.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
@@ -2653,10 +2660,10 @@ def visualizzaProva():
     entry_incasso_das = ctk.CTkEntry(frame_incassi, textvariable=incasso_das, state='disabled', width=100)
     entry_incasso_das.grid(row=2, column=1, pady=10, padx=20, sticky="nw")
     #Incasso bonifici
-    label_movimentibancari = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
-    label_movimentibancari.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
-    entry_movimentibancari = ctk.CTkEntry(frame_incassi, textvariable=totale_bonifici, state='disabled', width=100)
-    entry_movimentibancari.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
+    label_incasso_bonifici = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
+    label_incasso_bonifici.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    entry_incasso_bonifici = ctk.CTkEntry(frame_incassi, textvariable=totale_bonifici, state='disabled', width=100)
+    entry_incasso_bonifici.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze bonifici
     label_incasso_polizzebonifici = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze bonifici:", font=("Helvetica",14,"bold"))
     label_incasso_polizzebonifici.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
@@ -2859,13 +2866,18 @@ def visualizzaProva():
 
 
     #Frame totali
-    frame_saldo_sospesi = ctk.CTkFrame(master=tabview.tab("Recupero sospesi"))
-    frame_saldo_sospesi.pack(pady=(20,0))
-    #Saldo sospesi
-    label_saldo_sospesi = ctk.CTkLabel(master=frame_saldo_sospesi, text="Saldo sospesi:", font=("Helvetica",14,"bold"))
-    label_saldo_sospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
-    entry_saldo_sospesi = ctk.CTkEntry(frame_saldo_sospesi, textvariable=saldo_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_saldo_sospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
+    frame_recuperosospesi_totali = ctk.CTkFrame(master=tabview.tab("Recupero sospesi"))
+    frame_recuperosospesi_totali.pack(pady=(20,0))
+    #--Totale recupero sospesi--
+    label_tot_recuperosospesi = ctk.CTkLabel(master=frame_recuperosospesi_totali, text="Totale recupero sospesi:", font=("Helvetica",14,"bold"))
+    label_tot_recuperosospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    entry_tot_recuperosospesi = ctk.CTkEntry(frame_recuperosospesi_totali, textvariable=totale_recupero_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_tot_recuperosospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
+    #--Totale cassa contanti--
+    label_tot_cassacontanti = ctk.CTkLabel(master=frame_recuperosospesi_totali, text="Totale cassa contanti:", font=("Helvetica",14,"bold"))
+    label_tot_cassacontanti.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
+    entry_tot_cassacontanti = ctk.CTkEntry(frame_recuperosospesi_totali, textvariable=totale_cassa_contante, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_tot_cassacontanti.grid(row=1, column=1, pady=10, padx=20, sticky="nw")
 
     #----TAB USCITE----
     frame_uscite_abbuoniviva = ctk.CTkFrame(master=tabview.tab("Uscite"))
@@ -3239,10 +3251,10 @@ def visualizzaProva():
         add_versamento.pack(padx=20, pady=(20,0))
         add_uscitamarchirolo.pack(padx=20, pady=(20,0))
     def setEnableDisable(new_state):
-        entry_premiolordo.configure(state=new_state)
+        entry_incassi_vittoria.configure(state=new_state)
         entry_incasso_conto.configure(state=new_state)
         entry_incasso_das.configure(state=new_state)
-        entry_movimentibancari.configure(state=new_state)
+        entry_incasso_bonifici.configure(state=new_state)
         entry_incasso_cartepos.configure(state=new_state)
         entry_abbuoni.configure(state=new_state)
         entry_incasso_contante.configure(state=new_state)
@@ -3325,7 +3337,7 @@ def visualizzaProva():
                 return output
             #Aggiungi tutte le entry
             c.execute("INSERT INTO prova VALUES ('"+data_converted_text+"', "
-                    +str(safeLoad(premiolordo))+", "
+                    +str(safeLoad(totale_incassi_vittoria))+", "
                     +str(safeLoad(incasso_per_conto))+", "
                     +str(safeLoad(incasso_das))+", "
                     +str(safeLoad(totale_bonifici))+", "
