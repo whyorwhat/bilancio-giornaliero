@@ -21,22 +21,23 @@ conn.commit()
 #Crea tabelle se non esistono
 c.execute("""CREATE TABLE IF NOT EXISTS prova(
     data DATE,
-    totale_incassi_vittoria DOUBLE,
-    incasso_per_conto DOUBLE,
-    incasso_das DOUBLE,
-    totale_bonifici DOUBLE,
+    premio_lordo DOUBLE,
+    movimenti_bancari DOUBLE,
     incasso_polizze_bonifici DOUBLE,
     totale_carte_pos DOUBLE,
     incasso_polizze_carte_pos DOUBLE,
+    totale_das_contante DOUBLE,
+    totale_das_bonifico DOUBLE,
+    totale_das_cartepos DOUBLE,
+    totale_das DOUBLE,
+    totale_incassi_per_conto DOUBLE,
     totale_sospesi DOUBLE,
     totale_parziale_1 DOUBLE,
     fondo_cassa_precedente DOUBLE,
     incassi_contante DOUBLE,
-    totale_parziale_2 DOUBLE,
     totale_recupero_sospesi_contanti DOUBLE,
     totale_recupero_sospesi_carte_pos DOUBLE,
     totale_recupero_sospesi_bonifici DOUBLE,
-    totale_recupero_sospesi DOUBLE,
     totale_cassa_contante DOUBLE,
     totale_abbuoni DOUBLE,
     totale_uscite_varie DOUBLE,
@@ -45,12 +46,12 @@ c.execute("""CREATE TABLE IF NOT EXISTS prova(
     fondo_cassa_da_riportare DOUBLE,
     totale_marchirolo DOUBLE,
     saldo_cassa DOUBLE,
-    completato TEXT,
-    incasso_assegni DOUBLE,
-    incasso_contante DOUBLE,
     saldo_sospesi DOUBLE,
     punti_viva DOUBLE,
+    quadratura_contante_cassa_assegno DOUBLE,
+    totale_entrate_cassa_contante DOUBLE,
     commenti TEXT,
+    completato TEXT,
     PRIMARY KEY(data)
     )"""
 )
@@ -774,12 +775,43 @@ def createNuovaProvaView():
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
         entry_tot_parziale_1.configure(state='disabled')
+
+        #Aggiorna totale DAS
+        try: g=totale_das_cartepos.get()
+        except:g=0
+        try: h=totale_das_bonifico.get()
+        except:h=0
+        result=c+g+h
+        entry_totale_das.configure(state='normal')
+        entry_totale_das.delete(0,'end')
+        entry_totale_das.insert('end', "{:.2f}".format(result))
+        entry_totale_das.configure(state='disabled')
     def updateTotaleDasBonifico(*args):
-        print("il totale das bonifici è cambiato e ora aggiorno il resto")
+        #Aggiorna totale DAS
+        try: a=totale_das_contante.get()
+        except: a=0
+        try: b=totale_das_cartepos.get()
+        except:b=0
+        try: c=totale_das_bonifico.get()
+        except:c=0
+        result=a+b+c
+        entry_totale_das.configure(state='normal')
+        entry_totale_das.delete(0,'end')
+        entry_totale_das.insert('end', "{:.2f}".format(result))
+        entry_totale_das.configure(state='disabled')
     def updateTotaleDasCartePOS(*args):
-        print("il totale das carte è cambiato e ora aggiorno il resto")
-    def updateDAS(*args):
-        print("il totale das è cambiato e ora aggiorno il resto")
+        #Aggiorna totale DAS
+        try: a=totale_das_contante.get()
+        except: a=0
+        try: b=totale_das_cartepos.get()
+        except:b=0
+        try: c=totale_das_bonifico.get()
+        except:c=0
+        result=a+b+c
+        entry_totale_das.configure(state='normal')
+        entry_totale_das.delete(0,'end')
+        entry_totale_das.insert('end', "{:.2f}".format(result))
+        entry_totale_das.configure(state='disabled')
     def updateTotaleEntrateCassaContante(*args):
         #Aggiorna fondo cassa da riportare
         try: a=totale_entrate_cassa_contante.get()
@@ -812,7 +844,6 @@ def createNuovaProvaView():
     totale_das_cartepos = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
     totale_das_cartepos.trace("w", updateTotaleDasCartePOS)
     totale_das = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
-    totale_das.trace("w", updateDAS)
     totale_incassi_per_conto = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
     totale_incassi_per_conto.trace("w", updateTotaleIncassoPerConto)
     totale_sospesi = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
@@ -1561,22 +1592,23 @@ def createNuovaProvaView():
                     return output
                 #Aggiungi tutte le entry
                 c.execute("INSERT INTO prova VALUES ('"+data_converted_text+"', "
-                        +str(safeLoad(totale_incassi_vittoria))+", "
-                        +str(safeLoad(incasso_per_conto))+", "
-                        +str(safeLoad(incasso_das))+", "
-                        +str(safeLoad(totale_bonifici))+", "
+                        +str(safeLoad(premio_lordo))+", "
+                        +str(safeLoad(movimenti_bancari))+", "
                         +str(safeLoad(incasso_polizze_bonifici))+", "
                         +str(safeLoad(totale_carte_pos))+", "
                         +str(safeLoad(incasso_polizze_carte_pos))+", "
+                        +str(safeLoad(totale_das_contante))+", "
+                        +str(safeLoad(totale_das_bonifico))+", "
+                        +str(safeLoad(totale_das_cartepos))+", "
+                        +str(safeLoad(totale_das))+", "
+                        +str(safeLoad(totale_incassi_per_conto))+", "
                         +str(safeLoad(totale_sospesi))+", "
                         +str(safeLoad(totale_parziale_1))+", "
                         +str(safeLoad(fondo_cassa_precedente))+", "
                         +str(safeLoad(incassi_contante))+", "
-                        +str(safeLoad(totale_parziale_2))+", "
                         +str(safeLoad(totale_recupero_sospesi_contanti))+", "
                         +str(safeLoad(totale_recupero_sospesi_carte_pos))+", "
                         +str(safeLoad(totale_recupero_sospesi_bonifici))+", "
-                        +str(safeLoad(totale_recupero_sospesi))+", "
                         +str(safeLoad(totale_cassa_contante))+", "
                         +str(safeLoad(totale_abbuoni))+", "
                         +str(safeLoad(totale_uscite_varie))+", "
@@ -1584,13 +1616,13 @@ def createNuovaProvaView():
                         +str(safeLoad(totale_generale_uscite))+", "
                         +str(safeLoad(fondo_cassa_da_riportare))+", "
                         +str(safeLoad(totale_marchirolo))+", "
-                        +str(safeLoad(saldo_cassa))+
-                        ", 'false', "
-                        +str(safeLoad(incasso_assegni))+", "
-                        +str(safeLoad(incasso_contante))+", "
+                        +str(safeLoad(saldo_cassa))+", "
                         +str(safeLoad(saldo_sospesi))+", "
                         +str(safeLoad(punti_viva))+", "
-                        +"'"+str(entry_commenti.get('0.0','end'))+"'"+")"
+                        +str(safeLoad(quadratura_contante_cassa_assegno))+", "
+                        +str(safeLoad(totale_entrate_cassa_contante))+", "
+                        +"'"+str(entry_commenti.get('0.0','end'))+"',"+
+                        " 'false')"
                 )
                 conn.commit()
                 
@@ -1678,7 +1710,58 @@ def createNuovaProvaView():
                             )
                     except:
                         print("Entries vuote non caricate")
-                conn.commit()  
+                conn.commit()
+
+                for valore, causale in zip(lista_das_contanti, lista_das_contanti_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'das_contanti', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()
+                for valore, causale in zip(lista_das_cartepos, lista_das_cartepos_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'das_cartepos', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()
+                for valore, causale in zip(lista_das_bonifico, lista_das_bonifico_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'das_bonifico', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()
+                for valore, causale in zip(lista_incassi_per_conto, lista_incassi_per_conto_causali):
+                    try:
+                        if valore.get() != "" and causale.get() != "":
+                            c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                    +"'incassi_per_conto', "
+                                    +str(valore.get())+", '"
+                                    +causale.get()+
+                                    "')"
+                            )
+                    except:
+                        print("Entries vuote non caricate")
+                conn.commit()
+
+
 
                 conn.close()
                 showConfirmMessage(creaprova, "Caricamento completato", "Dati correttamente aggiunti al database", "check", True)
