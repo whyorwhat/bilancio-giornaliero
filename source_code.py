@@ -1160,18 +1160,13 @@ def createNuovaProvaView():
 
 
     #Frame totali
-    frame_recuperosospesi_totali = ctk.CTkFrame(master=tabview.tab("Recupero sospesi"))
-    frame_recuperosospesi_totali.pack(pady=(20,0))
-    #--Totale recupero sospesi--
-    label_tot_recuperosospesi = ctk.CTkLabel(master=frame_recuperosospesi_totali, text="Totale recupero sospesi:", font=("Helvetica",14,"bold"))
-    label_tot_recuperosospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
-    entry_tot_recuperosospesi = ctk.CTkEntry(frame_recuperosospesi_totali, textvariable=totale_recupero_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_tot_recuperosospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
-    #--Totale cassa contanti--
-    label_tot_cassacontanti = ctk.CTkLabel(master=frame_recuperosospesi_totali, text="Totale cassa contanti:", font=("Helvetica",14,"bold"))
-    label_tot_cassacontanti.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
-    entry_tot_cassacontanti = ctk.CTkEntry(frame_recuperosospesi_totali, textvariable=totale_cassa_contante, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_tot_cassacontanti.grid(row=1, column=1, pady=10, padx=20, sticky="nw")
+    frame_saldo_sospesi = ctk.CTkFrame(master=tabview.tab("Recupero sospesi"))
+    frame_saldo_sospesi.pack(pady=(20,0))
+    #Saldo sospesi
+    label_saldo_sospesi = ctk.CTkLabel(master=frame_saldo_sospesi, text="Saldo sospesi:", font=("Helvetica",14,"bold"))
+    label_saldo_sospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    entry_saldo_sospesi = ctk.CTkEntry(frame_saldo_sospesi, textvariable=saldo_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_saldo_sospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
 
     #----TAB USCITE----
     frame_uscite_abbuoniviva = ctk.CTkFrame(master=tabview.tab("Uscite"))
@@ -1341,13 +1336,6 @@ def createNuovaProvaView():
     entry_incassicontante.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     explain_incassi_contante = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 2 + tot. rec. sosp. contante", text_color="#969595", font=("Helvetica",13))
     explain_incassi_contante.grid(row=3, column=2, pady=10, padx=20, sticky="nw")
-    #Saldo sospesi
-    label_saldo_sospesi = ctk.CTkLabel(master=frame_resoconto, text="Saldo sospesi:", font=("Helvetica",14,"bold"))
-    label_saldo_sospesi.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
-    entry_saldo_sospesi = ctk.CTkEntry(frame_resoconto, textvariable=saldo_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_saldo_sospesi.grid(row=4, column=1, pady=10, padx=20, sticky="nw")
-    explain_saldo_sospesi = ctk.CTkLabel(master=frame_resoconto, text="Sospesi - rec. sospesi", text_color="#969595", font=("Helvetica",13))
-    explain_saldo_sospesi.grid(row=4, column=2, pady=10, padx=20, sticky="nw")
     #Totale parziale 2
     label_tot_parziale_2 = ctk.CTkLabel(master=frame_resoconto, text="Totale parziale 2:", font=("Helvetica",14,"bold"))
     label_tot_parziale_2.grid(row=5, column=0, pady=10, padx=20, sticky="ne")
@@ -2871,18 +2859,13 @@ def visualizzaProva():
 
 
     #Frame totali
-    frame_recuperosospesi_totali = ctk.CTkFrame(master=tabview.tab("Recupero sospesi"))
-    frame_recuperosospesi_totali.pack(pady=(20,0))
-    #--Totale recupero sospesi--
-    label_tot_recuperosospesi = ctk.CTkLabel(master=frame_recuperosospesi_totali, text="Totale recupero sospesi:", font=("Helvetica",14,"bold"))
-    label_tot_recuperosospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
-    entry_tot_recuperosospesi = ctk.CTkEntry(frame_recuperosospesi_totali, textvariable=totale_recupero_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_tot_recuperosospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
-    #--Totale cassa contanti--
-    label_tot_cassacontanti = ctk.CTkLabel(master=frame_recuperosospesi_totali, text="Totale cassa contanti:", font=("Helvetica",14,"bold"))
-    label_tot_cassacontanti.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
-    entry_tot_cassacontanti = ctk.CTkEntry(frame_recuperosospesi_totali, textvariable=totale_cassa_contante, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_tot_cassacontanti.grid(row=1, column=1, pady=10, padx=20, sticky="nw")
+    frame_saldo_sospesi = ctk.CTkFrame(master=tabview.tab("Recupero sospesi"))
+    frame_saldo_sospesi.pack(pady=(20,0))
+    #Saldo sospesi
+    label_saldo_sospesi = ctk.CTkLabel(master=frame_saldo_sospesi, text="Saldo sospesi:", font=("Helvetica",14,"bold"))
+    label_saldo_sospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    entry_saldo_sospesi = ctk.CTkEntry(frame_saldo_sospesi, textvariable=saldo_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_saldo_sospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
 
     #----TAB USCITE----
     frame_uscite_abbuoniviva = ctk.CTkFrame(master=tabview.tab("Uscite"))
