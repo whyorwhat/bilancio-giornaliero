@@ -1349,18 +1349,59 @@ def createNuovaProvaView():
             #Se la cartella della categoria non esiste, creala
             if not os.path.exists(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()):     
                 os.makedirs(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get())
-            #Se dai un nuovo nome al file
-            if(new_filename != ""):
-                #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
-                #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
-                shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
-            #Altrimenti spostalo con lo stesso nome
+            #Controlla se è un versamento. Se si, il nome del file deve essere uguale ad una causale esistente e poi lo carica. Altrimenti manda un avviso
+            if entry_outputcategory.get() == "Versamenti":
+                causale_trovata = False
+                #Salva i nomi delle causali nella lista causali_versamenti
+                causali_versamenti=[]
+                isvalore = True
+                for child in frame_versamenti.winfo_children():                #Scorri ogni elemento nel frame-padre
+                    if isinstance(child, ctk.CTkFrame):             #Se è un sotto-frame
+                        for child2 in child.winfo_children():       #scorri ogni elemento nel sotto-frame
+                            if isinstance(child2, ctk.CTkEntry):    #se è una entry
+                                if isvalore==True:                  #ed è il valore, la prossima entry sarà la causale
+                                    isvalore=False
+                                else:                               #altrimenti è la causale: se è vuota ritorna "True", altrimenti la prossima entry sarà il valore
+                                    causali_versamenti.append(child2.get())
+                                    isvalore = True
+                #SE DAI UN NUOVO NOME AL FILE
+                if(new_filename != ""):
+                    #Cerca un nome del file
+                    for item in causali_versamenti:
+                        if new_filename == item:
+                            causale_trovata = True                                
+                    if causale_trovata == True:
+                        shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
+                        showConfirmMessage(creaprova,"Successo","Documento correttamente caricato", "check", False)
+                        frame.destroy()
+                    else:
+                        showConfirmMessage(creaprova,"Attenzione","Il nome non corrisponde a nessuna causale", "warning", False)
+                #ALTRIMENTI SPOSTALO CON LO STESSO NOME
+                else:
+                    for item in causali_versamenti:
+                        if tail[:-4] == item:
+                            causale_trovata = True  
+                    if causale_trovata == True:
+                        shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
+                        showConfirmMessage(creaprova,"Successo","Documento correttamente caricato", "check", False)
+                        frame.destroy()
+                    else:
+                        showConfirmMessage(creaprova,"Attenzione","Il nome non corrisponde a nessuna causale", "warning", False)
             else:
-                #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
-                #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
-                shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
-            showConfirmMessage(creaprova, "Successo","Documento correttamente caricato", "check", False)
-            frame.destroy()
+                #Se dai un nuovo nome al file
+                if(new_filename != ""):
+                    #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
+                    #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
+                    shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
+                    showConfirmMessage(creaprova,"Successo","Documento correttamente caricato", "check", False)
+                    frame.destroy()
+                #Altrimenti spostalo con lo stesso nome
+                else:
+                    #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
+                    #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
+                    shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
+                    showConfirmMessage(creaprova,"Successo","Documento correttamente caricato", "check", False)
+                    frame.destroy()
         frame = ctk.CTkFrame(tabview.tab("Documenti"))
         frame.pack(padx=20, pady=10)
         input_button = ctk.CTkButton(frame, text="Sfoglia", command=chooseFile, width=60)
