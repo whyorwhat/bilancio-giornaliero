@@ -2248,7 +2248,7 @@ def visualizzaProva():
         saveData("totale_incassi_per_conto", entry_totale_incassi_per_conto, totale_incassi_per_conto, c)
         saveData("totale_sospesi", entry_sospesi, totale_sospesi, c)
         saveData("totale_parziale_1", entry_tot_parziale_1, totale_parziale_1, c)
-        saveData("fondo_cassa_precedente", entry_cassaprecedente, fondo_cassa_precedente, c)
+        #saveData("fondo_cassa_precedente", entry_cassaprecedente, fondo_cassa_precedente, c)
         saveData("totale_recupero_sospesi_contanti", entry_tot_contante_recuperato, totale_recupero_sospesi_contanti, c)
         saveData("totale_recupero_sospesi_carte_pos", entry_tot_cartapos_recuperato, totale_recupero_sospesi_carte_pos, c)
         saveData("totale_recupero_sospesi_bonifici", entry_tot_bonifici_recuperato, totale_recupero_sospesi_bonifici, c)
@@ -2277,16 +2277,22 @@ def visualizzaProva():
         saveDataList(frame_uscite_varie, "uscite_varie", updateUsciteVarie, c)
         saveDataList(frame_versamenti, "uscite_versamenti", updateVersamenti, c)
         saveDataList(frame_marchirolo, "marchirolo", updateMarchirolo, c)
-        
 
         #Converti data
         data_converted = (calendar.get_date()).split('-')
         data_converted_text=""
         data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
-        #Aggiorna fondo cassa precedente
+        #CARICA FONDO CASSA PRECEDENTE
+        #Salva Totale entrate cassa contante per confrontarlo dopo per verificare se è cambiato il fondo cassa da riportare del giorno precedente
+        previous_totale_entrate_cassa_contante = entry_totale_entrate_cassa_contante.get()
         c.execute("SELECT data, fondo_cassa_da_riportare FROM prova WHERE data<'"+data_converted_text+"' ORDER BY data DESC LIMIT 1")
         rows=c.fetchall()
         if len(rows)==0:
+            #Reset entry cassa_precedente
+            entry_cassaprecedente.configure(state='normal')
+            entry_cassaprecedente.delete(0,'end')
+            entry_cassaprecedente.insert('end', "{:.2f}".format(0))
+            entry_cassaprecedente.configure(state='disabled')
             label_cassaprecedente.unbind("<Enter>")
             label_cassaprecedente.unbind("<Leave>")
             CreateToolTip(label_cassaprecedente, text="Non trovato")
@@ -2297,10 +2303,44 @@ def visualizzaProva():
                 data_converted2 = (data_precedente).split('-')
                 data_converted_text2=""
                 data_converted_text2=data_converted2[2]+"-"+data_converted2[1]+"-"+data_converted2[0]
+                #Aggiorna entry_cassa precedente
+                entry_cassaprecedente.configure(state='normal')
+                entry_cassaprecedente.delete(0,'end')
+                entry_cassaprecedente.insert('end', "{:.2f}".format(fondo_cassa_da_riportare_precedente))
+                entry_cassaprecedente.configure(state='disabled')
                 #Cambia info sul giorno nella label cassa precedente: rimuovi il bind sulla label del vecchio tooltip e creane uno nuovo
                 label_cassaprecedente.unbind("<Enter>")
                 label_cassaprecedente.unbind("<Leave>")
                 CreateToolTip(label_cassaprecedente, text="Del "+data_converted_text2)
+        #Manda avviso se il fondo cassa precedente è cambiato
+        #Aggiorna Totale entrate cassa contante. Se è cambiato, significa che il fondo cassa precedente è cambiato
+        updateFondoCassaPrecedente()
+        if entry_totale_entrate_cassa_contante.get() != previous_totale_entrate_cassa_contante:
+            def yes():
+                saveButton()
+                message_window.destroy()
+            def no():
+                message_window.destroy()
+            message_window = ctk.CTkToplevel(visualizzaprova)
+            message_window.grab_set()   #Setta finestra sopra il frame principale
+            message_window.title("Attenzione")
+            message_window.iconbitmap(percorso_applicazione+"app_icon.ico")
+            ws = message_window.winfo_screenwidth()
+            hs = message_window.winfo_screenheight()
+            x = (ws/2) - (450/2)
+            y = (hs/2) - (250/2)
+            message_window.geometry('%dx%d+%d+%d' % (450, 250, x, y))
+            message_window.minsize(450, 250)
+            message_window.maxsize(450, 250)
+            icon = ctk.CTkLabel(message_window, text="", image=warning_icon)
+            icon.pack(pady=(15,0), padx=20)
+            message = ctk.CTkLabel(message_window, text="FONDO CASSA PRECEDENTE CAMBIATO\n\nCaricando il fondo cassa precedente, i calcoli sono cambiati\nrispetto a quanto salvato precedentemente nel database.\n Forse hai modificato qualcosa nei giorni precedenti.\nVuoi caricare questi nuovi calcoli nel database?", font=("Helvetica",14))
+            message.pack(pady=(0,10), padx=20)
+            no_button = ctk.CTkButton(message_window, text="No", fg_color="#A52A2A", hover_color="#EC3737", width=50, command=no)
+            no_button.pack(side="left", pady=(0,5), padx=(110,0))
+            yes_button = ctk.CTkButton(message_window, text="Si", fg_color="#809d5f", hover_color="#B7C019", width=50, command=yes)
+            yes_button.pack(side="right", pady=(0,5), padx=(0,110))
+
 
         #Prendi prova completata si/no
         c.execute("SELECT completato FROM prova WHERE data='"+data_converted_text+"'")
