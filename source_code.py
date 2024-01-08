@@ -2419,7 +2419,7 @@ def visualizzaProva():
     frame_das.pack()
 
     #--DAS contanti--
-    frame_das_contante = ctk.CTkFrame(master=frame_das)
+    frame_das_contante = ctk.CTkFrame(master=frame_das, height=50)
     frame_das_contante.pack()
     def addDasContante():
         #Elimina sospeso contante
@@ -2451,7 +2451,7 @@ def visualizzaProva():
     entry_totale_das_contante.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
     
     #--DAS carte/pos--
-    frame_das_cartepos = ctk.CTkFrame(master=frame_das)
+    frame_das_cartepos = ctk.CTkFrame(master=frame_das, height=50)
     frame_das_cartepos.pack()
     def addDasCartePOS():
         #Elimina sospeso contante
@@ -2483,7 +2483,7 @@ def visualizzaProva():
     entry_totale_das_cartepos.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
 
     #--DAS bonifico--
-    frame_das_bonifico = ctk.CTkFrame(master=frame_das)
+    frame_das_bonifico = ctk.CTkFrame(master=frame_das, height=50)
     frame_das_bonifico.pack()
     def addDasBonifico():
         #Elimina sospeso contante
@@ -2597,7 +2597,7 @@ def visualizzaProva():
     frame_recuperosospesi = ctk.CTkScrollableFrame(master=tabview.tab("Recupero sospesi"), width=500, height=480, border_color="black", border_width=1)
     frame_recuperosospesi.pack()
     #--Sospeso recuperato CONTANTI--
-    frame_recuperosospesi_contante = ctk.CTkFrame(master=frame_recuperosospesi)
+    frame_recuperosospesi_contante = ctk.CTkFrame(master=frame_recuperosospesi, height=50)
     frame_recuperosospesi_contante.pack()
 
     def addSospContante():
@@ -2631,7 +2631,7 @@ def visualizzaProva():
     entry_tot_contante_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
 
     #--Sospeso recuperato CARTE/POS--
-    frame_recuperosospesi_cartapos = ctk.CTkFrame(master=frame_recuperosospesi)
+    frame_recuperosospesi_cartapos = ctk.CTkFrame(master=frame_recuperosospesi, height=50)
     frame_recuperosospesi_cartapos.pack()
 
     def addSospCartePOS():
@@ -2664,7 +2664,7 @@ def visualizzaProva():
     entry_tot_cartapos_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
 
     #--Sospeso recuperato bonifici--
-    frame_recuperosospesi_bonifici = ctk.CTkFrame(master=frame_recuperosospesi)
+    frame_recuperosospesi_bonifici = ctk.CTkFrame(master=frame_recuperosospesi, height=50)
     frame_recuperosospesi_bonifici.pack()
 
     def addSospBonifici():
@@ -2723,7 +2723,7 @@ def visualizzaProva():
     frame_uscitevarieandversamenti = ctk.CTkScrollableFrame(master = tabview.tab("Uscite"), width=500, height=400, border_color="black", border_width=1)
     frame_uscitevarieandversamenti.pack()
     #--Aggiungi VERSAMENTI--
-    frame_versamenti = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
+    frame_versamenti = ctk.CTkFrame(master=frame_uscitevarieandversamenti, height=50)
     frame_versamenti.pack()
     def addVersamento():
         #Elimina sospeso contante
@@ -2755,7 +2755,7 @@ def visualizzaProva():
     entry_tot_versamenti.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
 
     #--Aggiungi USCITE VARIE--
-    frame_uscite_varie = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
+    frame_uscite_varie = ctk.CTkFrame(master=frame_uscitevarieandversamenti, height=50)
     frame_uscite_varie.pack()
     def addUsciteVarie():
         #Elimina uscita varia
