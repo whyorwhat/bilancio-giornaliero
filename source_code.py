@@ -1312,7 +1312,7 @@ def createNuovaProvaView():
     frame_resoconto = ctk.CTkFrame(master=tabview.tab("Resoconto"))
     frame_resoconto.pack(pady=(20,0))
     #Totale parziale 1
-    label_tot_parziale_1 = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 1 | Cassa contanti:", font=("Helvetica",14,"bold"))
+    label_tot_parziale_1 = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 1 (cassa contanti):", font=("Helvetica",14,"bold"))
     label_tot_parziale_1.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
     CreateToolTip(label_tot_parziale_1, text="Premio lordo + tot. incasso per conto + DAS contanti - incasso polizze bonifici- incasso polizze carte/POS - tot. sospesi")
     entry_tot_parziale_1 = ctk.CTkEntry(frame_resoconto, textvariable=totale_parziale_1, state='disabled', font=("Helvetica",15,"bold"), width=100)
@@ -2926,7 +2926,7 @@ def visualizzaProva():
     frame_resoconto = ctk.CTkFrame(master=tabview.tab("Resoconto"))
     frame_resoconto.pack(pady=(20,0))
     #Totale parziale 1
-    label_tot_parziale_1 = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 1 | Cassa contanti:", font=("Helvetica",14,"bold"))
+    label_tot_parziale_1 = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 1 (cassa contanti):", font=("Helvetica",14,"bold"))
     label_tot_parziale_1.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
     CreateToolTip(label_tot_parziale_1, text="Premio lordo + tot. incasso per conto + DAS contanti - incasso polizze bonifici- incasso polizze carte/POS - tot. sospesi")
     entry_tot_parziale_1 = ctk.CTkEntry(frame_resoconto, textvariable=totale_parziale_1, state='disabled', font=("Helvetica",15,"bold"), width=100)
