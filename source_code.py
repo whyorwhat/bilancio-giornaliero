@@ -291,8 +291,6 @@ def createNuovaProvaView():
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
         entry_tot_parziale_1.configure(state='disabled')
-    def updateIncassoPerConto(*args):
-        updateLista(frame_incasso_per_conto, entry_totale_incassi_per_conto)
     def updateTotaleIncassoPerConto(*args):
         #Aggiorna totale parziale 1
         try: a=premio_lordo.get()
@@ -538,6 +536,8 @@ def createNuovaProvaView():
         entry_saldocassa.delete(0,'end')
         entry_saldocassa.insert('end', "{:.2f}".format(result))
         entry_saldocassa.configure(state='disabled')
+    def updateIncassoPerConto(*args):
+        updateLista(frame_incasso_per_conto, entry_totale_incassi_per_conto)
     def updateSospesi(*args):
         updateLista(frame_sospesi, entry_sospesi)
     def updateRecuperoContanti(*args):
@@ -1458,7 +1458,7 @@ def createNuovaProvaView():
                 )
                 conn.commit()
                 
-                #Scorri lista e aggiungi: is valore alterna 
+                #Scorri lista e aggiungi: is valore si alterna tra True e False
                 def listToDatabase(frame, categoria):
                     isvalore = True
                     for child in frame.winfo_children():                #Scorri ogni elemento nel frame-padre
@@ -1535,6 +1535,25 @@ def visualizzaProva():
 
 
     #CAMBIAMENTO DI VARIABILI: Le seguenti variabili sono associate ad una variabile. Quando questa cambia valore, permette di aggiornare altre entries, come specificato all'interno di ogni def
+    def updateLista(nome_frame, entry):
+        somma=0
+        isvalore = True
+        for child in nome_frame.winfo_children():           #Scorri ogni elemento nel frame-padre
+            if isinstance(child, ctk.CTkFrame):             #Se è un sotto-frame
+                for child2 in child.winfo_children():       #scorri ogni elemento nel sotto-frame
+                    if isinstance(child2, ctk.CTkEntry):    #se è una entry
+                        if isvalore==True:                  #ed è il valore, aggiorna somma. la prossima entry sarà la causale
+                            try: valore=float(child2.get())
+                            except: valore=0
+                            somma=somma+valore   
+                            isvalore=False
+                        else:                               #altrimenti è la causale: la prossima entry sarà il valore
+                            isvalore = True
+        entry.configure(state='normal')                     #Aggiorna la entry
+        entry.delete(0,'end')
+        entry.insert('end', "{:.2f}".format(somma))
+        entry.configure(state='disabled')
+
     def updatePremioLordo(*args):
         #Aggiorna totale parziale 1
         try: a=premio_lordo.get()
@@ -1554,16 +1573,6 @@ def visualizzaProva():
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
         entry_tot_parziale_1.configure(state='disabled')
-    def updateIncassoPerConto(*args):
-        somma=0
-        for item in new_lista_incassi_per_conto:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_totale_incassi_per_conto.configure(state='normal')
-        entry_totale_incassi_per_conto.delete(0,'end')
-        entry_totale_incassi_per_conto.insert('end', "{:.2f}".format(somma))
-        entry_totale_incassi_per_conto.configure(state='disabled')
     def updateTotaleIncassoPerConto(*args):
         #Aggiorna totale parziale 1
         try: a=premio_lordo.get()
@@ -1809,114 +1818,34 @@ def visualizzaProva():
         entry_saldocassa.delete(0,'end')
         entry_saldocassa.insert('end', "{:.2f}".format(result))
         entry_saldocassa.configure(state='disabled')
+    def updateIncassoPerConto(*args):
+        updateLista(frame_incasso_per_conto, entry_totale_incassi_per_conto)
     def updateSospesi(*args):
-        #print("Aggiorna totale sospesi:")
-        somma=0
-        for item in new_lista_sospesi_values:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_sospesi.configure(state='normal')
-        entry_sospesi.delete(0,'end')
-        entry_sospesi.insert('end', "{:.2f}".format(somma))
-        entry_sospesi.configure(state='disabled')
+        updateLista(frame_sospesi, entry_sospesi)
     def updateRecuperoContanti(*args):
         #Aggiorna totale recupero sospesi contanti
-        somma=0
-        for item in new_lista_recupero_contanti:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_contante_recuperato.configure(state='normal')
-        entry_tot_contante_recuperato.delete(0,'end')
-        entry_tot_contante_recuperato.insert('end', "{:.2f}".format(somma))
-        entry_tot_contante_recuperato.configure(state='disabled')
+        updateLista(frame_recuperosospesi_contante, entry_tot_contante_recuperato)
     def updateRecuperoCartePOS(*args):
         #Aggiorna totale recupero sospesi carte/pos
-        somma=0
-        for item in new_lista_recupero_cartepos:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_cartapos_recuperato.configure(state='normal')
-        entry_tot_cartapos_recuperato.delete(0,'end')
-        entry_tot_cartapos_recuperato.insert('end', "{:.2f}".format(somma))
-        entry_tot_cartapos_recuperato.configure(state='disabled')
+        updateLista(frame_recuperosospesi_cartapos, entry_tot_cartapos_recuperato)
     def updateRecuperoBonifici(*args):
         #Aggiorna totale recupero sospesi carte/pos
-        somma=0
-        for item in new_lista_recupero_bonifici:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_bonifici_recuperato.configure(state='normal')
-        entry_tot_bonifici_recuperato.delete(0,'end')
-        entry_tot_bonifici_recuperato.insert('end', "{:.2f}".format(somma))
-        entry_tot_bonifici_recuperato.configure(state='disabled')
+        updateLista(frame_recuperosospesi_bonifici, entry_tot_bonifici_recuperato)
     def updateUsciteVarie(*args):
         #Aggiorna totale uscite varie
-        somma=0
-        for item in new_lista_uscite_varie:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_uscite_varie.configure(state='normal')
-        entry_tot_uscite_varie.delete(0,'end')
-        entry_tot_uscite_varie.insert('end', "{:.2f}".format(somma))
-        entry_tot_uscite_varie.configure(state='disabled')
+        updateLista(frame_uscite_varie, entry_tot_uscite_varie)
     def updateVersamenti(*args):
         #Aggiorna totale versamenti
-        somma=0
-        for item in new_lista_versamenti:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_versamenti.configure(state='normal')
-        entry_tot_versamenti.delete(0,'end')
-        entry_tot_versamenti.insert('end', "{:.2f}".format(somma))
-        entry_tot_versamenti.configure(state='disabled')
+        updateLista(frame_versamenti, entry_tot_versamenti)
     def updateMarchirolo(*args):
         #Aggiorna totale marchirolo
-        somma=0
-        for item in new_lista_marchirolo:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_marchirolo.configure(state='normal')
-        entry_tot_marchirolo.delete(0,'end')
-        entry_tot_marchirolo.insert('end', "{:.2f}".format(somma))
-        entry_tot_marchirolo.configure(state='disabled')
+        updateLista(frame_marchirolo, entry_tot_marchirolo)
     def updateDasContanti(*args):
-        somma=0
-        for item in new_lista_das_contanti:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_totale_das_contante.configure(state='normal')
-        entry_totale_das_contante.delete(0,'end')
-        entry_totale_das_contante.insert('end', "{:.2f}".format(somma))
-        entry_totale_das_contante.configure(state='disabled')
+        updateLista(frame_das_contante, entry_totale_das_contante)
     def updateDasCartePOS(*args):
-        somma=0
-        for item in new_lista_das_cartepos:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_totale_das_cartepos.configure(state='normal')
-        entry_totale_das_cartepos.delete(0,'end')
-        entry_totale_das_cartepos.insert('end', "{:.2f}".format(somma))
-        entry_totale_das_cartepos.configure(state='disabled')
+        updateLista(frame_das_cartepos, entry_totale_das_cartepos)
     def updateDasBonifici(*args):
-        somma=0
-        for item in new_lista_das_bonifico:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_totale_das_bonifico.configure(state='normal')
-        entry_totale_das_bonifico.delete(0,'end')
-        entry_totale_das_bonifico.insert('end', "{:.2f}".format(somma))
-        entry_totale_das_bonifico.configure(state='disabled')
-
+        updateLista(frame_das_bonifico, entry_totale_das_bonifico)
     def updateTotaleMarchirolo(*args):
         #print("Aggiorna saldo cassa")
         try: a=fondo_cassa_da_riportare.get()
@@ -2172,41 +2101,6 @@ def visualizzaProva():
             ctk_entry.configure(state='normal')
             ctk_entry.insert('0.0', "\n".join(item))
             ctk_entry.configure(state='disabled')
-
-
-    '''def ricercaPosizioneEntry(frame_name, nome_entry):
-        posizione = 0
-        isvalore = 0
-        for child in frame_name.winfo_children():
-            if isinstance(child, ctk.CTkFrame):
-                for child2 in child.winfo_children():
-                    if isinstance(child2, ctk.CTkLabel):
-                        if isvalore==2:
-                            labelavalue = child2.cget("text")
-                            print("if", str(labelavalue), " = ", str(nome_entry))
-                            if str(labelavalue) == str(nome_entry):
-                                print ("La posizione cercata è: ", posizione)
-                                return posizione
-                            else:
-                                print("false")
-                                posizione = posizione + 1
-                            isvalore = 0
-                        else:
-                            isvalore = isvalore + 1
-    
-    def destroy(frame_import, nomeposizione, new_lista_values, new_lista_causali):
-        pos = ricercaPosizioneEntry (frame_import, nomeposizione.cget("text"))
-        print("Sto eliminando il valore alla posizione: ", pos, " che ha valore:")
-        ind = 0
-        for item in new_lista_values:
-            if ind == pos:
-                print(item.get())
-            ind = ind + 1
-        new_lista_values.pop(pos)
-        new_lista_causali.pop(pos)
-        frame.pack_forget()
-        defUpdate()
-        print("Elemento eliminato dalla lista")'''
     
     def aggiornaTutteLeEntries(*args):
         updateSospesi()
@@ -2220,18 +2114,13 @@ def visualizzaProva():
         updateDasCartePOS()
         updateDasBonifici()
         updateIncassoPerConto()
-    def destroy(nome_frame, posizione, lista_valori, lista_causali):
-        print(posizione)
-        #lista_valori.pop(posizione)
-        #lista_causali.pop(posizione)
-        lista_valori[posizione] = ""
-        lista_causali[posizione] = ""
+    def destroy(nome_frame, posizione):
         nome_frame.destroy()
         aggiornaTutteLeEntries()
         
 
     #SELECT dalle liste del database e aggiorna lista
-    def saveDataList(frame_import, categoria, new_lista_values, new_lista_causali, defUpdate, c):
+    def saveDataList(frame_import, categoria, defUpdate, c):
         #Converti data
         data_converted = (calendar.get_date()).split('-')
         data_converted_text=""
@@ -2253,11 +2142,8 @@ def visualizzaProva():
                 ent2.insert('end', causale)
                 ent2.grid(row=1, column=1)
                 ent2.configure(state='disabled')
-                delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=lambda f=nomeentry: destroy(frame, f, new_lista_values, new_lista_causali), state="disabled")
+                delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=lambda f=nomeentry: destroy(frame, f), state="disabled")
                 delete_button.grid(row=1, column=2)
-                new_lista_values.append(var1)
-                new_lista_causali.append(ent2)
-
         for valore,causale in rows:
             createFrame(valore, causale)
             nomeentry = nomeentry + 1
@@ -2298,17 +2184,17 @@ def visualizzaProva():
         saveData("totale_entrate_cassa_contante", entry_totale_entrate_cassa_contante, totale_entrate_cassa_contante, c)
         saveDataTextBox("commenti", entry_commenti, c)
 
-        saveDataList(frame_das_contante, "das_contanti", new_lista_das_contanti, new_lista_das_contanti_causali, updateDasContanti, c)
-        saveDataList(frame_das_cartepos, "das_cartepos", new_lista_das_cartepos, new_lista_das_cartepos_causali, updateDasCartePOS, c)
-        saveDataList(frame_das_bonifico, "das_bonifico", new_lista_das_bonifico, new_lista_das_bonifico_causali, updateDasBonifici, c)
-        saveDataList(frame_incasso_per_conto, "incasso_per_conto", new_lista_incassi_per_conto, new_lista_incassi_per_conto_causali, updateIncassoPerConto, c)
-        saveDataList(frame_sospesi, "sospesi", new_lista_sospesi_values, new_lista_sospesi_causali, updateSospesi, c)
-        saveDataList(frame_recuperosospesi_contante, "recupero_contanti", new_lista_recupero_contanti, new_lista_recupero_contanti_causali, updateRecuperoContanti, c)
-        saveDataList(frame_recuperosospesi_cartapos, "recupero_cartepos", new_lista_recupero_cartepos, new_lista_recupero_cartepos_causali, updateRecuperoCartePOS, c)
-        saveDataList(frame_recuperosospesi_bonifici, "recupero_bonifici", new_lista_recupero_bonifici, new_lista_recupero_bonifici_causali, updateRecuperoBonifici, c)
-        saveDataList(frame_uscite_varie, "uscite_varie", new_lista_uscite_varie, new_lista_uscite_varie_causali, updateUsciteVarie, c)
-        saveDataList(frame_versamenti, "uscite_versamenti", new_lista_versamenti, new_lista_versamenti_causali, updateVersamenti, c)
-        saveDataList(frame_marchirolo, "marchirolo", new_lista_marchirolo, new_lista_marchirolo_causali, updateMarchirolo, c)
+        saveDataList(frame_das_contante, "das_contanti", updateDasContanti, c)
+        saveDataList(frame_das_cartepos, "das_cartepos", updateDasCartePOS, c)
+        saveDataList(frame_das_bonifico, "das_bonifico", updateDasBonifici, c)
+        saveDataList(frame_incasso_per_conto, "incasso_per_conto", updateIncassoPerConto, c)
+        saveDataList(frame_sospesi, "sospesi", updateSospesi, c)
+        saveDataList(frame_recuperosospesi_contante, "recupero_contanti", updateRecuperoContanti, c)
+        saveDataList(frame_recuperosospesi_cartapos, "recupero_cartepos", updateRecuperoCartePOS, c)
+        saveDataList(frame_recuperosospesi_bonifici, "recupero_bonifici", updateRecuperoBonifici, c)
+        saveDataList(frame_uscite_varie, "uscite_varie", updateUsciteVarie, c)
+        saveDataList(frame_versamenti, "uscite_versamenti", updateVersamenti, c)
+        saveDataList(frame_marchirolo, "marchirolo", updateMarchirolo, c)
         
 
         #Converti data
@@ -2350,7 +2236,7 @@ def visualizzaProva():
 
     #Picked date and label update
     def chooseDate(event):
-        #Cancella valori attualmente presenti nelle entry (prevenzione se non esiste il giorno)
+        '''#Cancella valori attualmente presenti nelle entry (prevenzione se non esiste il giorno)
         def resetEntry(entry_name):
             entry_name.configure(state='normal')
             entry_name.delete(0,'end')
@@ -2387,12 +2273,12 @@ def visualizzaProva():
         resetEntry(entry_viva)
         resetEntry(entry_quadratura_contante_cassa_assegno)
         resetEntry(entry_totale_entrate_cassa_contante)
-        resetEntryTextBox(entry_commenti)
-        #Elimina entry all'interno di un frame lista
+        resetEntryTextBox(entry_commenti)'''
+        #Elimina frame delle liste (nota: i valori singoli, se sono =0, sono comunque ripristinati quando li sovrascrivo, mentre le liste -per la struttura della table- chiaramente no)
         def resetEntryInsideFrame(frame_name):
             for child in frame_name.winfo_children():
                 if isinstance(child, ctk.CTkFrame):
-                    child.pack_forget()   
+                    child.destroy()   
         resetEntryInsideFrame(frame_das_contante)
         resetEntryInsideFrame(frame_das_cartepos)
         resetEntryInsideFrame(frame_das_bonifico)
@@ -2404,22 +2290,6 @@ def visualizzaProva():
         resetEntryInsideFrame(frame_uscite_varie)
         resetEntryInsideFrame(frame_versamenti)
         resetEntryInsideFrame(frame_marchirolo)
-        #Reset all lists
-        def resetLists (lista_values, lista_causali):
-            lista_values.clear()
-            lista_causali.clear()
-
-        resetLists(new_lista_das_contanti, new_lista_das_contanti_causali)
-        resetLists(new_lista_das_cartepos, new_lista_das_cartepos_causali)
-        resetLists(new_lista_das_bonifico, new_lista_das_bonifico_causali)
-        resetLists(new_lista_incassi_per_conto, new_lista_incassi_per_conto_causali)
-        resetLists(new_lista_sospesi_values, new_lista_sospesi_causali)
-        resetLists(new_lista_recupero_contanti, new_lista_recupero_contanti_causali)
-        resetLists(new_lista_recupero_cartepos, new_lista_recupero_cartepos_causali)
-        resetLists(new_lista_recupero_bonifici, new_lista_recupero_bonifici_causali)
-        resetLists(new_lista_uscite_varie, new_lista_uscite_varie_causali)
-        resetLists(new_lista_versamenti, new_lista_versamenti_causali)
-        resetLists(new_lista_marchirolo, new_lista_marchirolo_causali)
 
         label_daybefore.configure(text="Non trovato")
         label_conferma.pack_forget()
@@ -2435,6 +2305,7 @@ def visualizzaProva():
         c.execute("SELECT * FROM prova WHERE data='"+data_converted_text+"'")
         data=c.fetchall()
         conn.commit()
+        #Se la data non è presente
         if (len(data)==0):
             showConfirmMessage(visualizzaprova,"Attenzione", "Il giorno selezionato non è presente", "cancel", False)
             label_date_picked.configure(text="*** Seleziona una data per visualizzare i dati ***")
@@ -2554,9 +2425,7 @@ def visualizzaProva():
         #Elimina sospeso contante
         def destroy():
             var1.set(0)
-            new_lista_das_contanti.remove(var1)
-            new_lista_das_contanti_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("DAS contante eliminato")
         print ("DAS contante aggiunto")
         frame = ctk.CTkFrame(frame_das_contante)
@@ -2571,10 +2440,6 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        new_lista_das_contanti.append(var1)
-        new_lista_das_contanti_causali.append(ent2)
-    new_lista_das_contanti = []
-    new_lista_das_contanti_causali = []
 
     add_das_contante = ctk.CTkButton(frame_das_contante, text='Aggiungi DAS contante', command=addDasContante)
     add_das_contante.pack(padx=20, pady=(20,0))
@@ -2593,9 +2458,7 @@ def visualizzaProva():
         #Elimina sospeso contante
         def destroy():
             var1.set(0)
-            new_lista_das_cartepos.remove(var1)
-            new_lista_das_cartepos_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("DAS carte/pos eliminato")
         print ("DAS carte/pos aggiunto")
         frame = ctk.CTkFrame(frame_das_cartepos)
@@ -2610,10 +2473,6 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        new_lista_das_cartepos.append(var1)
-        new_lista_das_cartepos_causali.append(ent2)
-    new_lista_das_cartepos = []
-    new_lista_das_cartepos_causali = []
 
     add_das_cartepos = ctk.CTkButton(frame_das_cartepos, text='Aggiungi DAS carta/POS', command=addDasCartePOS)
     add_das_cartepos.pack(padx=20, pady=(20,0))
@@ -2632,9 +2491,7 @@ def visualizzaProva():
         #Elimina sospeso contante
         def destroy():
             var1.set(0)
-            new_lista_das_bonifico.remove(var1)
-            new_lista_das_bonifico_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("DAS carte/pos eliminato")
         print ("DAS carte/pos aggiunto")
         frame = ctk.CTkFrame(frame_das_bonifico)
@@ -2649,10 +2506,6 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        new_lista_das_bonifico.append(var1)
-        new_lista_das_bonifico_causali.append(ent2)
-    new_lista_das_bonifico = []
-    new_lista_das_bonifico_causali = []
 
     add_das_bonifico = ctk.CTkButton(frame_das_bonifico, text='Aggiungi DAS bonifico', command=addDasBonifico)
     add_das_bonifico.pack(padx=20, pady=(20,0))
@@ -2681,9 +2534,7 @@ def visualizzaProva():
         #Elimina sospeso carta/POS
         def destroy():
             var1.set(0)
-            new_lista_incassi_per_conto.remove(var1)
-            new_lista_incassi_per_conto_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("incasso x conto eliminato")
         print ("incasso x conto aggiunta")
         frame = ctk.CTkFrame(frame_incasso_per_conto)
@@ -2698,10 +2549,6 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        new_lista_incassi_per_conto.append(var1)
-        new_lista_incassi_per_conto_causali.append(ent2)
-    new_lista_incassi_per_conto = []
-    new_lista_incassi_per_conto_causali = []
 
     add_incasso_per_conto = ctk.CTkButton(frame_incasso_per_conto, text='Aggiungi incasso per conto', command=addIncassoPerConto)
     add_incasso_per_conto.pack(padx=20, pady=(20,0))
@@ -2724,9 +2571,7 @@ def visualizzaProva():
         #Elimina sospeso
         def destroy():
             var1.set(0)
-            new_lista_sospesi_values.remove(var1)
-            new_lista_sospesi_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("Sospeso eliminato")
         print ("Sospeso aggiunto")
         frame = ctk.CTkFrame(frame_sospesi)
@@ -2741,18 +2586,7 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        #lista_sospesi.append( (ent1, ent2) )
-        new_lista_sospesi_values.append(var1)
-        new_lista_sospesi_causali.append(ent2)
-    #Print all entries
-    #def showSospesi():
-    #    for number, (ent1, ent2) in enumerate(lista_sospesi_values):
-    #        print (number, ent1.get(), ent2.get())
-    #lista_sospesi = []
-    new_lista_sospesi_values = []
-    new_lista_sospesi_causali = []
-    #showButton = ctk.CTkButton(frame_sospesi, text='Stampa tutti i sospesi', command=showSospesi)
-    #showButton.pack()
+
     addboxButton = ctk.CTkButton(frame_sospesi, text='Aggiungi sospeso', command=addSospeso)
     addboxButton.pack(padx=20, pady=20)
 
@@ -2775,9 +2609,7 @@ def visualizzaProva():
         #Elimina sospeso contante
         def destroy():
             var1.set(0)
-            new_lista_recupero_contanti.remove(var1)
-            new_lista_recupero_contanti_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("Sospeso contante eliminato")
         print ("Sospeso recuperato contante aggiunto")
         frame = ctk.CTkFrame(frame_recuperosospesi_contante)
@@ -2792,10 +2624,6 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        new_lista_recupero_contanti.append(var1)
-        new_lista_recupero_contanti_causali.append(ent2)
-    new_lista_recupero_contanti = []
-    new_lista_recupero_contanti_causali = []
 
     add_contante_recuperato = ctk.CTkButton(frame_recuperosospesi_contante, text='Aggiungi contante recuperato', command=addSospContante)
     add_contante_recuperato.pack(padx=20, pady=(20,0))
@@ -2816,9 +2644,7 @@ def visualizzaProva():
         #Elimina sospeso carta/POS
         def destroy():
             var1.set(0)
-            new_lista_recupero_cartepos.remove(var1)
-            new_lista_recupero_cartepos_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("Sospeso carta/POS eliminato")
         print ("Sospeso recuperato carta/POS aggiunto")
         frame = ctk.CTkFrame(frame_recuperosospesi_cartapos)
@@ -2833,10 +2659,6 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        new_lista_recupero_cartepos.append(var1)
-        new_lista_recupero_cartepos_causali.append(ent2)
-    new_lista_recupero_cartepos = []
-    new_lista_recupero_cartepos_causali = []
 
     add_cartapos_recuperato = ctk.CTkButton(frame_recuperosospesi_cartapos, text='Aggiungi Carta/POS recuperato', command=addSospCartePOS)
     add_cartapos_recuperato.pack(pady=(25,0))
@@ -2856,9 +2678,7 @@ def visualizzaProva():
         #Elimina sospeso contante
         def destroy():
             var1.set(0)
-            new_lista_recupero_bonifici.remove(var1)
-            new_lista_recupero_bonifici_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("Sospeso bonifico eliminato")
         print ("Sospeso recuperato bonifico aggiunto")
         frame = ctk.CTkFrame(frame_recuperosospesi_bonifici)
@@ -2873,10 +2693,6 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        new_lista_recupero_bonifici.append(var1)
-        new_lista_recupero_bonifici_causali.append(ent2)
-    new_lista_recupero_bonifici = []
-    new_lista_recupero_bonifici_causali = []
 
     add_bonifici_recuperato = ctk.CTkButton(frame_recuperosospesi_bonifici, text='Aggiungi bonifico recuperato', command=addSospBonifici)
     add_bonifici_recuperato.pack(pady=(25,0))
@@ -2921,9 +2737,7 @@ def visualizzaProva():
         #Elimina sospeso contante
         def destroy():
             var1.set(0)
-            new_lista_versamenti.remove(var1)
-            new_lista_versamenti_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("Versamento eliminato")
         print ("Versamento aggiunta")
         frame = ctk.CTkFrame(frame_versamenti)
@@ -2938,10 +2752,6 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        new_lista_versamenti.append(var1)
-        new_lista_versamenti_causali.append(ent2)
-    new_lista_versamenti = []
-    new_lista_versamenti_causali = []
 
     add_versamento = ctk.CTkButton(frame_versamenti, text='Aggiungi versamento', command=addVersamento)
     add_versamento.pack(padx=20, pady=(20,0))
@@ -2960,9 +2770,7 @@ def visualizzaProva():
         #Elimina uscita varia
         def destroy():
             var1.set(0)
-            new_lista_uscite_varie.remove(var1)
-            new_lista_uscite_varie_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("Uscita varia eliminata")
         print ("Uscita varia aggiunta")
         frame = ctk.CTkFrame(frame_uscite_varie)
@@ -2977,10 +2785,6 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        new_lista_uscite_varie.append(var1)
-        new_lista_uscite_varie_causali.append(ent2)
-    new_lista_uscite_varie = []
-    new_lista_uscite_varie_causali = []
 
     add_uscite_varie = ctk.CTkButton(frame_uscite_varie, text='Aggiungi uscita extra', command=addUsciteVarie)
     add_uscite_varie.pack(padx=20, pady=(20,0))
@@ -3013,9 +2817,7 @@ def visualizzaProva():
         #Elimina sospeso carta/POS
         def destroy():
             var1.set(0)
-            new_lista_marchirolo.remove(var1)
-            new_lista_marchirolo_causali.remove(ent2)
-            frame.pack_forget()
+            frame.destroy()
             print("Marchirolo eliminato")
         print ("Uscita marchirolo aggiunta")
         frame = ctk.CTkFrame(frame_marchirolo)
@@ -3030,10 +2832,7 @@ def visualizzaProva():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        new_lista_marchirolo.append(var1)
-        new_lista_marchirolo_causali.append(ent2)
-    new_lista_marchirolo = []
-    new_lista_marchirolo_causali = []
+
     add_uscitamarchirolo = ctk.CTkButton(frame_marchirolo, text='Aggiungi uscita Marchirolo', command=addUscitaMarchirolo)
 
     label_tot_marchirolo = ctk.CTkLabel(master=tabview.tab("Marchirolo"), text="Totale Marchirolo:", font=("Helvetica",14,"bold"))
@@ -3142,25 +2941,34 @@ def visualizzaProva():
             #Controlla se è un versamento. Se si, il nome del file deve essere uguale ad una causale esistente e poi lo carica. Altrimenti manda un avviso
             if entry_outputcategory.get() == "Versamenti":
                 causale_trovata = False
-                #Se dai un nuovo nome al file
+                #Salva i nomi delle causali nella lista causali_versamenti
+                causali_versamenti=[]
+                isvalore = True
+                for child in frame_versamenti.winfo_children():                #Scorri ogni elemento nel frame-padre
+                    if isinstance(child, ctk.CTkFrame):             #Se è un sotto-frame
+                        for child2 in child.winfo_children():       #scorri ogni elemento nel sotto-frame
+                            if isinstance(child2, ctk.CTkEntry):    #se è una entry
+                                if isvalore==True:                  #ed è il valore, la prossima entry sarà la causale
+                                    isvalore=False
+                                else:                               #altrimenti è la causale: se è vuota ritorna "True", altrimenti la prossima entry sarà il valore
+                                    causali_versamenti.append(child2.get())
+                                    isvalore = True
+                #SE DAI UN NUOVO NOME AL FILE
                 if(new_filename != ""):
-                    for item in new_lista_versamenti_causali:
-                        if new_filename == item.get():
+                    #Cerca un nome del file
+                    for item in causali_versamenti:
+                        if new_filename == item:
                             causale_trovata = True                                
                     if causale_trovata == True:
                         shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
-                        print("File caricato")
                         showConfirmMessage(visualizzaprova,"Successo","Documento correttamente caricato", "check", False)
                         frame.destroy()
                     else:
-                        print("Attenzione: i nomi non combaciano")
                         showConfirmMessage(visualizzaprova,"Attenzione","Il nome non corrisponde a nessuna causale", "warning", False)
-                #Altrimenti spostalo con lo stesso nome
+                #ALTRIMENTI SPOSTALO CON LO STESSO NOME
                 else:
-                    for item in new_lista_versamenti_causali:
-                        print(str(tail[:-4]))
-                        print(item.get())
-                        if tail[:-4] == item.get():
+                    for item in causali_versamenti:
+                        if tail[:-4] == item:
                             causale_trovata = True  
                     if causale_trovata == True:
                         shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
@@ -3198,13 +3006,6 @@ def visualizzaProva():
         input_button.grid(row=0, column=0)
         entry_inputfile = ctk.CTkEntry(frame, width=250, placeholder_text="Scegli file da spostare...")
         entry_inputfile.grid(row=0, column=1)
-        #def updateOutputCategory(*args):
-        #    if outputcategory.get() == "Quadratura punto vendita":
-        #        entry_outputfilename.insert(0, "Quadratura punto vendita")
-        #    else:
-        #        entry_outputfilename.delete(0, 'end')
-        #outputcategory = ctk.StringVar(frame, "")
-        #outputcategory.trace("w", updateOutputCategory)
         entry_outputcategory = ctk.CTkComboBox(frame, values=("Bonifici", "Movimenti POS", "Versamenti", "Assegni", "Quadratura punto vendita", "Recupero sospesi", "Chiusure POS", "Quitanze", "Foglio cassa", "Altro"))
         entry_outputcategory.grid(row=0, column=3)
         entry_outputfilename = ctk.CTkEntry(frame, width=250, placeholder_text="Rinomina il file...")
@@ -3225,12 +3026,24 @@ def visualizzaProva():
         #Togli l'estensione dal nome dei file (estensione è lunga 4 caratteri: .pdf)
         for i in range(len(file_versamenti_list)):
             file_versamenti_list[i] = file_versamenti_list[i][:-4]
+        #Salva i nomi delle causali nella lista causali_versamenti
+        causali_versamenti=[]
+        isvalore = True
+        for child in frame_versamenti.winfo_children():                #Scorri ogni elemento nel frame-padre
+            if isinstance(child, ctk.CTkFrame):             #Se è un sotto-frame
+                for child2 in child.winfo_children():       #scorri ogni elemento nel sotto-frame
+                    if isinstance(child2, ctk.CTkEntry):    #se è una entry
+                        if isvalore==True:                  #ed è il valore, la prossima entry sarà la causale
+                            isvalore=False
+                        else:                               #altrimenti è la causale: se è vuota ritorna "True", altrimenti la prossima entry sarà il valore
+                            causali_versamenti.append(child2.get())
+                            isvalore = True
         #Per ogni elemento in new_lista_versamenti_causali, se è presente (il nome è =) in file_versamenti_list aumenta causali_trovate
-        for j in range(len(new_lista_versamenti_causali)):
-            if new_lista_versamenti_causali[j].get() in file_versamenti_list:
+        for j in range(len(causali_versamenti)):
+            if causali_versamenti[j] in file_versamenti_list:
                 causali_trovate = causali_trovate+1
 
-        if causali_trovate == len(new_lista_versamenti_causali):
+        if causali_trovate == len(causali_versamenti):
             #Converti data
             data_converted = (calendar.get_date()).split('-')
             data_converted_text=""
@@ -3397,140 +3210,40 @@ def visualizzaProva():
                     " 'false')"
             )
             conn.commit()
-            #Aggiungi liste
-            for valore, causale in zip(new_lista_sospesi_values, new_lista_sospesi_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
+            #Scorri lista e aggiungi: is valore si alterna tra True e False
+            def listToDatabase(frame, categoria):
+                isvalore = True
+                for child in frame.winfo_children():                #Scorri ogni elemento nel frame-padre
+                    if isinstance(child, ctk.CTkFrame):             #Se è un sotto-frame
+                        for child2 in child.winfo_children():       #scorri ogni elemento nel sotto-frame
+                            if isinstance(child2, ctk.CTkEntry):    #se è una entry
+                                if isvalore==True:                  #ed è il valore, salva il valore e la prossima entry sarà la causale
+                                    valore=child2.get()
+                                    print(valore)
+                                    isvalore=False
+                                else:                               #altrimenti è la causale, quindi salva la causale e la prossima entry sarà il valore
+                                    causale=child2.get()
+                                    print(causale)
+                                    isvalore = True
                         c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'sospesi', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
+                                +"'"+categoria+"', "
+                                +valore+", '"
+                                +causale+
                                 "')"
                         )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(new_lista_recupero_contanti, new_lista_recupero_contanti_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'recupero_contanti', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(new_lista_recupero_cartepos, new_lista_recupero_cartepos_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'recupero_cartepos', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(new_lista_recupero_bonifici, new_lista_recupero_bonifici_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'recupero_bonifici', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(new_lista_uscite_varie, new_lista_uscite_varie_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'uscite_varie', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(new_lista_versamenti, new_lista_versamenti_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'uscite_versamenti', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(new_lista_marchirolo, new_lista_marchirolo_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'marchirolo', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-
-            for valore, causale in zip(new_lista_das_contanti, new_lista_das_contanti_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'das_contanti', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(new_lista_das_cartepos, new_lista_das_cartepos_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'das_cartepos', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(new_lista_das_bonifico, new_lista_das_bonifico_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'das_bonifico', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
-            for valore, causale in zip(new_lista_incassi_per_conto, new_lista_incassi_per_conto_causali):
-                try:
-                    if valore.get() != "" and causale.get() != "":
-                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                +"'incasso_per_conto', "
-                                +str(valore.get())+", '"
-                                +causale.get()+
-                                "')"
-                        )
-                except:
-                    print("Entries vuote non caricate")
-            conn.commit()
+                conn.commit()
+            
+            listToDatabase(frame_sospesi, "sospesi")
+            listToDatabase(frame_recuperosospesi_contante, "recupero_contanti")
+            listToDatabase(frame_recuperosospesi_cartapos, "recupero_cartepos")
+            listToDatabase(frame_recuperosospesi_bonifici, "recupero_bonifici")
+            listToDatabase(frame_versamenti, "uscite_versamenti")
+            listToDatabase(frame_uscite_varie, "uscite_varie")
+            listToDatabase(frame_marchirolo, "marchirolo")
+            listToDatabase(frame_das_contante, "das_contanti")
+            listToDatabase(frame_das_cartepos, "das_cartepos")
+            listToDatabase(frame_das_bonifico, "das_bonifico")
+            listToDatabase(frame_incasso_per_conto, "incasso_per_conto")
 
             conn.close()
             showConfirmMessage(visualizzaprova,"Caricamento completato", "Dati correttamente aggiunti al database", "check", False)
