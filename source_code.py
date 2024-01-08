@@ -7,6 +7,45 @@ from PIL import Image
 import shutil
 import webbrowser
 
+#Hover su tasto per informazioni
+#Fonte: https://stackoverflow.com/questions/20399243/display-message-when-hovering-over-something-with-mouse-cursor-in-python
+class ToolTip(object):
+    def __init__(self, widget):
+        self.widget = widget
+        self.tipwindow = None
+        self.id = None
+        self.x = self.y = 0
+
+    def showtip(self, text):
+        "Display text in tooltip window"
+        self.text = text
+        if self.tipwindow or not self.text:
+            return
+        x, y, cx, cy = self.widget.bbox("insert")
+        x = x + self.widget.winfo_rootx() + 27
+        y = y + cy + self.widget.winfo_rooty() +5
+        self.tipwindow = tw = ctk.CTkToplevel(self.widget)
+        tw.wm_overrideredirect(1)
+        tw.wm_geometry("+%d+%d" % (x, y))
+        label = ctk.CTkLabel(tw, text=self.text)
+        label.pack(ipadx=1)
+    def hidetip(self):
+        tw = self.tipwindow
+        self.tipwindow = None
+        if tw:
+            tw.destroy()
+def CreateToolTip(widget, text):
+    toolTip = ToolTip(widget)
+    def enter(event):
+        toolTip.showtip(text)
+    def leave(event):
+        toolTip.hidetip()
+    widget.bind('<Enter>', enter)
+    widget.bind('<Leave>', leave)
+def DeleteToolTip(widget):
+    toolTip = ToolTip(widget)
+    widget.hideToolTips()
+
 # Apro il file delle posizioni in modalità lettura
 with open('posizioni.txt', 'r') as file:
     # Leggo le tre righe dal file e le sarvo nelle loro variabili
@@ -185,7 +224,9 @@ def createNuovaProvaView():
         connection.commit()
         data=cursor.fetchall()
         if (len(data)==0):
-            label_daybefore.configure(text="Non trovato")
+            label_cassaprecedente.unbind("<Enter>")
+            label_cassaprecedente.unbind("<Leave>")
+            CreateToolTip(label_cassaprecedente, text="Non trovato")
             data_precedente=""
         else:
             for data_precedente, fondo_cassa_da_riportare_precedente in data:
@@ -197,7 +238,10 @@ def createNuovaProvaView():
                 data_converted2 = (data_precedente).split('-')
                 data_converted_text2=""
                 data_converted_text2=data_converted2[2]+"-"+data_converted2[1]+"-"+data_converted2[0]
-                label_daybefore.configure(text="Del "+data_converted_text2)
+                #Cambia info sul giorno nella label cassa precedente: rimuovi il bind sulla label del vecchio tooltip e creane uno nuovo
+                label_cassaprecedente.unbind("<Enter>")
+                label_cassaprecedente.unbind("<Leave>")
+                CreateToolTip(label_cassaprecedente, text="Del "+data_converted_text2)
 
         #Elimina entry all'interno ella lista marchirolo
         for child in frame_marchirolo.winfo_children():
@@ -799,26 +843,31 @@ def createNuovaProvaView():
     #Premio lordo
     label_premio_lordo = ctk.CTkLabel(master=frame_incassi, text="Premio lordo:")
     label_premio_lordo.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_premio_lordo, text="Premio lordo")
     entry_premio_lordo = ctk.CTkEntry(frame_incassi, textvariable=premio_lordo, width=100)
     entry_premio_lordo.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
     #Movimenti bancari
     label_movimenti_bancari = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
     label_movimenti_bancari.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_movimenti_bancari, text="Solo Vittoria. Gli incassi per conto via bonifico sono già inclusi nella quadratura bonifici")
     entry_movimenti_bancari = ctk.CTkEntry(frame_incassi, textvariable=movimenti_bancari, width=100)
     entry_movimenti_bancari.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze bonifici
     label_incasso_polizzebonifici = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze bonifici:", font=("Helvetica",14,"bold"))
     label_incasso_polizzebonifici.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_incasso_polizzebonifici, text="Movimenti bancari + DAS bonifico")
     entry_incasso_polizzebonifici = ctk.CTkEntry(frame_incassi, textvariable=incasso_polizze_bonifici, state="disabled", font=("Helvetica",15,"bold"), width=100)
     entry_incasso_polizzebonifici.grid(row=4, column=1, pady=10, padx=20, sticky="nw")
     #Totale carte/POS
     label_totale_carte_pos = ctk.CTkLabel(master=frame_incassi, text="Totale carte/POS:")
     label_totale_carte_pos.grid(row=5, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_totale_carte_pos, text="Solo Vittoria.")
     entry_totale_carte_pos = ctk.CTkEntry(frame_incassi, textvariable=totale_carte_pos, width=100)
     entry_totale_carte_pos.grid(row=5, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze carte/POS
     label_incasso_polizzecartepos = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze carte/POS:", font=("Helvetica",14,"bold"))
     label_incasso_polizzecartepos.grid(row=6, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_incasso_polizzecartepos, text="Totale carte pos + DAS carte/POS")
     entry_incasso_polizzecartepos = ctk.CTkEntry(frame_incassi, textvariable=incasso_polizze_carte_pos, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_incasso_polizzecartepos.grid(row=6, column=1, pady=10, padx=20, sticky="nw")
 
@@ -1120,6 +1169,7 @@ def createNuovaProvaView():
     frame_saldo_sospesi.pack(pady=(20,0))
     label_saldo_sospesi = ctk.CTkLabel(master=frame_saldo_sospesi, text="Saldo sospesi:", font=("Helvetica",14,"bold"))
     label_saldo_sospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_saldo_sospesi, text="Totale sospesi - rec. sosp. contanti - rec. sosp. carte/POS - rec. sosp. bonifico")
     entry_saldo_sospesi = ctk.CTkEntry(frame_saldo_sospesi, textvariable=saldo_sospesi, font=("Helvetica",15,"bold"), width=100)
     entry_saldo_sospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
 
@@ -1213,11 +1263,13 @@ def createNuovaProvaView():
     #--Totale generale uscite--
     label_totale_generale_uscite = ctk.CTkLabel(master=frame_totale_generale_uscite_e_quadratura, text="Totale generale uscite:", font=("Helvetica",14,"bold"))
     label_totale_generale_uscite.grid(row=1, column=0, pady=10, padx=10, sticky="ne")
+    CreateToolTip(label_totale_generale_uscite, text="Totale Abbuoni + totale p.ti Viva + totale versamenti + totale uscite extra")
     entry_totale_generale_uscite = ctk.CTkEntry(frame_totale_generale_uscite_e_quadratura, textvariable=totale_generale_uscite, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_totale_generale_uscite.grid(row=1, column=1, pady=10, padx=10, sticky="nw")
     #--Quadratura contante cassa + assegno--
     label_quadratura_contante_cassa_assegno = ctk.CTkLabel(master=frame_totale_generale_uscite_e_quadratura, text="Quadratura contante cassa + assegno:", font=("Helvetica",14,"bold"))
     label_quadratura_contante_cassa_assegno.grid(row=2, column=0, pady=10, padx=10, sticky="ne")
+    CreateToolTip(label_quadratura_contante_cassa_assegno, text="Tot. parz. 1 (cassa contante) + totale rec. sosp. contante - totale abbuoni - totale p.ti Viva")
     entry_quadratura_contante_cassa_assegno = ctk.CTkEntry(frame_totale_generale_uscite_e_quadratura, textvariable=quadratura_contante_cassa_assegno, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_quadratura_contante_cassa_assegno.grid(row=2, column=1, pady=10, padx=10, sticky="nw")
 
@@ -1262,27 +1314,24 @@ def createNuovaProvaView():
     #Totale parziale 1
     label_tot_parziale_1 = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 1 | Cassa contanti:", font=("Helvetica",14,"bold"))
     label_tot_parziale_1.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_tot_parziale_1, text="Premio lordo + tot. incasso per conto + DAS contanti - incasso polizze bonifici- incasso polizze carte/POS - tot. sospesi")
     entry_tot_parziale_1 = ctk.CTkEntry(frame_resoconto, textvariable=totale_parziale_1, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_parziale_1.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
-    explain_tot_parziale_1 = ctk.CTkLabel(master=frame_resoconto, text="Incassi - bonifici - POS - sospesi", text_color="#969595", font=("Helvetica",13))
-    explain_tot_parziale_1.grid(row=0, column=2, pady=10, padx=20, sticky="nw")
     #Fondo cassa precedente
     label_cassaprecedente = ctk.CTkLabel(master=frame_resoconto, text="Fondo cassa precedente:", font=("Helvetica",14,"bold"))
     label_cassaprecedente.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_cassaprecedente, text="Non trovato")
     entry_cassaprecedente = ctk.CTkEntry(frame_resoconto, textvariable=fondo_cassa_precedente, font=("Helvetica",15,"bold"), width=100)
     entry_cassaprecedente.grid(row=1, column=1, pady=10, padx=20, sticky="nw")
-    label_daybefore = ctk.CTkLabel(master=frame_resoconto, text="Non trovato", text_color="#969595", font=("Helvetica",13))
-    label_daybefore.grid(row=1, column=2, pady=10, padx=20, sticky="nw")
     #Totale sospesi contante recuperato
     label_tot_contante_recuperato_copia = ctk.CTkLabel(master=frame_resoconto, text="Totale recupero sospesi contante:", font=("Helvetica",14,"bold"))
     label_tot_contante_recuperato_copia.grid(row=2, column=0, pady=10, padx=20, sticky="ne")
     entry_tot_contante_recuperato_copia = ctk.CTkEntry(frame_resoconto, textvariable=totale_recupero_sospesi_contanti, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_contante_recuperato_copia.grid(row=2, column=1, pady=10, padx=20, sticky="nw")
-    explain_tot_contante_recuperato_copia = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 2 + tot. rec. sosp. contante", text_color="#969595", font=("Helvetica",13))
-    explain_tot_contante_recuperato_copia.grid(row=2, column=2, pady=10, padx=20, sticky="nw")
     #Totale entrate cassa contante
     label_totale_entrate_cassa_contante = ctk.CTkLabel(master=frame_resoconto, text="Totale entrate cassa contante:", font=("Helvetica",14,"bold"))
     label_totale_entrate_cassa_contante.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_totale_entrate_cassa_contante, text="Tot. parz. 1 (cassa contante) + fondo cassa precedente + tot. rec. sospesi contante")
     entry_totale_entrate_cassa_contante = ctk.CTkEntry(frame_resoconto, textvariable=totale_entrate_cassa_contante, font=("Helvetica",15,"bold"), width=100)
     entry_totale_entrate_cassa_contante.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     #Totale generale uscite
@@ -1290,11 +1339,10 @@ def createNuovaProvaView():
     label_totale_generale_uscite_copia.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
     entry_totale_generale_uscite_copia = ctk.CTkEntry(frame_resoconto, textvariable=totale_generale_uscite, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_totale_generale_uscite_copia.grid(row=4, column=1, pady=10, padx=20, sticky="nw")
-    explain_totale_generale_uscite_copia = ctk.CTkLabel(master=frame_resoconto, text="Abbuoni + p.ti Viva + uscite varie + versamenti", text_color="#969595", font=("Helvetica",13))
-    explain_totale_generale_uscite_copia.grid(row=4, column=2, pady=10, padx=20, sticky="nw")
     #Fondo cassa da riportare
-    label_fondodariportare = ctk.CTkLabel(master=frame_resoconto, text="Fondo cassa da riportate:", font=("Helvetica",14,"bold"))
+    label_fondodariportare = ctk.CTkLabel(master=frame_resoconto, text="Fondo cassa da riportare:", font=("Helvetica",14,"bold"))
     label_fondodariportare.grid(row=5, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_fondodariportare, text="Totale entrate cassa contante - totale generale uscite")
     entry_fondodariportare = ctk.CTkEntry(frame_resoconto, textvariable=fondo_cassa_da_riportare, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_fondodariportare.grid(row=5, column=1, pady=10, padx=20, sticky="nw")
     #Totale Marchirolo COPIA
@@ -1302,15 +1350,12 @@ def createNuovaProvaView():
     label_tot_marchirolo_copy.grid(row=6, column=0, pady=10, padx=20, sticky="ne")
     entry_tot_marchirolo_copy = ctk.CTkEntry(frame_resoconto, textvariable=totale_marchirolo, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_marchirolo_copy.grid(row=6, column=1, pady=10, padx=20, sticky="nw")
-    explain_tot_marchirolo_copy = ctk.CTkLabel(master=frame_resoconto, text="Totale uscite Marchirolo", text_color="#969595", font=("Helvetica",13))
-    explain_tot_marchirolo_copy.grid(row=6, column=2, pady=10, padx=20, sticky="nw")
     #Saldo cassa
     label_saldocassa = ctk.CTkLabel(master=frame_resoconto, text="Saldo cassa:", font=("Helvetica",14,"bold"))
     label_saldocassa.grid(row=7, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_saldocassa, text="Fondo cassa da riportare - totale Marchirolo")
     entry_saldocassa = ctk.CTkEntry(frame_resoconto, textvariable=saldo_cassa, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_saldocassa.grid(row=7, column=1, pady=10, padx=20, sticky="nw")
-    explain_saldocassa = ctk.CTkLabel(master=frame_resoconto, text="F. cass da riportare + tot. Marchirolo", text_color="#969595", font=("Helvetica",13))
-    explain_saldocassa.grid(row=7, column=2, pady=10, padx=20, sticky="nw")
     #Commenti
     label_commenti = ctk.CTkLabel(master=tabview.tab("Resoconto"), text="Commenti:")
     label_commenti.pack()
@@ -2242,7 +2287,10 @@ def visualizzaProva():
         c.execute("SELECT data, fondo_cassa_da_riportare FROM prova WHERE data<'"+data_converted_text+"' ORDER BY data DESC LIMIT 1")
         rows=c.fetchall()
         if len(rows)==0:
-            label_daybefore.configure(text="Non trovato")
+            label_cassaprecedente.unbind("<Enter>")
+            label_cassaprecedente.unbind("<Leave>")
+            CreateToolTip(label_cassaprecedente, text="Non trovato")
+            data_precedente=""
         else:
             for data_precedente, fondo_cassa_da_riportare_precedente in rows:
                 entry_cassaprecedente.configure(state='normal')
@@ -2253,7 +2301,10 @@ def visualizzaProva():
                 data_converted2 = (data_precedente).split('-')
                 data_converted_text2=""
                 data_converted_text2=data_converted2[2]+"-"+data_converted2[1]+"-"+data_converted2[0]
-                label_daybefore.configure(text="Del "+data_converted_text2)
+                #Cambia info sul giorno nella label cassa precedente: rimuovi il bind sulla label del vecchio tooltip e creane uno nuovo
+                label_cassaprecedente.unbind("<Enter>")
+                label_cassaprecedente.unbind("<Leave>")
+                CreateToolTip(label_cassaprecedente, text="Del "+data_converted_text2)
 
         #Prendi prova completata si/no
         c.execute("SELECT completato FROM prova WHERE data='"+data_converted_text+"'")
@@ -2328,7 +2379,6 @@ def visualizzaProva():
         resetEntryInsideFrame(frame_versamenti)
         resetEntryInsideFrame(frame_marchirolo)
 
-        label_daybefore.configure(text="Non trovato")
         label_conferma.pack_forget()
         bottone_conferma.pack_forget()
 
@@ -2427,26 +2477,31 @@ def visualizzaProva():
     #Premio lordo
     label_premio_lordo = ctk.CTkLabel(master=frame_incassi, text="Premio lordo:")
     label_premio_lordo.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_premio_lordo, text="Premio lordo")
     entry_premio_lordo = ctk.CTkEntry(frame_incassi, textvariable=premio_lordo, width=100)
     entry_premio_lordo.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
     #Movimenti bancari
     label_movimenti_bancari = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
     label_movimenti_bancari.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_movimenti_bancari, text="Solo Vittoria. Gli incassi per conto via bonifico sono già inclusi nella quadratura bonifici")
     entry_movimenti_bancari = ctk.CTkEntry(frame_incassi, textvariable=movimenti_bancari, width=100)
     entry_movimenti_bancari.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze bonifici
     label_incasso_polizzebonifici = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze bonifici:", font=("Helvetica",14,"bold"))
     label_incasso_polizzebonifici.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_incasso_polizzebonifici, text="Movimenti bancari + DAS bonifico")
     entry_incasso_polizzebonifici = ctk.CTkEntry(frame_incassi, textvariable=incasso_polizze_bonifici, state="disabled", font=("Helvetica",15,"bold"), width=100)
     entry_incasso_polizzebonifici.grid(row=4, column=1, pady=10, padx=20, sticky="nw")
     #Totale carte/POS
     label_totale_carte_pos = ctk.CTkLabel(master=frame_incassi, text="Totale carte/POS:")
     label_totale_carte_pos.grid(row=5, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_totale_carte_pos, text="Solo Vittoria.")
     entry_totale_carte_pos = ctk.CTkEntry(frame_incassi, textvariable=totale_carte_pos, width=100)
     entry_totale_carte_pos.grid(row=5, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze carte/POS
     label_incasso_polizzecartepos = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze carte/POS:", font=("Helvetica",14,"bold"))
     label_incasso_polizzecartepos.grid(row=6, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_incasso_polizzecartepos, text="Totale carte pos + DAS carte/POS")
     entry_incasso_polizzecartepos = ctk.CTkEntry(frame_incassi, textvariable=incasso_polizze_carte_pos, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_incasso_polizzecartepos.grid(row=6, column=1, pady=10, padx=20, sticky="nw")
 
@@ -2738,6 +2793,7 @@ def visualizzaProva():
     frame_saldo_sospesi.pack(pady=(20,0))
     label_saldo_sospesi = ctk.CTkLabel(master=frame_saldo_sospesi, text="Saldo sospesi:", font=("Helvetica",14,"bold"))
     label_saldo_sospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_saldo_sospesi, text="Totale sospesi - rec. sosp. contanti - rec. sosp. carte/POS - rec. sosp. bonifico")
     entry_saldo_sospesi = ctk.CTkEntry(frame_saldo_sospesi, textvariable=saldo_sospesi, font=("Helvetica",15,"bold"), width=100)
     entry_saldo_sospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
 
@@ -2829,11 +2885,13 @@ def visualizzaProva():
     #--Totale generale uscite--
     label_totale_generale_uscite = ctk.CTkLabel(master=frame_totale_generale_uscite_e_quadratura, text="Totale generale uscite:", font=("Helvetica",14,"bold"))
     label_totale_generale_uscite.grid(row=1, column=0, pady=10, padx=10, sticky="ne")
+    CreateToolTip(label_totale_generale_uscite, text="Totale Abbuoni + totale p.ti Viva + totale versamenti + totale uscite extra")
     entry_totale_generale_uscite = ctk.CTkEntry(frame_totale_generale_uscite_e_quadratura, textvariable=totale_generale_uscite, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_totale_generale_uscite.grid(row=1, column=1, pady=10, padx=10, sticky="nw")
     #--Quadratura contante cassa + assegno--
     label_quadratura_contante_cassa_assegno = ctk.CTkLabel(master=frame_totale_generale_uscite_e_quadratura, text="Quadratura contante cassa + assegno:", font=("Helvetica",14,"bold"))
     label_quadratura_contante_cassa_assegno.grid(row=2, column=0, pady=10, padx=10, sticky="ne")
+    CreateToolTip(label_quadratura_contante_cassa_assegno, text="Tot. parz. 1 (cassa contante) + totale rec. sosp. contante - totale abbuoni - totale p.ti Viva")
     entry_quadratura_contante_cassa_assegno = ctk.CTkEntry(frame_totale_generale_uscite_e_quadratura, textvariable=quadratura_contante_cassa_assegno, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_quadratura_contante_cassa_assegno.grid(row=2, column=1, pady=10, padx=10, sticky="nw")
 
@@ -2874,27 +2932,24 @@ def visualizzaProva():
     #Totale parziale 1
     label_tot_parziale_1 = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 1 | Cassa contanti:", font=("Helvetica",14,"bold"))
     label_tot_parziale_1.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_tot_parziale_1, text="Premio lordo + tot. incasso per conto + DAS contanti - incasso polizze bonifici- incasso polizze carte/POS - tot. sospesi")
     entry_tot_parziale_1 = ctk.CTkEntry(frame_resoconto, textvariable=totale_parziale_1, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_parziale_1.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
-    explain_tot_parziale_1 = ctk.CTkLabel(master=frame_resoconto, text="Incassi - bonifici - POS - sospesi", text_color="#969595", font=("Helvetica",13))
-    explain_tot_parziale_1.grid(row=0, column=2, pady=10, padx=20, sticky="nw")
     #Fondo cassa precedente
     label_cassaprecedente = ctk.CTkLabel(master=frame_resoconto, text="Fondo cassa precedente:", font=("Helvetica",14,"bold"))
     label_cassaprecedente.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_cassaprecedente, text="Non trovato")
     entry_cassaprecedente = ctk.CTkEntry(frame_resoconto, textvariable=fondo_cassa_precedente, font=("Helvetica",15,"bold"), width=100)
     entry_cassaprecedente.grid(row=1, column=1, pady=10, padx=20, sticky="nw")
-    label_daybefore = ctk.CTkLabel(master=frame_resoconto, text="Non trovato", text_color="#969595", font=("Helvetica",13))
-    label_daybefore.grid(row=1, column=2, pady=10, padx=20, sticky="nw")
     #Totale sospesi contante recuperato
     label_tot_contante_recuperato_copia = ctk.CTkLabel(master=frame_resoconto, text="Totale recupero sospesi contante:", font=("Helvetica",14,"bold"))
     label_tot_contante_recuperato_copia.grid(row=2, column=0, pady=10, padx=20, sticky="ne")
     entry_tot_contante_recuperato_copia = ctk.CTkEntry(frame_resoconto, textvariable=totale_recupero_sospesi_contanti, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_contante_recuperato_copia.grid(row=2, column=1, pady=10, padx=20, sticky="nw")
-    explain_tot_contante_recuperato_copia = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 2 + tot. rec. sosp. contante", text_color="#969595", font=("Helvetica",13))
-    explain_tot_contante_recuperato_copia.grid(row=2, column=2, pady=10, padx=20, sticky="nw")
     #Totale entrate cassa contante
     label_totale_entrate_cassa_contante = ctk.CTkLabel(master=frame_resoconto, text="Totale entrate cassa contante:", font=("Helvetica",14,"bold"))
     label_totale_entrate_cassa_contante.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_totale_entrate_cassa_contante, text="Tot. parz. 1 (cassa contante) + fondo cassa precedente + tot. rec. sospesi contante")
     entry_totale_entrate_cassa_contante = ctk.CTkEntry(frame_resoconto, textvariable=totale_entrate_cassa_contante, font=("Helvetica",15,"bold"), width=100)
     entry_totale_entrate_cassa_contante.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     #Totale generale uscite
@@ -2902,11 +2957,10 @@ def visualizzaProva():
     label_totale_generale_uscite_copia.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
     entry_totale_generale_uscite_copia = ctk.CTkEntry(frame_resoconto, textvariable=totale_generale_uscite, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_totale_generale_uscite_copia.grid(row=4, column=1, pady=10, padx=20, sticky="nw")
-    explain_totale_generale_uscite_copia = ctk.CTkLabel(master=frame_resoconto, text="Abbuoni + p.ti Viva + uscite varie + versamenti", text_color="#969595", font=("Helvetica",13))
-    explain_totale_generale_uscite_copia.grid(row=4, column=2, pady=10, padx=20, sticky="nw")
     #Fondo cassa da riportare
-    label_fondodariportare = ctk.CTkLabel(master=frame_resoconto, text="Fondo cassa da riportate:", font=("Helvetica",14,"bold"))
+    label_fondodariportare = ctk.CTkLabel(master=frame_resoconto, text="Fondo cassa da riportare:", font=("Helvetica",14,"bold"))
     label_fondodariportare.grid(row=5, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_fondodariportare, text="Totale entrate cassa contante - totale generale uscite")
     entry_fondodariportare = ctk.CTkEntry(frame_resoconto, textvariable=fondo_cassa_da_riportare, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_fondodariportare.grid(row=5, column=1, pady=10, padx=20, sticky="nw")
     #Totale Marchirolo COPIA
@@ -2914,15 +2968,12 @@ def visualizzaProva():
     label_tot_marchirolo_copy.grid(row=6, column=0, pady=10, padx=20, sticky="ne")
     entry_tot_marchirolo_copy = ctk.CTkEntry(frame_resoconto, textvariable=totale_marchirolo, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_marchirolo_copy.grid(row=6, column=1, pady=10, padx=20, sticky="nw")
-    explain_tot_marchirolo_copy = ctk.CTkLabel(master=frame_resoconto, text="Totale uscite Marchirolo", text_color="#969595", font=("Helvetica",13))
-    explain_tot_marchirolo_copy.grid(row=6, column=2, pady=10, padx=20, sticky="nw")
     #Saldo cassa
     label_saldocassa = ctk.CTkLabel(master=frame_resoconto, text="Saldo cassa:", font=("Helvetica",14,"bold"))
     label_saldocassa.grid(row=7, column=0, pady=10, padx=20, sticky="ne")
+    CreateToolTip(label_saldocassa, text="Fondo cassa da riportare - totale Marchirolo")
     entry_saldocassa = ctk.CTkEntry(frame_resoconto, textvariable=saldo_cassa, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_saldocassa.grid(row=7, column=1, pady=10, padx=20, sticky="nw")
-    explain_saldocassa = ctk.CTkLabel(master=frame_resoconto, text="F. cass da riportare + tot. Marchirolo", text_color="#969595", font=("Helvetica",13))
-    explain_saldocassa.grid(row=7, column=2, pady=10, padx=20, sticky="nw")
     #Commenti
     label_commenti = ctk.CTkLabel(master=tabview.tab("Resoconto"), text="Commenti:")
     label_commenti.pack()
