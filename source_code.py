@@ -2442,7 +2442,6 @@ def visualizzaProva():
         delete_button.grid(row=1, column=2)
 
     add_das_contante = ctk.CTkButton(frame_das_contante, text='Aggiungi DAS contante', command=addDasContante)
-    add_das_contante.pack(padx=20, pady=(20,0))
     #Totale contante das
     frame_totale_das_contante = ctk.CTkFrame(master=frame_das)
     frame_totale_das_contante.pack()
@@ -2475,7 +2474,6 @@ def visualizzaProva():
         delete_button.grid(row=1, column=2)
 
     add_das_cartepos = ctk.CTkButton(frame_das_cartepos, text='Aggiungi DAS carta/POS', command=addDasCartePOS)
-    add_das_cartepos.pack(padx=20, pady=(20,0))
     #Totale carte/pos das
     frame_totale_das_cartepos = ctk.CTkFrame(master=frame_das)
     frame_totale_das_cartepos.pack()
@@ -2508,7 +2506,6 @@ def visualizzaProva():
         delete_button.grid(row=1, column=2)
 
     add_das_bonifico = ctk.CTkButton(frame_das_bonifico, text='Aggiungi DAS bonifico', command=addDasBonifico)
-    add_das_bonifico.pack(padx=20, pady=(20,0))
     #Totale carte/pos das
     frame_totale_das_bonifico = ctk.CTkFrame(master=frame_das)
     frame_totale_das_bonifico.pack()
@@ -2551,7 +2548,6 @@ def visualizzaProva():
         delete_button.grid(row=1, column=2)
 
     add_incasso_per_conto = ctk.CTkButton(frame_incasso_per_conto, text='Aggiungi incasso per conto', command=addIncassoPerConto)
-    add_incasso_per_conto.pack(padx=20, pady=(20,0))
 
     #Totale incassi per conto
     frame_totale_incassi_per_conto=ctk.CTkFrame(master=tabview.tab("Altri incassi"))
@@ -2588,7 +2584,6 @@ def visualizzaProva():
         delete_button.grid(row=1, column=2)
 
     addboxButton = ctk.CTkButton(frame_sospesi, text='Aggiungi sospeso', command=addSospeso)
-    addboxButton.pack(padx=20, pady=20)
 
     #Totale sospesi
     label_sospesi = ctk.CTkLabel(master=tabview.tab("Sospesi"), text="Totale sospesi:", font=("Helvetica",14,"bold"))
@@ -2626,7 +2621,6 @@ def visualizzaProva():
         delete_button.grid(row=1, column=2)
 
     add_contante_recuperato = ctk.CTkButton(frame_recuperosospesi_contante, text='Aggiungi contante recuperato', command=addSospContante)
-    add_contante_recuperato.pack(padx=20, pady=(20,0))
 
     #Totale contante recuperato
     frame_contanterecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
@@ -2661,7 +2655,6 @@ def visualizzaProva():
         delete_button.grid(row=1, column=2)
 
     add_cartapos_recuperato = ctk.CTkButton(frame_recuperosospesi_cartapos, text='Aggiungi Carta/POS recuperato', command=addSospCartePOS)
-    add_cartapos_recuperato.pack(pady=(25,0))
     #Totale carte/POS recuperato
     frame_carteposrecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_carteposrecuperato.pack()
@@ -2695,7 +2688,6 @@ def visualizzaProva():
         delete_button.grid(row=1, column=2)
 
     add_bonifici_recuperato = ctk.CTkButton(frame_recuperosospesi_bonifici, text='Aggiungi bonifico recuperato', command=addSospBonifici)
-    add_bonifici_recuperato.pack(pady=(25,0))
     #Totale bonifici recuperato
     frame_bonificirecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_bonificirecuperato.pack()
@@ -2754,7 +2746,6 @@ def visualizzaProva():
         delete_button.grid(row=1, column=2)
 
     add_versamento = ctk.CTkButton(frame_versamenti, text='Aggiungi versamento', command=addVersamento)
-    add_versamento.pack(padx=20, pady=(20,0))
     #Totale versamenti
     frame_usciteversamenti = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
     frame_usciteversamenti.pack()
@@ -2787,7 +2778,6 @@ def visualizzaProva():
         delete_button.grid(row=1, column=2)
 
     add_uscite_varie = ctk.CTkButton(frame_uscite_varie, text='Aggiungi uscita extra', command=addUsciteVarie)
-    add_uscite_varie.pack(padx=20, pady=(20,0))
     #Totale uscite varie
     frame_totaleuscitevarie = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
     frame_totaleuscitevarie.pack()
@@ -3079,8 +3069,12 @@ def visualizzaProva():
 
     #----MANAGE DATA SECTION----
     def addButtons():
-        #Aggiungi bottoni per sospesi, recuperi e uscite
-        addboxButton.pack(padx=20, pady=20)
+        #Aggiungi bottoni per aggiungere riga alle liste
+        add_das_contante.pack(padx=20, pady=(20,0))
+        add_das_bonifico.pack(padx=20, pady=(20,0))
+        add_das_cartepos.pack(padx=20, pady=(20,0))
+        add_incasso_per_conto.pack(padx=20, pady=(20,0))
+        addboxButton.pack(padx=20, pady=(20,0))
         add_contante_recuperato.pack(padx=20, pady=(20,0))
         add_cartapos_recuperato.pack(pady=(25,0))
         add_bonifici_recuperato.pack(pady=(25,0))
