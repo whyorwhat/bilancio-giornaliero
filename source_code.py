@@ -2280,8 +2280,13 @@ def visualizzaProva():
         data_converted_text=""
         data_converted_text=data_converted[2]+"-"+data_converted[1]+"-"+data_converted[0]
         #CARICA FONDO CASSA PRECEDENTE
-        #Salva Totale entrate cassa contante per confrontarlo dopo per verificare se è cambiato il fondo cassa da riportare del giorno precedente
-        previous_totale_entrate_cassa_contante = entry_totale_entrate_cassa_contante.get()
+        #Salva variabili che compongono Totale entrate cassa contante per confrontarli dopo il caricamento e aggiornamento del fondo cassa precedente
+        previous_totale_parziale_1 = float(entry_tot_parziale_1.get())
+        previous_totale_contante_recuperato = float(entry_tot_contante_recuperato.get())
+        previous_totale_entrate_cassa_contante = float(entry_totale_entrate_cassa_contante.get())
+        previous_fondo_cassa_precedente = previous_totale_entrate_cassa_contante - previous_totale_parziale_1 - previous_totale_contante_recuperato
+        previous_fondo_cassa_precedente = "{:.2f}".format(previous_fondo_cassa_precedente)
+        print(previous_fondo_cassa_precedente)
         c.execute("SELECT data, fondo_cassa_da_riportare FROM prova WHERE data<'"+data_converted_text+"' ORDER BY data DESC LIMIT 1")
         rows=c.fetchall()
         if len(rows)==0:
@@ -2309,11 +2314,11 @@ def visualizzaProva():
                 label_cassaprecedente.unbind("<Enter>")
                 label_cassaprecedente.unbind("<Leave>")
                 CreateToolTip(label_cassaprecedente, text="Del "+data_converted_text2)
-        #Manda avviso se il fondo cassa precedente è cambiato
-        #Aggiorna Totale entrate cassa contante. Se è cambiato, significa che il fondo cassa precedente è cambiato
-        #MIGLIORARE QUESTO CHECK: RENDERLO PIU PRECISO
         updateFondoCassaPrecedente()
-        if entry_totale_entrate_cassa_contante.get() != previous_totale_entrate_cassa_contante:
+        #AVVISO SE FONDO CASSA E' CAMBIATO
+        #Confronta variabili precedenti con nuove
+        print(entry_cassaprecedente.get())
+        if entry_cassaprecedente.get() != previous_fondo_cassa_precedente:
             def yes():
                 saveButton()
                 message_window.destroy()
