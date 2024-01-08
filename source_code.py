@@ -2311,6 +2311,7 @@ def visualizzaProva():
                 CreateToolTip(label_cassaprecedente, text="Del "+data_converted_text2)
         #Manda avviso se il fondo cassa precedente è cambiato
         #Aggiorna Totale entrate cassa contante. Se è cambiato, significa che il fondo cassa precedente è cambiato
+        #MIGLIORARE QUESTO CHECK: RENDERLO PIU PRECISO
         updateFondoCassaPrecedente()
         if entry_totale_entrate_cassa_contante.get() != previous_totale_entrate_cassa_contante:
             def yes():
