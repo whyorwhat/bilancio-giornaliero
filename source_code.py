@@ -114,7 +114,7 @@ check_icon = ctk.CTkImage(Image.open(percorso_applicazione+"check_icon.png"), si
 error_icon = ctk.CTkImage(Image.open(percorso_applicazione+"error_icon.png"), size=(40, 40))
 
 #Set application colors
-ctk.set_appearance_mode("system")
+ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("dark-blue")
 
 #Set app size
@@ -2293,10 +2293,6 @@ def visualizzaProva():
             data_precedente=""
         else:
             for data_precedente, fondo_cassa_da_riportare_precedente in rows:
-                entry_cassaprecedente.configure(state='normal')
-                entry_cassaprecedente.delete(0,'end')
-                entry_cassaprecedente.insert('end', "{:.2f}".format(fondo_cassa_da_riportare_precedente))
-                entry_cassaprecedente.configure(state='disabled')
                 #Converti di nuovo la data in formato gg-mm-aaaa
                 data_converted2 = (data_precedente).split('-')
                 data_converted_text2=""
