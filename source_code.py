@@ -34,11 +34,9 @@ c.execute("""CREATE TABLE IF NOT EXISTS prova(
     totale_sospesi DOUBLE,
     totale_parziale_1 DOUBLE,
     fondo_cassa_precedente DOUBLE,
-    incassi_contante DOUBLE,
     totale_recupero_sospesi_contanti DOUBLE,
     totale_recupero_sospesi_carte_pos DOUBLE,
     totale_recupero_sospesi_bonifici DOUBLE,
-    totale_cassa_contante DOUBLE,
     totale_abbuoni DOUBLE,
     totale_uscite_varie DOUBLE,
     totale_uscite_versamenti DOUBLE,
@@ -277,7 +275,7 @@ def createNuovaProvaView():
     tabview.add("Resoconto")
     tabview.add("Documenti")
 
-    #UPDATE VALUES DECLARATION
+    #CAMBIAMENTO DI VARIABILI: Le seguenti variabili sono associate ad una variabile. Quando questa cambia valore, permette di aggiornare altre entries, come specificato all'interno di ogni def
     def updatePremioLordo(*args):
         #Aggiorna totale parziale 1
         try: a=premio_lordo.get()
@@ -489,17 +487,6 @@ def createNuovaProvaView():
         entry_saldo_sospesi.delete(0,'end')
         entry_saldo_sospesi.insert('end', "{:.2f}".format(result))
         entry_saldo_sospesi.configure(state='disabled')
-    def updateTotaleCassaContante(*args):
-        #print("Aggiorna fondo cassa da riportare")
-        try: a=totale_cassa_contante.get()
-        except: a=0
-        try: b=totale_generale_uscite.get()
-        except: b=0
-        result=a-b
-        entry_fondodariportare.configure(state='normal')
-        entry_fondodariportare.delete(0,'end')
-        entry_fondodariportare.insert('end', "{:.2f}".format(result))
-        entry_fondodariportare.configure(state='disabled')
     def updateTotaleAbbuoni(*args):
         #print("Aggiorna Totale generale uscite")
         try: a=totale_abbuoni.get()
@@ -799,6 +786,15 @@ def createNuovaProvaView():
         entry_totale_das.delete(0,'end')
         entry_totale_das.insert('end', "{:.2f}".format(result))
         entry_totale_das.configure(state='disabled')
+
+        #Aggiorna incasso polizze bonifici
+        try: d=movimenti_bancari.get()
+        except: d=0
+        result2=d+c
+        entry_incasso_polizzebonifici.configure(state='normal')
+        entry_incasso_polizzebonifici.delete(0,'end')
+        entry_incasso_polizzebonifici.insert('end', "{:.2f}".format(result2))
+        entry_incasso_polizzebonifici.configure(state='disabled')
     def updateTotaleDasCartePOS(*args):
         #Aggiorna totale DAS
         try: a=totale_das_contante.get()
@@ -812,6 +808,15 @@ def createNuovaProvaView():
         entry_totale_das.delete(0,'end')
         entry_totale_das.insert('end', "{:.2f}".format(result))
         entry_totale_das.configure(state='disabled')
+
+        #Aggiorna incasso polizze carte/pos
+        try: d=totale_carte_pos.get()
+        except: d=0
+        result2=b+d
+        entry_incasso_polizzecartepos.configure(state='normal')
+        entry_incasso_polizzecartepos.delete(0,'end')
+        entry_incasso_polizzecartepos.insert('end', "{:.2f}".format(result2))
+        entry_incasso_polizzecartepos.configure(state='disabled')
     def updateTotaleEntrateCassaContante(*args):
         #Aggiorna fondo cassa da riportare
         try: a=totale_entrate_cassa_contante.get()
@@ -826,7 +831,7 @@ def createNuovaProvaView():
      
 
 
-    #VARIABLES DECLARATION
+    #DICHIARAZIONE VARIABILI
     premio_lordo = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
     premio_lordo.trace("w", updatePremioLordo)
     movimenti_bancari = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
@@ -852,15 +857,12 @@ def createNuovaProvaView():
     totale_parziale_1.trace("w", updateTotaleParziale1)
     fondo_cassa_precedente = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
     fondo_cassa_precedente.trace("w", updateFondoCassaPrecedente)
-    incassi_contante = ctk.DoubleVar(creaprova, "{:.2f}".format(0))                    #totale_incassi_vittoria - incasso_polizze_bonifici - incasso_polizze_carte_pos - totale_sospesi
     totale_recupero_sospesi_contanti = ctk.DoubleVar(creaprova, "{:.2f}".format(0))    #somma array recupero_sospesi_contanti
     totale_recupero_sospesi_contanti.trace("w", updateTotaleRecuperoSospesiContanti)
     totale_recupero_sospesi_carte_pos = ctk.DoubleVar(creaprova, "{:.2f}".format(0))   #somma array recupero_sospesi_carte_pos
     totale_recupero_sospesi_carte_pos.trace("w", updateTotaleRecuperoSospesiCartePOS)
     totale_recupero_sospesi_bonifici = ctk.DoubleVar(creaprova, "{:.2f}".format(0))    #somma array recupero_sospesi_bonifici
     totale_recupero_sospesi_bonifici.trace("w", updateTotaleRecuperoSospesiBonifici)
-    totale_cassa_contante = ctk.DoubleVar(creaprova, "{:.2f}".format(0))               #totale_parziale_2 + totale_recupero_sospesi
-    totale_cassa_contante.trace("w", updateTotaleCassaContante)
     totale_abbuoni = ctk.DoubleVar(creaprova, "{:.2f}".format(0))
     totale_abbuoni.trace("w", updateTotaleAbbuoni)
     totale_uscite_varie = ctk.DoubleVar(creaprova, "{:.2f}".format(0))                 #uscite_varie + uscite_versamenti
@@ -894,10 +896,10 @@ def createNuovaProvaView():
     entry_premio_lordo = ctk.CTkEntry(frame_incassi, textvariable=premio_lordo, width=100)
     entry_premio_lordo.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
     #Movimenti bancari
-    label_incasso_bonifici = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
-    label_incasso_bonifici.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
-    entry_incasso_bonifici = ctk.CTkEntry(frame_incassi, textvariable=movimenti_bancari, width=100)
-    entry_incasso_bonifici.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
+    label_movimenti_bancari = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
+    label_movimenti_bancari.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    entry_movimenti_bancari = ctk.CTkEntry(frame_incassi, textvariable=movimenti_bancari, width=100)
+    entry_movimenti_bancari.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze bonifici
     label_incasso_polizzebonifici = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze bonifici:", font=("Helvetica",14,"bold"))
     label_incasso_polizzebonifici.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
@@ -1605,11 +1607,9 @@ def createNuovaProvaView():
                         +str(safeLoad(totale_sospesi))+", "
                         +str(safeLoad(totale_parziale_1))+", "
                         +str(safeLoad(fondo_cassa_precedente))+", "
-                        +str(safeLoad(incassi_contante))+", "
                         +str(safeLoad(totale_recupero_sospesi_contanti))+", "
                         +str(safeLoad(totale_recupero_sospesi_carte_pos))+", "
                         +str(safeLoad(totale_recupero_sospesi_bonifici))+", "
-                        +str(safeLoad(totale_cassa_contante))+", "
                         +str(safeLoad(totale_abbuoni))+", "
                         +str(safeLoad(totale_uscite_varie))+", "
                         +str(safeLoad(totale_uscite_versamenti))+", "
@@ -1752,7 +1752,7 @@ def createNuovaProvaView():
                     try:
                         if valore.get() != "" and causale.get() != "":
                             c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
-                                    +"'incassi_per_conto', "
+                                    +"'incasso_per_conto', "
                                     +str(valore.get())+", '"
                                     +causale.get()+
                                     "')"
@@ -1802,120 +1802,14 @@ def visualizzaProva():
 
 
 
-    #UPDATE VALUES DECLARATION
-    def updateIncassiVittoria(*args):
-        #print("Aggiorna totale parziale 1")
-        try: a=totale_incassi_vittoria.get()
+    #CAMBIAMENTO DI VARIABILI: Le seguenti variabili sono associate ad una variabile. Quando questa cambia valore, permette di aggiornare altre entries, come specificato all'interno di ogni def
+    def updatePremioLordo(*args):
+        #Aggiorna totale parziale 1
+        try: a=premio_lordo.get()
         except: a=0
-        try: b=incasso_per_conto.get()
+        try: b=totale_incassi_per_conto.get()
         except: b=0
-        try: c=incasso_das.get()
-        except: c=0
-        try: d=totale_bonifici.get()
-        except: d=0
-        try: e=totale_carte_pos.get()
-        except: e=0
-        try: f=totale_sospesi.get()
-        except: f=0
-        try: k=incasso_contante.get()
-        except: k=0
-        try: l=incasso_assegni.get()
-        except: l=0
-        result=a+b+c+k+l-d-e-f
-        entry_tot_parziale_1.configure(state='normal')
-        entry_tot_parziale_1.delete(0,'end')
-        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
-        entry_tot_parziale_1.configure(state='disabled')
-
-        #print("Aggiorna Incasso contanti")
-        try: g=totale_incassi_vittoria.get()
-        except: g=0
-        try: h=incasso_polizze_bonifici.get()
-        except: h=0
-        try: i=incasso_polizze_carte_pos.get()
-        except: i=0
-        try: j=totale_sospesi.get()
-        except: j=0
-        result2=g-h-i-j
-        entry_incassicontante.configure(state='normal')
-        entry_incassicontante.delete(0,'end')
-        entry_incassicontante.insert('end', "{:.2f}".format(result2))
-        entry_incassicontante.configure(state='disabled')
-    def updateIncassoPerConto(*args):
-        #print("Aggiorna totale parziale 1")
-        print("ho aggiornato la lista degli incassi per conto e ora aggiorna il resto")
-    def updateIncassoDAS(*args):
-        #print("Aggiorna totale parziale 1")
-        try: a=totale_incassi_vittoria.get()
-        except: a=0
-        try: b=incasso_per_conto.get()
-        except: b=0
-        try: c=incasso_das.get()
-        except: c=0
-        try: d=totale_bonifici.get()
-        except: d=0
-        try: e=totale_carte_pos.get()
-        except: e=0
-        try: f=totale_sospesi.get()
-        except: f=0
-        try: g=incasso_contante.get()
-        except: g=0
-        try: h=incasso_assegni.get()
-        except: h=0
-        result=a+b+c+g+h-d-e-f
-        entry_tot_parziale_1.configure(state='normal')
-        entry_tot_parziale_1.delete(0,'end')
-        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
-        entry_tot_parziale_1.configure(state='disabled')
-    def updateTotaleBonifici(*args):
-        #print("Aggiorna totale parziale 1")
-        try: a=totale_incassi_vittoria.get()
-        except: a=0
-        try: b=incasso_per_conto.get()
-        except: b=0
-        try: c=incasso_das.get()
-        except: c=0
-        try: d=totale_bonifici.get()
-        except: d=0
-        try: e=totale_carte_pos.get()
-        except: e=0
-        try: f=totale_sospesi.get()
-        except: f=0
-        try: i=incasso_contante.get()
-        except: i=0
-        try: j=incasso_assegni.get()
-        except: j=0
-        result=a+b+c+i+j-d-e-f
-        entry_tot_parziale_1.configure(state='normal')
-        entry_tot_parziale_1.delete(0,'end')
-        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
-        entry_tot_parziale_1.configure(state='disabled')
-
-        #print("Aggiorna Incasso polizze bonifici")
-        try: g=totale_bonifici.get()
-        except: g=0
-        try: h=totale_recupero_sospesi_bonifici.get()
-        except: h=0
-        result2=g-h
-        entry_incasso_polizzebonifici.configure(state='normal')
-        entry_incasso_polizzebonifici.delete(0,'end')
-        entry_incasso_polizzebonifici.insert('end', "{:.2f}".format(result2))
-        entry_incasso_polizzebonifici.configure(state='disabled')
-    def updateIncassoPolizzeBonifici(*args):
-        #print("Aggiorna Incasso polizze bonifici")
-        try: a=totale_bonifici.get()
-        except: a=0
-        try: b=totale_recupero_sospesi_bonifici.get()
-        except: b=0
-        result=a-b
-        entry_incasso_polizzebonifici.configure(state='normal')
-        entry_incasso_polizzebonifici.delete(0,'end')
-        entry_incasso_polizzebonifici.insert('end', "{:.2f}".format(result))
-        entry_incasso_polizzebonifici.configure(state='disabled')
-
-        #Aggiorna Incasso contanti
-        #print("Aggiorna Incasso contanti")
-        try: c=totale_incassi_vittoria.get()
+        try: c=totale_das_contante.get()
         except: c=0
         try: d=incasso_polizze_bonifici.get()
         except: d=0
@@ -1923,187 +1817,203 @@ def visualizzaProva():
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        result2=c-d-e-f
-        entry_incassicontante.configure(state='normal')
-        entry_incassicontante.delete(0,'end')
-        entry_incassicontante.insert('end', "{:.2f}".format(result2))
-        entry_incassicontante.configure(state='disabled')
-    def updateTotaleCartePOS(*args):
-        #print("Aggiorna totale parziale 1")
-        try: a=totale_incassi_vittoria.get()
-        except: a=0
-        try: b=incasso_per_conto.get()
-        except: b=0
-        try: c=incasso_das.get()
-        except: c=0
-        try: d=totale_bonifici.get()
-        except: d=0
-        try: e=totale_carte_pos.get()
-        except: e=0
-        try: f=totale_sospesi.get()
-        except: f=0
-        try: i=incasso_contante.get()
-        except: i=0
-        try: j=incasso_assegni.get()
-        except: j=0
-        result=a+b+c+i+j-d-e-f
+        result=a+b+c-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
         entry_tot_parziale_1.configure(state='disabled')
-
-        #print("Aggiorna incasso polizze pos/carte")
-        try: g=totale_carte_pos.get()
-        except: g=0
-        try: h=totale_recupero_sospesi_carte_pos.get()
-        except: h=0
-        result2=g-h
+    def updateIncassoPerConto(*args):
+        somma=0
+        for item in new_lista_incassi_per_conto:
+            try: tmp=item.get()
+            except: tmp=0
+            somma = somma+tmp
+        entry_totale_incassi_per_conto.configure(state='normal')
+        entry_totale_incassi_per_conto.delete(0,'end')
+        entry_totale_incassi_per_conto.insert('end', "{:.2f}".format(somma))
+        entry_totale_incassi_per_conto.configure(state='disabled')
+    def updateTotaleIncassoPerConto(*args):
+        #Aggiorna totale parziale 1
+        try: a=premio_lordo.get()
+        except: a=0
+        try: b=totale_incassi_per_conto.get()
+        except: b=0
+        try: c=totale_das_contante.get()
+        except: c=0
+        try: d=incasso_polizze_bonifici.get()
+        except: d=0
+        try: e=incasso_polizze_carte_pos.get()
+        except: e=0
+        try: f=totale_sospesi.get()
+        except: f=0
+        result=a+b+c-d-e-f
+        entry_tot_parziale_1.configure(state='normal')
+        entry_tot_parziale_1.delete(0,'end')
+        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
+        entry_tot_parziale_1.configure(state='disabled')
+    def updateMovimentiBancari(*args):
+        #Aggiorna Incasso polizze bonifici
+        try: a=movimenti_bancari.get()
+        except: a=0
+        try: b=totale_das_bonifico.get()
+        except: b=0
+        result2=a+b
+        entry_incasso_polizzebonifici.configure(state='normal')
+        entry_incasso_polizzebonifici.delete(0,'end')
+        entry_incasso_polizzebonifici.insert('end', "{:.2f}".format(result2))
+        entry_incasso_polizzebonifici.configure(state='disabled')
+    def updateIncassoPolizzeBonifici(*args):
+        #Aggiorna totale parziale 1
+        try: a=premio_lordo.get()
+        except: a=0
+        try: b=totale_incassi_per_conto.get()
+        except: b=0
+        try: c=totale_das_contante.get()
+        except: c=0
+        try: d=incasso_polizze_bonifici.get()
+        except: d=0
+        try: e=incasso_polizze_carte_pos.get()
+        except: e=0
+        try: f=totale_sospesi.get()
+        except: f=0
+        result=a+b+c-d-e-f
+        entry_tot_parziale_1.configure(state='normal')
+        entry_tot_parziale_1.delete(0,'end')
+        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
+        entry_tot_parziale_1.configure(state='disabled')
+    def updateTotaleCartePOS(*args):
+        #Aggiorna incasso polizze pos/carte
+        try: a=totale_carte_pos.get()
+        except: a=0
+        try: b=totale_recupero_sospesi_carte_pos.get()
+        except: b=0
+        result2=a+b
         entry_incasso_polizzecartepos.configure(state='normal')
         entry_incasso_polizzecartepos.delete(0,'end')
         entry_incasso_polizzecartepos.insert('end', "{:.2f}".format(result2))
         entry_incasso_polizzecartepos.configure(state='disabled')
     def updateIncassoPolizzeCartePOS(*args):
-        #print("Aggiorna Incasso contanti")
-        try: a=totale_incassi_vittoria.get()
+        #Aggiorna totale parziale 1
+        try: a=premio_lordo.get()
         except: a=0
-        try: b=incasso_polizze_bonifici.get()
+        try: b=totale_incassi_per_conto.get()
         except: b=0
-        try: c=incasso_polizze_carte_pos.get()
+        try: c=totale_das_contante.get()
         except: c=0
-        try: d=totale_sospesi.get()
+        try: d=incasso_polizze_bonifici.get()
+        except: d=0
+        try: e=incasso_polizze_carte_pos.get()
+        except: e=0
+        try: f=totale_sospesi.get()
+        except: f=0
+        result=a+b+c-d-e-f
+        entry_tot_parziale_1.configure(state='normal')
+        entry_tot_parziale_1.delete(0,'end')
+        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
+        entry_tot_parziale_1.configure(state='disabled')
+    def updateTotaleParziale1(*args):
+        #Aggiorna totale entrate cassa contante
+        try: a=totale_parziale_1.get()
+        except: a=0
+        try: b=fondo_cassa_precedente.get()
+        except: b=0
+        try: c=totale_recupero_sospesi_contanti.get()
+        except: c=0
+        result=a+b+c
+        entry_totale_entrate_cassa_contante.configure(state='normal')
+        entry_totale_entrate_cassa_contante.delete(0,'end')
+        entry_totale_entrate_cassa_contante.insert('end', "{:.2f}".format(result))
+        entry_totale_entrate_cassa_contante.configure(state='disabled')
+        #Aggiorna Quadratura contante cassa + assegno
+        try: g=totale_abbuoni.get()
+        except: g=0
+        try: h=punti_viva.get()
+        except: h=0
+        result3=a+c-g-h
+        entry_quadratura_contante_cassa_assegno.configure(state='normal')
+        entry_quadratura_contante_cassa_assegno.delete(0,'end')
+        entry_quadratura_contante_cassa_assegno.insert('end', "{:.2f}".format(result3))
+        entry_quadratura_contante_cassa_assegno.configure(state='disabled')
+    def updateFondoCassaPrecedente(*args):
+        #Aggiorna totale entrate cassa contante
+        try: a=totale_parziale_1.get()
+        except: a=0
+        try: b=fondo_cassa_precedente.get()
+        except: b=0
+        try: c=totale_recupero_sospesi_contanti.get()
+        except: c=0
+        result=a+b+c
+        entry_totale_entrate_cassa_contante.configure(state='normal')
+        entry_totale_entrate_cassa_contante.delete(0,'end')
+        entry_totale_entrate_cassa_contante.insert('end', "{:.2f}".format(result))
+        entry_totale_entrate_cassa_contante.configure(state='disabled')
+    def updateTotaleRecuperoSospesiContanti(*args):
+        #Aggiorna saldo sospesi
+        try: a=totale_sospesi.get()
+        except: a=0
+        try: b=totale_recupero_sospesi_contanti.get()
+        except: b=0
+        try: c=totale_recupero_sospesi_carte_pos.get()
+        except: c=0
+        try: d=totale_recupero_sospesi_bonifici.get()
         except: d=0
         result=a-b-c-d
-        entry_incassicontante.configure(state='normal')
-        entry_incassicontante.delete(0,'end')
-        entry_incassicontante.insert('end', "{:.2f}".format(result))
-        entry_incassicontante.configure(state='disabled')
-    def updateTotaleParziale1(*args):
-        #print("Aggiorna totale parziale 2")
-        try: a=totale_parziale_1.get()
-        except: a=0
-        try: b=fondo_cassa_precedente.get()
-        except: b=0
-        result=a+b
-        entry_tot_parziale_2.configure(state='normal')
-        entry_tot_parziale_2.delete(0,'end')
-        entry_tot_parziale_2.insert('end', "{:.2f}".format(result))
-        entry_tot_parziale_2.configure(state='disabled')
-    def updateFondoCassaPrecedente(*args):
-        #print("Aggiorna totaele parziale 2")
-        try: a=totale_parziale_1.get()
-        except: a=0
-        try: b=fondo_cassa_precedente.get()
-        except: b=0
-        result=a+b
-        entry_tot_parziale_2.configure(state='normal')
-        entry_tot_parziale_2.delete(0,'end')
-        entry_tot_parziale_2.insert('end', "{:.2f}".format(result))
-        entry_tot_parziale_2.configure(state='disabled')
-    def updateTotaleParziale2(*args):
-        #print("Aggiorna totale cassa contante")
-        try: a=totale_parziale_2.get()
-        except: a=0
-        try: b=totale_recupero_sospesi.get()
-        except: b=0
-        result=a+b
-        entry_tot_cassacontanti.configure(state='normal')
-        entry_tot_cassacontanti.delete(0,'end')
-        entry_tot_cassacontanti.insert('end', "{:.2f}".format(result))
-        entry_tot_cassacontanti.configure(state='disabled')
-    def updateTotaleRecuperoSospesiContanti(*args):
-        #print("Aggiorna totale recupero sospesi")
-        try: a=totale_recupero_sospesi_contanti.get()
-        except: a=0
-        try: b=totale_recupero_sospesi_carte_pos.get()
-        except: b=0
-        try: c=totale_recupero_sospesi_bonifici.get()
-        except: c=0
-        result=a+b+c
-        entry_tot_recuperosospesi.configure(state='normal')
-        entry_tot_recuperosospesi.delete(0,'end')
-        entry_tot_recuperosospesi.insert('end', "{:.2f}".format(result))
-        entry_tot_recuperosospesi.configure(state='disabled')
-    def updateTotaleRecuperoSospesiCartePOS(*args):
-        #print("Aggiorna totale recupero sospesi")
-        try: a=totale_recupero_sospesi_contanti.get()
-        except: a=0
-        try: b=totale_recupero_sospesi_carte_pos.get()
-        except: b=0
-        try: c=totale_recupero_sospesi_bonifici.get()
-        except: c=0
-        result=a+b+c
-        entry_tot_recuperosospesi.configure(state='normal')
-        entry_tot_recuperosospesi.delete(0,'end')
-        entry_tot_recuperosospesi.insert('end', "{:.2f}".format(result))
-        entry_tot_recuperosospesi.configure(state='disabled')
-
-        #print("Aggiorna incasso polizze pos/carte")
-        try: d=totale_carte_pos.get()
-        except: d=0
-        try: e=totale_recupero_sospesi_carte_pos.get()
-        except: e=0
-        result2=d-e
-        entry_incasso_polizzecartepos.configure(state='normal')
-        entry_incasso_polizzecartepos.delete(0,'end')
-        entry_incasso_polizzecartepos.insert('end', "{:.2f}".format(result2))
-        entry_incasso_polizzecartepos.configure(state='disabled')
-    def updateTotaleRecuperoSospesiBonifici(*args):
-        #print("Aggiorna totale recupero sospesi")
-        try: a=totale_recupero_sospesi_contanti.get()
-        except: a=0
-        try: b=totale_recupero_sospesi_carte_pos.get()
-        except: b=0
-        try: c=totale_recupero_sospesi_bonifici.get()
-        except: c=0
-        result=a+b+c
-        entry_tot_recuperosospesi.configure(state='normal')
-        entry_tot_recuperosospesi.delete(0,'end')
-        entry_tot_recuperosospesi.insert('end', "{:.2f}".format(result))
-        entry_tot_recuperosospesi.configure(state='disabled')
-
-        #print("Aggiorna Incasso polizze bonifici")
-        try: d=totale_bonifici.get()
-        except: d=0
-        try: e=totale_recupero_sospesi_bonifici.get()
-        except: e=0
-        result2=d-e
-        entry_incasso_polizzebonifici.configure(state='normal')
-        entry_incasso_polizzebonifici.delete(0,'end')
-        entry_incasso_polizzebonifici.insert('end', "{:.2f}".format(result2))
-        entry_incasso_polizzebonifici.configure(state='disabled')
-    def updateTotaleRecuperoSospesi(*args):
-        #print("Aggiorna totale cassa contante")
-        try: a=totale_parziale_2.get()
-        except: a=0
-        try: b=totale_recupero_sospesi.get()
-        except: b=0
-        result=a+b
-        entry_tot_cassacontanti.configure(state='normal')
-        entry_tot_cassacontanti.delete(0,'end')
-        entry_tot_cassacontanti.insert('end', "{:.2f}".format(result))
-        entry_tot_cassacontanti.configure(state='disabled')
-        
-        #Aggiorna saldo sospesi
-        try: c=totale_sospesi.get()
-        except: c=0
-        try: d=totale_recupero_sospesi.get()
-        except: d=0
-        result3=c-d
         entry_saldo_sospesi.configure(state='normal')
         entry_saldo_sospesi.delete(0,'end')
-        entry_saldo_sospesi.insert('end', "{:.2f}".format(result3))
+        entry_saldo_sospesi.insert('end', "{:.2f}".format(result))
         entry_saldo_sospesi.configure(state='disabled')
-    def updateTotaleCassaContante(*args):
-        #print("Aggiorna fondo cassa da riportare")
-        try: a=totale_cassa_contante.get()
+
+        #Aggiorna Totale entrate cassa contante
+        try: e=totale_parziale_1.get()
+        except: e=0
+        try: f=fondo_cassa_precedente.get()
+        except: f=0
+        result2=e+f+b
+        entry_totale_entrate_cassa_contante.configure(state='normal')
+        entry_totale_entrate_cassa_contante.delete(0,'end')
+        entry_totale_entrate_cassa_contante.insert('end', "{:.2f}".format(result2))
+        entry_totale_entrate_cassa_contante.configure(state='disabled')
+
+        #Aggiorna Quadratura contante cassa + assegno
+        try: g=totale_abbuoni.get()
+        except: g=0
+        try: h=punti_viva.get()
+        except: h=0
+        result3=e+b-g-h
+        entry_quadratura_contante_cassa_assegno.configure(state='normal')
+        entry_quadratura_contante_cassa_assegno.delete(0,'end')
+        entry_quadratura_contante_cassa_assegno.insert('end', "{:.2f}".format(result3))
+        entry_quadratura_contante_cassa_assegno.configure(state='disabled')
+    def updateTotaleRecuperoSospesiCartePOS(*args):
+        #Aggiorna saldo sospesi
+        try: a=totale_sospesi.get()
         except: a=0
-        try: b=totale_generale_uscite.get()
+        try: b=totale_recupero_sospesi_contanti.get()
         except: b=0
-        result=a-b
-        entry_fondodariportare.configure(state='normal')
-        entry_fondodariportare.delete(0,'end')
-        entry_fondodariportare.insert('end', "{:.2f}".format(result))
-        entry_fondodariportare.configure(state='disabled')
+        try: c=totale_recupero_sospesi_carte_pos.get()
+        except: c=0
+        try: d=totale_recupero_sospesi_bonifici.get()
+        except: d=0
+        result=a-b-c-d
+        entry_saldo_sospesi.configure(state='normal')
+        entry_saldo_sospesi.delete(0,'end')
+        entry_saldo_sospesi.insert('end', "{:.2f}".format(result))
+        entry_saldo_sospesi.configure(state='disabled')
+    def updateTotaleRecuperoSospesiBonifici(*args):
+        #Aggiorna saldo sospesi
+        try: a=totale_sospesi.get()
+        except: a=0
+        try: b=totale_recupero_sospesi_contanti.get()
+        except: b=0
+        try: c=totale_recupero_sospesi_carte_pos.get()
+        except: c=0
+        try: d=totale_recupero_sospesi_bonifici.get()
+        except: d=0
+        result=a-b-c-d
+        entry_saldo_sospesi.configure(state='normal')
+        entry_saldo_sospesi.delete(0,'end')
+        entry_saldo_sospesi.insert('end', "{:.2f}".format(result))
+        entry_saldo_sospesi.configure(state='disabled')
     def updateTotaleAbbuoni(*args):
         #print("Aggiorna Totale generale uscite")
         try: a=totale_abbuoni.get()
@@ -2115,10 +2025,21 @@ def visualizzaProva():
         try:d=punti_viva.get()
         except:d=0
         result=a+b+c+d
-        totale_generale_uscite.configure(state='normal')
-        totale_generale_uscite.delete(0,'end')
-        totale_generale_uscite.insert('end', "{:.2f}".format(result))
-        totale_generale_uscite.configure(state='disabled')
+        entry_totale_generale_uscite.configure(state='normal')
+        entry_totale_generale_uscite.delete(0,'end')
+        entry_totale_generale_uscite.insert('end', "{:.2f}".format(result))
+        entry_totale_generale_uscite.configure(state='disabled')
+
+        #Aggiorna Quadratura contante cassa + assegno
+        try: e=totale_parziale_1.get()
+        except: g=0
+        try: f=totale_recupero_sospesi_contanti.get()
+        except: h=0
+        result2=e+f-a-d
+        entry_quadratura_contante_cassa_assegno.configure(state='normal')
+        entry_quadratura_contante_cassa_assegno.delete(0,'end')
+        entry_quadratura_contante_cassa_assegno.insert('end', "{:.2f}".format(result2))
+        entry_quadratura_contante_cassa_assegno.configure(state='disabled')
     def updateTotaleUsciteVarie(*args):
         #print("Aggiorna Totale generale uscite")
         try:a=totale_abbuoni.get()
@@ -2130,13 +2051,13 @@ def visualizzaProva():
         try:d=punti_viva.get()
         except:d=0
         result=a+b+c+d
-        totale_generale_uscite.configure(state='normal')
-        totale_generale_uscite.delete(0,'end')
-        totale_generale_uscite.insert('end', "{:.2f}".format(result))
-        totale_generale_uscite.configure(state='disabled')
+        entry_totale_generale_uscite.configure(state='normal')
+        entry_totale_generale_uscite.delete(0,'end')
+        entry_totale_generale_uscite.insert('end', "{:.2f}".format(result))
+        entry_totale_generale_uscite.configure(state='disabled')
     def updateTotaleGeneraleUscite(*args):
-        #print("Aggiorna fondo cassa da riportare")
-        try: a=totale_cassa_contante.get()
+        #Aggiorna fondo cassa da riportare
+        try: a=totale_entrate_cassa_contante.get()
         except: a=0
         try: b=totale_generale_uscite.get()
         except: b=0
@@ -2233,6 +2154,37 @@ def visualizzaProva():
         entry_tot_marchirolo.delete(0,'end')
         entry_tot_marchirolo.insert('end', "{:.2f}".format(somma))
         entry_tot_marchirolo.configure(state='disabled')
+    def updateDasContanti(*args):
+        somma=0
+        for item in new_lista_das_contanti:
+            try: tmp=item.get()
+            except: tmp=0
+            somma = somma+tmp
+        entry_totale_das_contante.configure(state='normal')
+        entry_totale_das_contante.delete(0,'end')
+        entry_totale_das_contante.insert('end', "{:.2f}".format(somma))
+        entry_totale_das_contante.configure(state='disabled')
+    def updateDasCartePOS(*args):
+        somma=0
+        for item in new_lista_das_cartepos:
+            try: tmp=item.get()
+            except: tmp=0
+            somma = somma+tmp
+        entry_totale_das_cartepos.configure(state='normal')
+        entry_totale_das_cartepos.delete(0,'end')
+        entry_totale_das_cartepos.insert('end', "{:.2f}".format(somma))
+        entry_totale_das_cartepos.configure(state='disabled')
+    def updateDasBonifici(*args):
+        somma=0
+        for item in new_lista_das_bonifico:
+            try: tmp=item.get()
+            except: tmp=0
+            somma = somma+tmp
+        entry_totale_das_bonifico.configure(state='normal')
+        entry_totale_das_bonifico.delete(0,'end')
+        entry_totale_das_bonifico.insert('end', "{:.2f}".format(somma))
+        entry_totale_das_bonifico.configure(state='disabled')
+
     def updateTotaleMarchirolo(*args):
         #print("Aggiorna saldo cassa")
         try: a=fondo_cassa_da_riportare.get()
@@ -2246,117 +2198,39 @@ def visualizzaProva():
         entry_saldocassa.configure(state='disabled')
     def updateTotaleSospesi(*args):
         #Aggiorna totale parziale 1
-        try: a=totale_incassi_vittoria.get()
+        try: a=premio_lordo.get()
         except: a=0
-        try: b=incasso_per_conto.get()
+        try: b=totale_incassi_per_conto.get()
         except: b=0
-        try: c=incasso_das.get()
+        try: c=totale_das_contante.get()
         except: c=0
-        try: d=totale_bonifici.get()
+        try: d=incasso_polizze_bonifici.get()
         except: d=0
-        try: e=totale_carte_pos.get()
+        try: e=incasso_polizze_carte_pos.get()
         except: e=0
         try: f=totale_sospesi.get()
         except: f=0
-        try: k=incasso_contante.get()
-        except: k=0
-        try: l=incasso_assegni.get()
-        except: l=0
-        result=a+b+c+k+l-d-e-f
+        result=a+b+c-d-e-f
         entry_tot_parziale_1.configure(state='normal')
         entry_tot_parziale_1.delete(0,'end')
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
         entry_tot_parziale_1.configure(state='disabled')
-
-        #print("Aggiorna Incasso contanti")
-        try: g=totale_incassi_vittoria.get()
-        except: g=0
-        try: h=incasso_polizze_bonifici.get()
-        except: h=0
-        try: i=incasso_polizze_carte_pos.get()
-        except: i=0
-        try: j=totale_sospesi.get()
-        except: j=0
-        result2=g-h-i-j
-        entry_incassicontante.configure(state='normal')
-        entry_incassicontante.delete(0,'end')
-        entry_incassicontante.insert('end', "{:.2f}".format(result2))
-        entry_incassicontante.configure(state='disabled')
 
         #Aggiorna saldo sospesi
-        try: k=totale_sospesi.get()
-        except: k=0
-        try: l=totale_recupero_sospesi.get()
-        except: l=0
-        result3=k-l
+        try: g=totale_recupero_sospesi_contanti.get()
+        except: g=0
+        try: h=totale_recupero_sospesi_carte_pos.get()
+        except: h=0
+        try: i=totale_recupero_sospesi_bonifici.get()
+        except: i=0
+        result2=f-g-h-i
         entry_saldo_sospesi.configure(state='normal')
         entry_saldo_sospesi.delete(0,'end')
-        entry_saldo_sospesi.insert('end', "{:.2f}".format(result3))
+        entry_saldo_sospesi.insert('end', "{:.2f}".format(result2))
         entry_saldo_sospesi.configure(state='disabled')
+
     def updateUsciteVersamenti(*args):
         #print("Aggiorna Totale generale uscite")
-        try: a=totale_abbuoni.get()
-        except: a=0
-        try: b=totale_uscite_varie.get()
-        except: b=0
-        try: c=totale_uscite_versamenti.get()
-        except: c=0
-        result=a+b+c
-        entry_tot_generaleuscite.configure(state='normal')
-        entry_tot_generaleuscite.delete(0,'end')
-        entry_tot_generaleuscite.insert('end', "{:.2f}".format(result))
-        entry_tot_generaleuscite.configure(state='disabled')
-    def updateAssegni(*args):
-        #Aggiorna totale parziale 1
-        try: a=totale_incassi_vittoria.get()
-        except: a=0
-        try: b=incasso_per_conto.get()
-        except: b=0
-        try: c=incasso_das.get()
-        except: c=0
-        try: d=totale_bonifici.get()
-        except: d=0
-        try: e=totale_carte_pos.get()
-        except: e=0
-        try: f=totale_sospesi.get()
-        except: f=0
-        try: g=incasso_contante.get()
-        except: g=0
-        try: h=incasso_assegni.get()
-        except: h=0
-        result=a+b+c+g+h-d-e-f
-        entry_tot_parziale_1.configure(state='normal')
-        entry_tot_parziale_1.delete(0,'end')
-        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
-        entry_tot_parziale_1.configure(state='disabled')
-    def updateIncassoContante(*args):
-        #Aggiorna totale parziale 1
-        try: a=totale_incassi_vittoria.get()
-        except: a=0
-        try: b=incasso_per_conto.get()
-        except: b=0
-        try: c=incasso_das.get()
-        except: c=0
-        try: d=totale_bonifici.get()
-        except: d=0
-        try: e=totale_carte_pos.get()
-        except: e=0
-        try: f=totale_sospesi.get()
-        except: f=0
-        try: g=incasso_contante.get()
-        except: g=0
-        try: h=incasso_assegni.get()
-        except: h=0
-        result=a+b+c+g+h-d-e-f
-        entry_tot_parziale_1.configure(state='normal')
-        entry_tot_parziale_1.delete(0,'end')
-        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
-        entry_tot_parziale_1.configure(state='disabled')
-    def updateSaldoSospesi(*args):
-        print("Entry saldo sospesi cambiata")
-        #Aggiorna
-    def updatePuntiViva(*args):
-         #print("Aggiorna Totale generale uscite")
         try: a=totale_abbuoni.get()
         except: a=0
         try: b=totale_uscite_varie.get()
@@ -2366,45 +2240,156 @@ def visualizzaProva():
         try:d=punti_viva.get()
         except:d=0
         result=a+b+c+d
-        entry_tot_generaleuscite.configure(state='normal')
-        entry_tot_generaleuscite.delete(0,'end')
-        entry_tot_generaleuscite.insert('end', "{:.2f}".format(result))
-        entry_tot_generaleuscite.configure(state='disabled')
+        entry_totale_generale_uscite.configure(state='normal')
+        entry_totale_generale_uscite.delete(0,'end')
+        entry_totale_generale_uscite.insert('end', "{:.2f}".format(result))
+        entry_totale_generale_uscite.configure(state='disabled')
+    def updatePuntiViva(*args):
+        #print("Aggiorna Totale generale uscite")
+        try: a=totale_abbuoni.get()
+        except: a=0
+        try: b=totale_uscite_varie.get()
+        except: b=0
+        try:c=totale_uscite_versamenti.get()
+        except:c=0
+        try:d=punti_viva.get()
+        except:d=0
+        result=a+b+c+d
+        entry_totale_generale_uscite.configure(state='normal')
+        entry_totale_generale_uscite.delete(0,'end')
+        entry_totale_generale_uscite.insert('end', "{:.2f}".format(result))
+        entry_totale_generale_uscite.configure(state='disabled')
 
-    #VARIABLES DECLARATION
-    totale_incassi_vittoria = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    totale_incassi_vittoria.trace("w", updateIncassiVittoria)
-    incasso_per_conto = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    incasso_per_conto.trace("w", updateIncassoPerConto)
-    incasso_das = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    incasso_das.trace("w", updateIncassoDAS)
-    totale_bonifici = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    totale_bonifici.trace("w", updateTotaleBonifici)
-    incasso_polizze_bonifici = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))   #totale_bonifici-totale_recupero_sospesi_bonifici
+        #Aggiorna Quadratura contante cassa + assegno
+        try: e=totale_parziale_1.get()
+        except: g=0
+        try: f=totale_recupero_sospesi_contanti.get()
+        except: h=0
+        result2=e+f-a-d
+        entry_quadratura_contante_cassa_assegno.configure(state='normal')
+        entry_quadratura_contante_cassa_assegno.delete(0,'end')
+        entry_quadratura_contante_cassa_assegno.insert('end', "{:.2f}".format(result2))
+        entry_quadratura_contante_cassa_assegno.configure(state='disabled')
+    def updateTotaleDasContanti(*args):
+        #Aggiorna totale parziale 1
+        try: a=premio_lordo.get()
+        except: a=0
+        try: b=totale_incassi_per_conto.get()
+        except: b=0
+        try: c=totale_das_contante.get()
+        except: c=0
+        try: d=incasso_polizze_bonifici.get()
+        except: d=0
+        try: e=incasso_polizze_carte_pos.get()
+        except: e=0
+        try: f=totale_sospesi.get()
+        except: f=0
+        result=a+b+c-d-e-f
+        entry_tot_parziale_1.configure(state='normal')
+        entry_tot_parziale_1.delete(0,'end')
+        entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
+        entry_tot_parziale_1.configure(state='disabled')
+
+        #Aggiorna totale DAS
+        try: g=totale_das_cartepos.get()
+        except:g=0
+        try: h=totale_das_bonifico.get()
+        except:h=0
+        result=c+g+h
+        entry_totale_das.configure(state='normal')
+        entry_totale_das.delete(0,'end')
+        entry_totale_das.insert('end', "{:.2f}".format(result))
+        entry_totale_das.configure(state='disabled')
+    def updateTotaleDasBonifico(*args):
+        #Aggiorna totale DAS
+        try: a=totale_das_contante.get()
+        except: a=0
+        try: b=totale_das_cartepos.get()
+        except:b=0
+        try: c=totale_das_bonifico.get()
+        except:c=0
+        result=a+b+c
+        entry_totale_das.configure(state='normal')
+        entry_totale_das.delete(0,'end')
+        entry_totale_das.insert('end', "{:.2f}".format(result))
+        entry_totale_das.configure(state='disabled')
+
+        #Aggiorna incasso polizze bonifici
+        try: d=movimenti_bancari.get()
+        except: d=0
+        result2=d+c
+        entry_incasso_polizzebonifici.configure(state='normal')
+        entry_incasso_polizzebonifici.delete(0,'end')
+        entry_incasso_polizzebonifici.insert('end', "{:.2f}".format(result2))
+        entry_incasso_polizzebonifici.configure(state='disabled')
+    def updateTotaleDasCartePOS(*args):
+        #Aggiorna totale DAS
+        try: a=totale_das_contante.get()
+        except: a=0
+        try: b=totale_das_cartepos.get()
+        except:b=0
+        try: c=totale_das_bonifico.get()
+        except:c=0
+        result=a+b+c
+        entry_totale_das.configure(state='normal')
+        entry_totale_das.delete(0,'end')
+        entry_totale_das.insert('end', "{:.2f}".format(result))
+        entry_totale_das.configure(state='disabled')
+
+        #Aggiorna incasso polizze carte/pos
+        try: d=totale_carte_pos.get()
+        except: d=0
+        result2=b+d
+        entry_incasso_polizzecartepos.configure(state='normal')
+        entry_incasso_polizzecartepos.delete(0,'end')
+        entry_incasso_polizzecartepos.insert('end', "{:.2f}".format(result2))
+        entry_incasso_polizzecartepos.configure(state='disabled')
+    def updateTotaleEntrateCassaContante(*args):
+        #Aggiorna fondo cassa da riportare
+        try: a=totale_entrate_cassa_contante.get()
+        except: a=0
+        try: b=totale_generale_uscite.get()
+        except: b=0
+        result=a-b
+        entry_fondodariportare.configure(state='normal')
+        entry_fondodariportare.delete(0,'end')
+        entry_fondodariportare.insert('end', "{:.2f}".format(result))
+        entry_fondodariportare.configure(state='disabled')
+     
+
+
+    #DICHIARAZIONE VARIABILI
+    premio_lordo = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
+    premio_lordo.trace("w", updatePremioLordo)
+    movimenti_bancari = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
+    movimenti_bancari.trace("w", updateMovimentiBancari)
+    incasso_polizze_bonifici = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))   
     incasso_polizze_bonifici.trace("w", updateIncassoPolizzeBonifici)
     totale_carte_pos = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
     totale_carte_pos.trace("w", updateTotaleCartePOS)
     incasso_polizze_carte_pos = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
     incasso_polizze_carte_pos.trace("w", updateIncassoPolizzeCartePOS)
-    totale_sospesi = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                      #somma array sospesi
+    totale_das_contante = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
+    totale_das_contante.trace("w", updateTotaleDasContanti)
+    totale_das_bonifico = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
+    totale_das_bonifico.trace("w", updateTotaleDasBonifico)
+    totale_das_cartepos = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
+    totale_das_cartepos.trace("w", updateTotaleDasCartePOS)
+    totale_das = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
+    totale_incassi_per_conto = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
+    totale_incassi_per_conto.trace("w", updateTotaleIncassoPerConto)
+    totale_sospesi = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
     totale_sospesi.trace("w", updateTotaleSospesi)
-    totale_parziale_1 = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                   #totale_incassi_vittoria+incasso_per_conto+incasso_das-totale_bonifici-totale_carte_pos-totale_sospesi
+    totale_parziale_1 = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                   
     totale_parziale_1.trace("w", updateTotaleParziale1)
     fondo_cassa_precedente = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
     fondo_cassa_precedente.trace("w", updateFondoCassaPrecedente)
-    incassi_contante = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                    #totale_incassi_vittoria - incasso_polizze_bonifici - incasso_polizze_carte_pos - totale_sospesi
-    totale_parziale_2 = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                   #totale_parziale_2 + fondo_cassa_precedente
-    totale_parziale_2.trace("w", updateTotaleParziale2)
     totale_recupero_sospesi_contanti = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))    #somma array recupero_sospesi_contanti
     totale_recupero_sospesi_contanti.trace("w", updateTotaleRecuperoSospesiContanti)
     totale_recupero_sospesi_carte_pos = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))   #somma array recupero_sospesi_carte_pos
     totale_recupero_sospesi_carte_pos.trace("w", updateTotaleRecuperoSospesiCartePOS)
     totale_recupero_sospesi_bonifici = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))    #somma array recupero_sospesi_bonifici
     totale_recupero_sospesi_bonifici.trace("w", updateTotaleRecuperoSospesiBonifici)
-    totale_recupero_sospesi = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))             #totale_recupero_sospesi_contanti + totale_recupero_sospesi_carte_pos + totale_recupero_sospesi_bonifici
-    totale_recupero_sospesi.trace("w", updateTotaleRecuperoSospesi)
-    totale_cassa_contante = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))               #totale_parziale_2 + totale_recupero_sospesi
-    totale_cassa_contante.trace("w", updateTotaleCassaContante)
     totale_abbuoni = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
     totale_abbuoni.trace("w", updateTotaleAbbuoni)
     totale_uscite_varie = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                 #uscite_varie + uscite_versamenti
@@ -2417,16 +2402,15 @@ def visualizzaProva():
     fondo_cassa_da_riportare.trace("w", updateFondoCassaDaRiportare)
     totale_marchirolo = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                   #somma array somme_marchirolo
     totale_marchirolo.trace("w", updateTotaleMarchirolo)
-    saldo_cassa = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    completato = ctk.StringVar(visualizzaprova, "")
-    incasso_assegni = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    incasso_assegni.trace("w", updateAssegni)
-    incasso_contante = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    incasso_contante.trace("w", updateIncassoContante)
+    saldo_cassa = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))                         #fondo_cassa_da_riportare - totale_marchirolo - totale_mimmo - totale_ditta
     saldo_sospesi = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
-    saldo_sospesi.trace("w", updateSaldoSospesi)
     punti_viva = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
     punti_viva.trace("w", updatePuntiViva)
+    quadratura_contante_cassa_assegno = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
+    totale_entrate_cassa_contante = ctk.DoubleVar(visualizzaprova, "{:.2f}".format(0))
+    totale_entrate_cassa_contante.trace("w", updateTotaleEntrateCassaContante)
+    commenti = ctk.StringVar(visualizzaprova, "")
+    completato = ctk.StringVar(visualizzaprova, "")
 
 
     #SELECT dal database e aggiorna entries 
@@ -2500,6 +2484,10 @@ def visualizzaProva():
         updateUsciteVarie()
         updateVersamenti()
         updateMarchirolo()
+        updateDasContanti()
+        updateDasCartePOS()
+        updateDasBonifici()
+        updateIncassoPerConto()
     def destroy(nome_frame, posizione, lista_valori, lista_causali):
         print(posizione)
         #lista_valori.pop(posizione)
@@ -2548,36 +2536,40 @@ def visualizzaProva():
         conn = sqlite3.connect(percorso_database)
         c = conn.cursor()
 
-        saveData("totale_incassi_vittoria", entry_incassi_vittoria, totale_incassi_vittoria, c)
-        saveData("incasso_per_conto", entry_incasso_conto, incasso_per_conto, c)
-        saveData("incasso_das", entry_incasso_das, incasso_das, c)
-        saveData("totale_bonifici", entry_incasso_bonifici, totale_bonifici, c)
+        saveData("premio_lordo", entry_premio_lordo, premio_lordo, c)
+        saveData("movimenti_bancari", entry_movimenti_bancari, movimenti_bancari, c)
         saveData("incasso_polizze_bonifici", entry_incasso_polizzebonifici, incasso_polizze_bonifici, c)
-        saveData("totale_carte_pos", entry_incasso_cartepos, totale_carte_pos, c)
+        saveData("totale_carte_pos", entry_totale_carte_pos, totale_carte_pos, c)
         saveData("incasso_polizze_carte_pos", entry_incasso_polizzecartepos, incasso_polizze_carte_pos, c)
+        saveData("totale_das_contante", entry_totale_das_contante, totale_das_contante, c)
+        saveData("totale_das_bonifico", entry_totale_das_bonifico, totale_das_bonifico, c)
+        saveData("totale_das_cartepos", entry_totale_das_cartepos, totale_das_cartepos, c)
+        saveData("totale_das", entry_totale_das, totale_das, c)
+        saveData("totale_incassi_per_conto", entry_totale_incassi_per_conto, totale_incassi_per_conto, c)
         saveData("totale_sospesi", entry_sospesi, totale_sospesi, c)
         saveData("totale_parziale_1", entry_tot_parziale_1, totale_parziale_1, c)
         saveData("fondo_cassa_precedente", entry_cassaprecedente, fondo_cassa_precedente, c)
-        saveData("incassi_contante", entry_incassicontante, incassi_contante, c)
-        saveData("totale_parziale_2", entry_tot_parziale_2, totale_parziale_2, c)
         saveData("totale_recupero_sospesi_contanti", entry_tot_contante_recuperato, totale_recupero_sospesi_contanti, c)
         saveData("totale_recupero_sospesi_carte_pos", entry_tot_cartapos_recuperato, totale_recupero_sospesi_carte_pos, c)
         saveData("totale_recupero_sospesi_bonifici", entry_tot_bonifici_recuperato, totale_recupero_sospesi_bonifici, c)
-        saveData("totale_recupero_sospesi", entry_tot_recuperosospesi, totale_recupero_sospesi, c)
-        saveData("totale_cassa_contante", entry_tot_cassacontanti, totale_cassa_contante, c)
+        saveData("totale_entrate_cassa_contante", entry_totale_entrate_cassa_contante, totale_entrate_cassa_contante, c)
         saveData("totale_abbuoni", entry_abbuoni, totale_abbuoni, c)
         saveData("totale_uscite_varie", entry_tot_uscite_varie, totale_uscite_varie, c)
         saveData("totale_uscite_versamenti", entry_tot_versamenti, totale_uscite_versamenti, c)
-        saveData("totale_generale_uscite", entry_tot_generaleuscite, totale_generale_uscite, c)
+        saveData("totale_generale_uscite", entry_totale_generale_uscite, totale_generale_uscite, c)
         saveData("fondo_cassa_da_riportare", entry_fondodariportare, fondo_cassa_da_riportare, c)
         saveData("totale_marchirolo", entry_tot_marchirolo, totale_marchirolo, c)
         saveData("saldo_cassa", entry_saldocassa, saldo_cassa, c)
-        saveData("incasso_assegni", entry_incasso_assegni, incasso_assegni, c)
-        saveData("incasso_contante", entry_incasso_contante, incasso_contante, c)
         saveData("saldo_sospesi", entry_saldo_sospesi, saldo_sospesi, c)
         saveData("punti_viva", entry_viva, punti_viva, c)
+        saveData("quadratura_contante_cassa_assegno", entry_quadratura_contante_cassa_assegno, quadratura_contante_cassa_assegno, c)
+        saveData("totale_entrate_cassa_contante", entry_totale_entrate_cassa_contante, totale_entrate_cassa_contante, c)
         saveDataTextBox("commenti", entry_commenti, c)
 
+        saveDataList(frame_das_contante, "das_contanti", new_lista_das_contanti, new_lista_das_contanti_causali, updateDasContanti, c)
+        saveDataList(frame_das_cartepos, "das_cartepos", new_lista_das_cartepos, new_lista_das_cartepos_causali, updateDasCartePOS, c)
+        saveDataList(frame_das_bonifico, "das_bonifico", new_lista_das_bonifico, new_lista_das_bonifico_causali, updateDasBonifici, c)
+        saveDataList(frame_incasso_per_conto, "incasso_per_conto", new_lista_incassi_per_conto, new_lista_incassi_per_conto_causali, updateIncassoPerConto, c)
         saveDataList(frame_sospesi, "sospesi", new_lista_sospesi_values, new_lista_sospesi_causali, updateSospesi, c)
         saveDataList(frame_recuperosospesi_contante, "recupero_contanti", new_lista_recupero_contanti, new_lista_recupero_contanti_causali, updateRecuperoContanti, c)
         saveDataList(frame_recuperosospesi_cartapos, "recupero_cartepos", new_lista_recupero_cartepos, new_lista_recupero_cartepos_causali, updateRecuperoCartePOS, c)
@@ -2636,39 +2628,43 @@ def visualizzaProva():
             entry_name.configure(state='normal')
             entry_name.delete('0.0','end')
             entry_name.configure(state='disabled')
-        resetEntry(entry_incassi_vittoria)
-        resetEntry(entry_incasso_conto)
-        resetEntry(entry_incasso_das)
-        resetEntry(entry_incasso_bonifici)
+        resetEntry(entry_premio_lordo)
+        resetEntry(entry_movimenti_bancari)
         resetEntry(entry_incasso_polizzebonifici)
-        resetEntry(entry_incasso_cartepos)
-        resetEntry(entry_incasso_polizzecartepos)
+        resetEntry(entry_totale_carte_pos)
+        resetEntry(entry_totale_das_contante)
+        resetEntry(entry_totale_das_bonifico)
+        resetEntry(entry_totale_das_cartepos)
+        resetEntry(entry_totale_das)
+        resetEntry(entry_totale_incassi_per_conto)
         resetEntry(entry_sospesi)
         resetEntry(entry_tot_parziale_1)
         resetEntry(entry_cassaprecedente)
-        resetEntry(entry_incassicontante)
-        resetEntry(entry_tot_parziale_2)
         resetEntry(entry_tot_contante_recuperato)
         resetEntry(entry_tot_cartapos_recuperato)
         resetEntry(entry_tot_bonifici_recuperato)
-        resetEntry(entry_tot_recuperosospesi)
-        resetEntry(entry_tot_cassacontanti)
+        resetEntry(entry_totale_entrate_cassa_contante)
         resetEntry(entry_abbuoni)
         resetEntry(entry_tot_uscite_varie)
         resetEntry(entry_tot_versamenti)
-        resetEntry(entry_tot_generaleuscite)
+        resetEntry(entry_totale_generale_uscite)
         resetEntry(entry_fondodariportare)
         resetEntry(entry_tot_marchirolo)
         resetEntry(entry_saldocassa)
-        resetEntry(entry_incasso_assegni)
-        resetEntry(entry_incasso_contante)
+        resetEntry(entry_saldo_sospesi)
         resetEntry(entry_viva)
+        resetEntry(entry_quadratura_contante_cassa_assegno)
+        resetEntry(entry_totale_entrate_cassa_contante)
         resetEntryTextBox(entry_commenti)
         #Elimina entry all'interno di un frame lista
         def resetEntryInsideFrame(frame_name):
             for child in frame_name.winfo_children():
                 if isinstance(child, ctk.CTkFrame):
-                    child.pack_forget()               
+                    child.pack_forget()   
+        resetEntryInsideFrame(frame_das_contante)
+        resetEntryInsideFrame(frame_das_cartepos)
+        resetEntryInsideFrame(frame_das_bonifico)
+        resetEntryInsideFrame(frame_incasso_per_conto)            
         resetEntryInsideFrame(frame_sospesi)
         resetEntryInsideFrame(frame_recuperosospesi_contante)
         resetEntryInsideFrame(frame_recuperosospesi_bonifici)
@@ -2680,6 +2676,11 @@ def visualizzaProva():
         def resetLists (lista_values, lista_causali):
             lista_values.clear()
             lista_causali.clear()
+
+        resetLists(new_lista_das_contanti, new_lista_das_contanti_causali)
+        resetLists(new_lista_das_cartepos, new_lista_das_cartepos_causali)
+        resetLists(new_lista_das_bonifico, new_lista_das_bonifico_causali)
+        resetLists(new_lista_incassi_per_conto, new_lista_incassi_per_conto_causali)
         resetLists(new_lista_sospesi_values, new_lista_sospesi_causali)
         resetLists(new_lista_recupero_contanti, new_lista_recupero_contanti_causali)
         resetLists(new_lista_recupero_cartepos, new_lista_recupero_cartepos_causali)
@@ -2732,6 +2733,7 @@ def visualizzaProva():
 
     tabview.add("Data")
     tabview.add("Incassi")
+    tabview.add("Altri incassi")
     tabview.add("Sospesi")
     tabview.add("Recupero sospesi")
     tabview.add("Uscite")
@@ -2782,53 +2784,203 @@ def visualizzaProva():
     #Create frame inside the tab
     frame_incassi = ctk.CTkFrame(master=tabview.tab("Incassi"))
     frame_incassi.pack(pady=(20,0))
-    #Incassi Vittoria
-    label_incassi_vittoria = ctk.CTkLabel(master=frame_incassi, text="Premio lordo:")
-    label_incassi_vittoria.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
-    entry_incassi_vittoria = ctk.CTkEntry(frame_incassi, textvariable=totale_incassi_vittoria, state='disabled', width=100)
-    entry_incassi_vittoria.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
-    #Incasso per conto
-    label_incasso_conto = ctk.CTkLabel(master=frame_incassi, text="Incasso per conto:")
-    label_incasso_conto.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
-    entry_incasso_conto = ctk.CTkEntry(frame_incassi, textvariable=incasso_per_conto, state='disabled', width=100)
-    entry_incasso_conto.grid(row=1, column=1, pady=10, padx=20, sticky="nw")
-    #Incasso DAS
-    label_incasso_das = ctk.CTkLabel(master=frame_incassi, text="Incasso DAS:")
-    label_incasso_das.grid(row=2, column=0, pady=10, padx=20, sticky="ne")
-    entry_incasso_das = ctk.CTkEntry(frame_incassi, textvariable=incasso_das, state='disabled', width=100)
-    entry_incasso_das.grid(row=2, column=1, pady=10, padx=20, sticky="nw")
-    #Incasso bonifici
-    label_incasso_bonifici = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
-    label_incasso_bonifici.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
-    entry_incasso_bonifici = ctk.CTkEntry(frame_incassi, textvariable=totale_bonifici, state='disabled', width=100)
-    entry_incasso_bonifici.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
+    #Premio lordo
+    label_premio_lordo = ctk.CTkLabel(master=frame_incassi, text="Premio lordo:")
+    label_premio_lordo.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    entry_premio_lordo = ctk.CTkEntry(frame_incassi, textvariable=premio_lordo, width=100)
+    entry_premio_lordo.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
+    #Movimenti bancari
+    label_movimenti_bancari = ctk.CTkLabel(master=frame_incassi, text="Movimenti bancari:")
+    label_movimenti_bancari.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    entry_movimenti_bancari = ctk.CTkEntry(frame_incassi, textvariable=movimenti_bancari, width=100)
+    entry_movimenti_bancari.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze bonifici
     label_incasso_polizzebonifici = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze bonifici:", font=("Helvetica",14,"bold"))
     label_incasso_polizzebonifici.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
     entry_incasso_polizzebonifici = ctk.CTkEntry(frame_incassi, textvariable=incasso_polizze_bonifici, state="disabled", font=("Helvetica",15,"bold"), width=100)
     entry_incasso_polizzebonifici.grid(row=4, column=1, pady=10, padx=20, sticky="nw")
-    #Incasso carte/POS
-    label_incasso_cartepos = ctk.CTkLabel(master=frame_incassi, text="Totale carte/POS:")
-    label_incasso_cartepos.grid(row=5, column=0, pady=10, padx=20, sticky="ne")
-    entry_incasso_cartepos = ctk.CTkEntry(frame_incassi, textvariable=totale_carte_pos, state='disabled', width=100)
-    entry_incasso_cartepos.grid(row=5, column=1, pady=10, padx=20, sticky="nw")
+    #Totale carte/POS
+    label_totale_carte_pos = ctk.CTkLabel(master=frame_incassi, text="Totale carte/POS:")
+    label_totale_carte_pos.grid(row=5, column=0, pady=10, padx=20, sticky="ne")
+    entry_totale_carte_pos = ctk.CTkEntry(frame_incassi, textvariable=totale_carte_pos, width=100)
+    entry_totale_carte_pos.grid(row=5, column=1, pady=10, padx=20, sticky="nw")
     #Incasso polizze carte/POS
     label_incasso_polizzecartepos = ctk.CTkLabel(master=frame_incassi, text="Incasso polizze carte/POS:", font=("Helvetica",14,"bold"))
     label_incasso_polizzecartepos.grid(row=6, column=0, pady=10, padx=20, sticky="ne")
     entry_incasso_polizzecartepos = ctk.CTkEntry(frame_incassi, textvariable=incasso_polizze_carte_pos, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_incasso_polizzecartepos.grid(row=6, column=1, pady=10, padx=20, sticky="nw")
-    #Incasso contante
-    label_incasso_contante = ctk.CTkLabel(master=frame_incassi, text="Contanti:")
-    label_incasso_contante.grid(row=7, column=0, pady=10, padx=20, sticky="ne")
-    entry_incasso_contante = ctk.CTkEntry(frame_incassi, textvariable=incasso_contante, state='disabled', width=100)
-    entry_incasso_contante.grid(row=7, column=1, pady=10, padx=20, sticky="nw")
-    #Incasso assegni
-    label_incasso_assegni = ctk.CTkLabel(master=frame_incassi, text="Assegni:")
-    label_incasso_assegni.grid(row=8, column=0, pady=10, padx=20, sticky="ne")
-    entry_incasso_assegni = ctk.CTkEntry(frame_incassi, textvariable=incasso_assegni, state='disabled', width=100)
-    entry_incasso_assegni.grid(row=8, column=1, pady=10, padx=20, sticky="nw")
+
+    #------TAB ALTRI INCASSI------
+    #--Lista DAS--
+    frame_das = ctk.CTkScrollableFrame(master=tabview.tab("Altri incassi"), width=500, height=250, border_color="black", border_width=1)
+    frame_das.pack()
+
+    #--DAS contanti--
+    frame_das_contante = ctk.CTkFrame(master=frame_das)
+    frame_das_contante.pack()
+    def addDasContante():
+        #Elimina sospeso contante
+        def destroy():
+            var1.set(0)
+            new_lista_das_contanti.remove(var1)
+            new_lista_das_contanti_causali.remove(ent2)
+            frame.pack_forget()
+            print("DAS contante eliminato")
+        print ("DAS contante aggiunto")
+        frame = ctk.CTkFrame(frame_das_contante)
+        frame.pack()
+        ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
+        var1 = ctk.DoubleVar(frame_das_contante, "{:.2f}".format(0))
+        var1.trace("w", updateDasContanti)
+        ent1 = ctk.CTkEntry(frame, textvariable=var1, width=100)
+        ent1.grid(row=1, column=0)
+        ctk.CTkLabel(frame, text='Causale:').grid(row=0, column=1)
+        ent2 = ctk.CTkEntry(frame, width=250)
+        ent2.grid(row=1, column=1)
+        delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
+        delete_button.grid(row=1, column=2)
+        new_lista_das_contanti.append(var1)
+        new_lista_das_contanti_causali.append(ent2)
+    new_lista_das_contanti = []
+    new_lista_das_contanti_causali = []
+
+    add_das_contante = ctk.CTkButton(frame_das_contante, text='Aggiungi DAS contante', command=addDasContante)
+    add_das_contante.pack(padx=20, pady=(20,0))
+    #Totale contante das
+    frame_totale_das_contante = ctk.CTkFrame(master=frame_das)
+    frame_totale_das_contante.pack()
+    label_totale_das_contante = ctk.CTkLabel(master=frame_totale_das_contante, text="Totale DAS contanti:", font=("Helvetica",14,"bold"))
+    label_totale_das_contante.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
+    entry_totale_das_contante = ctk.CTkEntry(frame_totale_das_contante, textvariable=totale_das_contante, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_totale_das_contante.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
+    
+    #--DAS carte/pos--
+    frame_das_cartepos = ctk.CTkFrame(master=frame_das)
+    frame_das_cartepos.pack()
+    def addDasCartePOS():
+        #Elimina sospeso contante
+        def destroy():
+            var1.set(0)
+            new_lista_das_cartepos.remove(var1)
+            new_lista_das_cartepos_causali.remove(ent2)
+            frame.pack_forget()
+            print("DAS carte/pos eliminato")
+        print ("DAS carte/pos aggiunto")
+        frame = ctk.CTkFrame(frame_das_cartepos)
+        frame.pack()
+        ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
+        var1 = ctk.DoubleVar(frame_das_cartepos, "{:.2f}".format(0))
+        var1.trace("w", updateDasCartePOS)
+        ent1 = ctk.CTkEntry(frame, textvariable=var1, width=100)
+        ent1.grid(row=1, column=0)
+        ctk.CTkLabel(frame, text='Causale:').grid(row=0, column=1)
+        ent2 = ctk.CTkEntry(frame, width=250)
+        ent2.grid(row=1, column=1)
+        delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
+        delete_button.grid(row=1, column=2)
+        new_lista_das_cartepos.append(var1)
+        new_lista_das_cartepos_causali.append(ent2)
+    new_lista_das_cartepos = []
+    new_lista_das_cartepos_causali = []
+
+    add_das_cartepos = ctk.CTkButton(frame_das_cartepos, text='Aggiungi DAS carta/POS', command=addDasCartePOS)
+    add_das_cartepos.pack(padx=20, pady=(20,0))
+    #Totale carte/pos das
+    frame_totale_das_cartepos = ctk.CTkFrame(master=frame_das)
+    frame_totale_das_cartepos.pack()
+    label_totale_das_cartepos = ctk.CTkLabel(master=frame_totale_das_cartepos, text="Totale DAS contanti:", font=("Helvetica",14,"bold"))
+    label_totale_das_cartepos.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
+    entry_totale_das_cartepos = ctk.CTkEntry(frame_totale_das_cartepos, textvariable=totale_das_cartepos, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_totale_das_cartepos.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
+
+    #--DAS bonifico--
+    frame_das_bonifico = ctk.CTkFrame(master=frame_das)
+    frame_das_bonifico.pack()
+    def addDasBonifico():
+        #Elimina sospeso contante
+        def destroy():
+            var1.set(0)
+            new_lista_das_bonifico.remove(var1)
+            new_lista_das_bonifico_causali.remove(ent2)
+            frame.pack_forget()
+            print("DAS carte/pos eliminato")
+        print ("DAS carte/pos aggiunto")
+        frame = ctk.CTkFrame(frame_das_bonifico)
+        frame.pack()
+        ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
+        var1 = ctk.DoubleVar(frame_das_bonifico, "{:.2f}".format(0))
+        var1.trace("w", updateDasBonifici)
+        ent1 = ctk.CTkEntry(frame, textvariable=var1, width=100)
+        ent1.grid(row=1, column=0)
+        ctk.CTkLabel(frame, text='Causale:').grid(row=0, column=1)
+        ent2 = ctk.CTkEntry(frame, width=250)
+        ent2.grid(row=1, column=1)
+        delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
+        delete_button.grid(row=1, column=2)
+        new_lista_das_bonifico.append(var1)
+        new_lista_das_bonifico_causali.append(ent2)
+    new_lista_das_bonifico = []
+    new_lista_das_bonifico_causali = []
+
+    add_das_bonifico = ctk.CTkButton(frame_das_bonifico, text='Aggiungi DAS bonifico', command=addDasBonifico)
+    add_das_bonifico.pack(padx=20, pady=(20,0))
+    #Totale carte/pos das
+    frame_totale_das_bonifico = ctk.CTkFrame(master=frame_das)
+    frame_totale_das_bonifico.pack()
+    label_totale_das_bonifico = ctk.CTkLabel(master=frame_totale_das_bonifico, text="Totale DAS bonifici:", font=("Helvetica",14,"bold"))
+    label_totale_das_bonifico.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
+    entry_totale_das_bonifico = ctk.CTkEntry(frame_totale_das_bonifico, textvariable=totale_das_bonifico, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_totale_das_bonifico.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
+
+    #Totale DAS
+    frame_totale_das=ctk.CTkFrame(master=tabview.tab("Altri incassi"))
+    frame_totale_das.pack(pady=(0,15))
+    label_totale_das = ctk.CTkLabel(master=frame_totale_das, text="Totale DAS:", font=("Helvetica",14,"bold"))
+    label_totale_das.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    entry_totale_das = ctk.CTkEntry(frame_totale_das, textvariable=totale_das, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_totale_das.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
 
 
+    #--Lista incasso per conto--
+    frame_incasso_per_conto = ctk.CTkScrollableFrame(master=tabview.tab("Altri incassi"), width=500, height=150, border_color="black", border_width=1)
+    frame_incasso_per_conto.pack()
+
+    def addIncassoPerConto():
+        #Elimina sospeso carta/POS
+        def destroy():
+            var1.set(0)
+            new_lista_incassi_per_conto.remove(var1)
+            new_lista_incassi_per_conto_causali.remove(ent2)
+            frame.pack_forget()
+            print("incasso x conto eliminato")
+        print ("incasso x conto aggiunta")
+        frame = ctk.CTkFrame(frame_incasso_per_conto)
+        frame.pack()
+        ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
+        var1 = ctk.DoubleVar(frame_incasso_per_conto, "{:.2f}".format(0))
+        var1.trace("w", updateIncassoPerConto)
+        ent1 = ctk.CTkEntry(frame, textvariable=var1, width=100)
+        ent1.grid(row=1, column=0)
+        ctk.CTkLabel(frame, text='Causale:').grid(row=0, column=1)
+        ent2 = ctk.CTkEntry(frame, width=250)
+        ent2.grid(row=1, column=1)
+        delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
+        delete_button.grid(row=1, column=2)
+        new_lista_incassi_per_conto.append(var1)
+        new_lista_incassi_per_conto_causali.append(ent2)
+    new_lista_incassi_per_conto = []
+    new_lista_incassi_per_conto_causali = []
+
+    add_incasso_per_conto = ctk.CTkButton(frame_incasso_per_conto, text='Aggiungi incasso per conto', command=addIncassoPerConto)
+    add_incasso_per_conto.pack(padx=20, pady=(20,0))
+
+    #Totale incassi per conto
+    frame_totale_incassi_per_conto=ctk.CTkFrame(master=tabview.tab("Altri incassi"))
+    frame_totale_incassi_per_conto.pack(pady=(0,15))
+    label_totale_incassi_per_conto = ctk.CTkLabel(master=frame_totale_incassi_per_conto, text="Totale incassi per conto:", font=("Helvetica",14,"bold"))
+    label_totale_incassi_per_conto.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    entry_totale_incassi_per_conto = ctk.CTkEntry(frame_totale_incassi_per_conto, textvariable=totale_incassi_per_conto, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_totale_incassi_per_conto.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
 
     #----TAB SOSPESI----
     #Create frame inside the tab
@@ -2870,7 +3022,7 @@ def visualizzaProva():
     #showButton = ctk.CTkButton(frame_sospesi, text='Stampa tutti i sospesi', command=showSospesi)
     #showButton.pack()
     addboxButton = ctk.CTkButton(frame_sospesi, text='Aggiungi sospeso', command=addSospeso)
-
+    addboxButton.pack(padx=20, pady=20)
 
     #Totale sospesi
     label_sospesi = ctk.CTkLabel(master=tabview.tab("Sospesi"), text="Totale sospesi:", font=("Helvetica",14,"bold"))
@@ -2884,7 +3036,7 @@ def visualizzaProva():
     frame_recuperosospesi = ctk.CTkScrollableFrame(master=tabview.tab("Recupero sospesi"), width=500, height=480, border_color="black", border_width=1)
     frame_recuperosospesi.pack()
     #--Sospeso recuperato CONTANTI--
-    frame_recuperosospesi_contante = ctk.CTkFrame(master=frame_recuperosospesi, height=50)
+    frame_recuperosospesi_contante = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_recuperosospesi_contante.pack()
 
     def addSospContante():
@@ -2912,7 +3064,9 @@ def visualizzaProva():
         new_lista_recupero_contanti_causali.append(ent2)
     new_lista_recupero_contanti = []
     new_lista_recupero_contanti_causali = []
+
     add_contante_recuperato = ctk.CTkButton(frame_recuperosospesi_contante, text='Aggiungi contante recuperato', command=addSospContante)
+    add_contante_recuperato.pack(padx=20, pady=(20,0))
 
     #Totale contante recuperato
     frame_contanterecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
@@ -2923,7 +3077,7 @@ def visualizzaProva():
     entry_tot_contante_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
 
     #--Sospeso recuperato CARTE/POS--
-    frame_recuperosospesi_cartapos = ctk.CTkFrame(master=frame_recuperosospesi, height=50)
+    frame_recuperosospesi_cartapos = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_recuperosospesi_cartapos.pack()
 
     def addSospCartePOS():
@@ -2951,9 +3105,9 @@ def visualizzaProva():
         new_lista_recupero_cartepos_causali.append(ent2)
     new_lista_recupero_cartepos = []
     new_lista_recupero_cartepos_causali = []
+
     add_cartapos_recuperato = ctk.CTkButton(frame_recuperosospesi_cartapos, text='Aggiungi Carta/POS recuperato', command=addSospCartePOS)
-
-
+    add_cartapos_recuperato.pack(pady=(25,0))
     #Totale carte/POS recuperato
     frame_carteposrecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_carteposrecuperato.pack()
@@ -2963,7 +3117,7 @@ def visualizzaProva():
     entry_tot_cartapos_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
 
     #--Sospeso recuperato bonifici--
-    frame_recuperosospesi_bonifici = ctk.CTkFrame(master=frame_recuperosospesi, height=50)
+    frame_recuperosospesi_bonifici = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_recuperosospesi_bonifici.pack()
 
     def addSospBonifici():
@@ -2991,9 +3145,9 @@ def visualizzaProva():
         new_lista_recupero_bonifici_causali.append(ent2)
     new_lista_recupero_bonifici = []
     new_lista_recupero_bonifici_causali = []
+
     add_bonifici_recuperato = ctk.CTkButton(frame_recuperosospesi_bonifici, text='Aggiungi bonifico recuperato', command=addSospBonifici)
-
-
+    add_bonifici_recuperato.pack(pady=(25,0))
     #Totale bonifici recuperato
     frame_bonificirecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_bonificirecuperato.pack()
@@ -3002,20 +3156,14 @@ def visualizzaProva():
     entry_tot_bonifici_recuperato = ctk.CTkEntry(frame_bonificirecuperato, textvariable=totale_recupero_sospesi_bonifici, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_bonifici_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
 
+    #Frame saldo sospesi
+    frame_saldo_sospesi = ctk.CTkFrame(master=tabview.tab("Recupero sospesi"))
+    frame_saldo_sospesi.pack(pady=(20,0))
+    label_saldo_sospesi = ctk.CTkLabel(master=frame_saldo_sospesi, text="Saldo sospesi:", font=("Helvetica",14,"bold"))
+    label_saldo_sospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
+    entry_saldo_sospesi = ctk.CTkEntry(frame_saldo_sospesi, textvariable=saldo_sospesi, font=("Helvetica",15,"bold"), width=100)
+    entry_saldo_sospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
 
-    #Frame totali
-    frame_recuperosospesi_totali = ctk.CTkFrame(master=tabview.tab("Recupero sospesi"))
-    frame_recuperosospesi_totali.pack(pady=(20,0))
-    #--Totale recupero sospesi--
-    label_tot_recuperosospesi = ctk.CTkLabel(master=frame_recuperosospesi_totali, text="Totale recupero sospesi:", font=("Helvetica",14,"bold"))
-    label_tot_recuperosospesi.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
-    entry_tot_recuperosospesi = ctk.CTkEntry(frame_recuperosospesi_totali, textvariable=totale_recupero_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_tot_recuperosospesi.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
-    #--Totale cassa contanti--
-    label_tot_cassacontanti = ctk.CTkLabel(master=frame_recuperosospesi_totali, text="Totale cassa contanti:", font=("Helvetica",14,"bold"))
-    label_tot_cassacontanti.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
-    entry_tot_cassacontanti = ctk.CTkEntry(frame_recuperosospesi_totali, textvariable=totale_cassa_contante, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_tot_cassacontanti.grid(row=1, column=1, pady=10, padx=20, sticky="nw")
 
     #----TAB USCITE----
     frame_uscite_abbuoniviva = ctk.CTkFrame(master=tabview.tab("Uscite"))
@@ -3023,19 +3171,19 @@ def visualizzaProva():
     #--Abbuoni--
     label_abbuoni = ctk.CTkLabel(master=frame_uscite_abbuoniviva, text="Totale abbuoni:")
     label_abbuoni.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
-    entry_abbuoni = ctk.CTkEntry(frame_uscite_abbuoniviva, textvariable=totale_abbuoni, state='disabled', width=100)
+    entry_abbuoni = ctk.CTkEntry(frame_uscite_abbuoniviva, textvariable=totale_abbuoni, width=100)
     entry_abbuoni.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
 
     #--Punti VIVA--
     label_viva = ctk.CTkLabel(master=frame_uscite_abbuoniviva, text="Totale punti Viva:")
     label_viva.grid(row=1, column=0, pady=10, padx=20, sticky="ne")
-    entry_viva = ctk.CTkEntry(frame_uscite_abbuoniviva, textvariable=punti_viva, state='disabled', width=100)
+    entry_viva = ctk.CTkEntry(frame_uscite_abbuoniviva, textvariable=punti_viva, width=100)
     entry_viva.grid(row=1, column=1, pady=10, padx=20, sticky="nw")
-    
-    frame_uscitevarieandversamenti = ctk.CTkScrollableFrame(master = tabview.tab("Uscite"), width=500, height=450, border_color="black", border_width=1)
+
+    frame_uscitevarieandversamenti = ctk.CTkScrollableFrame(master = tabview.tab("Uscite"), width=500, height=400, border_color="black", border_width=1)
     frame_uscitevarieandversamenti.pack()
     #--Aggiungi VERSAMENTI--
-    frame_versamenti = ctk.CTkFrame(master=frame_uscitevarieandversamenti, height=50)
+    frame_versamenti = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
     frame_versamenti.pack()
     def addVersamento():
         #Elimina sospeso contante
@@ -3062,7 +3210,9 @@ def visualizzaProva():
         new_lista_versamenti_causali.append(ent2)
     new_lista_versamenti = []
     new_lista_versamenti_causali = []
+
     add_versamento = ctk.CTkButton(frame_versamenti, text='Aggiungi versamento', command=addVersamento)
+    add_versamento.pack(padx=20, pady=(20,0))
     #Totale versamenti
     frame_usciteversamenti = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
     frame_usciteversamenti.pack()
@@ -3072,7 +3222,7 @@ def visualizzaProva():
     entry_tot_versamenti.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
 
     #--Aggiungi USCITE VARIE--
-    frame_uscite_varie = ctk.CTkFrame(master=frame_uscitevarieandversamenti, height=50)
+    frame_uscite_varie = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
     frame_uscite_varie.pack()
     def addUsciteVarie():
         #Elimina uscita varia
@@ -3099,7 +3249,9 @@ def visualizzaProva():
         new_lista_uscite_varie_causali.append(ent2)
     new_lista_uscite_varie = []
     new_lista_uscite_varie_causali = []
-    add_uscite_varie = ctk.CTkButton(frame_uscite_varie, text='Aggiungi uscite varie', command=addUsciteVarie)
+
+    add_uscite_varie = ctk.CTkButton(frame_uscite_varie, text='Aggiungi uscita extra', command=addUsciteVarie)
+    add_uscite_varie.pack(padx=20, pady=(20,0))
     #Totale uscite varie
     frame_totaleuscitevarie = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
     frame_totaleuscitevarie.pack()
@@ -3108,13 +3260,19 @@ def visualizzaProva():
     entry_tot_uscite_varie = ctk.CTkEntry(frame_totaleuscitevarie, textvariable=totale_uscite_varie, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_uscite_varie.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
 
-    frame_uscitetotali = ctk.CTkFrame(master=tabview.tab("Uscite"))
-    frame_uscitetotali.pack(pady=(20,0))
-    #--Fondo cassa da riportare--
-    label_fondodariportare = ctk.CTkLabel(master=frame_uscitetotali, text="Fondo cassa da riportare:", font=("Helvetica",14,"bold"))
-    label_fondodariportare.grid(row=1, column=0, pady=10, padx=10, sticky="ne")
-    entry_fondodariportare = ctk.CTkEntry(frame_uscitetotali, textvariable=fondo_cassa_da_riportare, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_fondodariportare.grid(row=1, column=1, pady=10, padx=10, sticky="nw")
+    #--Frame in fondo a uscite--
+    frame_totale_generale_uscite_e_quadratura = ctk.CTkFrame(master=tabview.tab("Uscite"))
+    frame_totale_generale_uscite_e_quadratura.pack(pady=(20,0))
+    #--Totale generale uscite--
+    label_totale_generale_uscite = ctk.CTkLabel(master=frame_totale_generale_uscite_e_quadratura, text="Totale generale uscite:", font=("Helvetica",14,"bold"))
+    label_totale_generale_uscite.grid(row=1, column=0, pady=10, padx=10, sticky="ne")
+    entry_totale_generale_uscite = ctk.CTkEntry(frame_totale_generale_uscite_e_quadratura, textvariable=totale_generale_uscite, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_totale_generale_uscite.grid(row=1, column=1, pady=10, padx=10, sticky="nw")
+    #--Quadratura contante cassa + assegno--
+    label_quadratura_contante_cassa_assegno = ctk.CTkLabel(master=frame_totale_generale_uscite_e_quadratura, text="Quadratura contante cassa + assegno:", font=("Helvetica",14,"bold"))
+    label_quadratura_contante_cassa_assegno.grid(row=2, column=0, pady=10, padx=10, sticky="ne")
+    entry_quadratura_contante_cassa_assegno = ctk.CTkEntry(frame_totale_generale_uscite_e_quadratura, textvariable=quadratura_contante_cassa_assegno, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_quadratura_contante_cassa_assegno.grid(row=2, column=1, pady=10, padx=10, sticky="nw")
 
     #----TAB MARCHIROLO----
     frame_marchirolo = ctk.CTkScrollableFrame(master=tabview.tab("Marchirolo"), width=500, height=300, border_color="black", border_width=1)
@@ -3156,7 +3314,7 @@ def visualizzaProva():
     frame_resoconto = ctk.CTkFrame(master=tabview.tab("Resoconto"))
     frame_resoconto.pack(pady=(20,0))
     #Totale parziale 1
-    label_tot_parziale_1 = ctk.CTkLabel(master=frame_resoconto, text="Totale parziale 1:", font=("Helvetica",14,"bold"))
+    label_tot_parziale_1 = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 1 | Cassa contanti:", font=("Helvetica",14,"bold"))
     label_tot_parziale_1.grid(row=0, column=0, pady=10, padx=20, sticky="ne")
     entry_tot_parziale_1 = ctk.CTkEntry(frame_resoconto, textvariable=totale_parziale_1, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_parziale_1.grid(row=0, column=1, pady=10, padx=20, sticky="nw")
@@ -3169,52 +3327,48 @@ def visualizzaProva():
     entry_cassaprecedente.grid(row=1, column=1, pady=10, padx=20, sticky="nw")
     label_daybefore = ctk.CTkLabel(master=frame_resoconto, text="Non trovato", text_color="#969595", font=("Helvetica",13))
     label_daybefore.grid(row=1, column=2, pady=10, padx=20, sticky="nw")
-    #Incassi contante
-    label_incassicontante = ctk.CTkLabel(master=frame_resoconto, text="Incassi contante:", font=("Helvetica",14,"bold"))
-    label_incassicontante.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
-    entry_incassicontante = ctk.CTkEntry(frame_resoconto, textvariable=incassi_contante, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_incassicontante.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
-    explain_incassicontante = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 2 + tot. rec. sosp. contante", text_color="#969595", font=("Helvetica",13))
-    explain_incassicontante.grid(row=3, column=2, pady=10, padx=20, sticky="nw")
-    #Saldo sospesi
-    label_saldo_sospesi = ctk.CTkLabel(master=frame_resoconto, text="Saldo sospesi:", font=("Helvetica",14,"bold"))
-    label_saldo_sospesi.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
-    entry_saldo_sospesi = ctk.CTkEntry(frame_resoconto, textvariable=saldo_sospesi, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_saldo_sospesi.grid(row=4, column=1, pady=10, padx=20, sticky="nw")
-    explain_saldo_sospesi = ctk.CTkLabel(master=frame_resoconto, text="Sospesi - rec. sospesi", text_color="#969595", font=("Helvetica",13))
-    explain_saldo_sospesi.grid(row=4, column=2, pady=10, padx=20, sticky="nw")
-    #Totale parziale 2
-    label_tot_parziale_2 = ctk.CTkLabel(master=frame_resoconto, text="Totale parziale 2:", font=("Helvetica",14,"bold"))
-    label_tot_parziale_2.grid(row=5, column=0, pady=10, padx=20, sticky="ne")
-    entry_tot_parziale_2 = ctk.CTkEntry(frame_resoconto, textvariable=totale_parziale_2, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_tot_parziale_2.grid(row=5, column=1, pady=10, padx=20, sticky="nw")
-    explain_tot_parziale_2 = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 1 + fondo cassa precedente", text_color="#969595", font=("Helvetica",13))
-    explain_tot_parziale_2.grid(row=5, column=2, pady=10, padx=20, sticky="nw")
-    #--Totale generale uscite--
-    label_tot_generaleuscite = ctk.CTkLabel(master=frame_resoconto, text="Totale generale uscite:", font=("Helvetica",14,"bold"))
-    label_tot_generaleuscite.grid(row=6, column=0, pady=10, padx=20, sticky="ne")
-    entry_tot_generaleuscite = ctk.CTkEntry(frame_resoconto, textvariable=totale_generale_uscite, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_tot_generaleuscite.grid(row=6, column=1, pady=10, padx=20, sticky="nw")
-    explain_tot_generaleuscite = ctk.CTkLabel(master=frame_resoconto, text="Abbuoni + p.ti Viva + uscite varie + versamenti", text_color="#969595", font=("Helvetica",13))
-    explain_tot_generaleuscite.grid(row=6, column=2, pady=10, padx=20, sticky="nw")
+    #Totale sospesi contante recuperato
+    label_tot_contante_recuperato_copia = ctk.CTkLabel(master=frame_resoconto, text="Totale sospesi contanti recuperato:", font=("Helvetica",14,"bold"))
+    label_tot_contante_recuperato_copia.grid(row=2, column=0, pady=10, padx=20, sticky="ne")
+    entry_tot_contante_recuperato_copia = ctk.CTkEntry(frame_resoconto, textvariable=totale_recupero_sospesi_contanti, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_tot_contante_recuperato_copia.grid(row=2, column=1, pady=10, padx=20, sticky="nw")
+    explain_tot_contante_recuperato_copia = ctk.CTkLabel(master=frame_resoconto, text="Tot. parz. 2 + tot. rec. sosp. contante", text_color="#969595", font=("Helvetica",13))
+    explain_tot_contante_recuperato_copia.grid(row=2, column=2, pady=10, padx=20, sticky="nw")
+    #Totale entrate cassa contante
+    label_totale_entrate_cassa_contante = ctk.CTkLabel(master=frame_resoconto, text="Totale entrate cassa contante:", font=("Helvetica",14,"bold"))
+    label_totale_entrate_cassa_contante.grid(row=3, column=0, pady=10, padx=20, sticky="ne")
+    entry_totale_entrate_cassa_contante = ctk.CTkEntry(frame_resoconto, textvariable=totale_entrate_cassa_contante, font=("Helvetica",15,"bold"), width=100)
+    entry_totale_entrate_cassa_contante.grid(row=3, column=1, pady=10, padx=20, sticky="nw")
+    #Totale generale uscite
+    label_totale_generale_uscite_copia = ctk.CTkLabel(master=frame_resoconto, text="Totale generale uscite:", font=("Helvetica",14,"bold"))
+    label_totale_generale_uscite_copia.grid(row=4, column=0, pady=10, padx=20, sticky="ne")
+    entry_totale_generale_uscite_copia = ctk.CTkEntry(frame_resoconto, textvariable=totale_generale_uscite, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_totale_generale_uscite_copia.grid(row=4, column=1, pady=10, padx=20, sticky="nw")
+    explain_totale_generale_uscite_copia = ctk.CTkLabel(master=frame_resoconto, text="Abbuoni + p.ti Viva + uscite varie + versamenti", text_color="#969595", font=("Helvetica",13))
+    explain_totale_generale_uscite_copia.grid(row=4, column=2, pady=10, padx=20, sticky="nw")
+    #Fondo cassa da riportare
+    label_fondodariportare = ctk.CTkLabel(master=frame_resoconto, text="Fondo cassa da riportate:", font=("Helvetica",14,"bold"))
+    label_fondodariportare.grid(row=5, column=0, pady=10, padx=20, sticky="ne")
+    entry_fondodariportare = ctk.CTkEntry(frame_resoconto, textvariable=fondo_cassa_da_riportare, state='disabled', font=("Helvetica",15,"bold"), width=100)
+    entry_fondodariportare.grid(row=5, column=1, pady=10, padx=20, sticky="nw")
     #Totale Marchirolo COPIA
     label_tot_marchirolo_copy = ctk.CTkLabel(master=frame_resoconto, text="Totale Marchirolo:", font=("Helvetica",14,"bold"))
-    label_tot_marchirolo_copy.grid(row=7, column=0, pady=10, padx=20, sticky="ne")
+    label_tot_marchirolo_copy.grid(row=6, column=0, pady=10, padx=20, sticky="ne")
     entry_tot_marchirolo_copy = ctk.CTkEntry(frame_resoconto, textvariable=totale_marchirolo, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_tot_marchirolo_copy.grid(row=7, column=1, pady=10, padx=20, sticky="nw")
+    entry_tot_marchirolo_copy.grid(row=6, column=1, pady=10, padx=20, sticky="nw")
     explain_tot_marchirolo_copy = ctk.CTkLabel(master=frame_resoconto, text="Totale uscite Marchirolo", text_color="#969595", font=("Helvetica",13))
-    explain_tot_marchirolo_copy.grid(row=7, column=2, pady=10, padx=20, sticky="nw")
+    explain_tot_marchirolo_copy.grid(row=6, column=2, pady=10, padx=20, sticky="nw")
     #Saldo cassa
     label_saldocassa = ctk.CTkLabel(master=frame_resoconto, text="Saldo cassa:", font=("Helvetica",14,"bold"))
-    label_saldocassa.grid(row=8, column=0, pady=10, padx=20, sticky="ne")
+    label_saldocassa.grid(row=7, column=0, pady=10, padx=20, sticky="ne")
     entry_saldocassa = ctk.CTkEntry(frame_resoconto, textvariable=saldo_cassa, state='disabled', font=("Helvetica",15,"bold"), width=100)
-    entry_saldocassa.grid(row=8, column=1, pady=10, padx=20, sticky="nw")
+    entry_saldocassa.grid(row=7, column=1, pady=10, padx=20, sticky="nw")
     explain_saldocassa = ctk.CTkLabel(master=frame_resoconto, text="F. cass da riportare + tot. Marchirolo", text_color="#969595", font=("Helvetica",13))
-    explain_saldocassa.grid(row=8, column=2, pady=10, padx=20, sticky="nw")
+    explain_saldocassa.grid(row=7, column=2, pady=10, padx=20, sticky="nw")
     #Commenti
     label_commenti = ctk.CTkLabel(master=tabview.tab("Resoconto"), text="Commenti:")
     label_commenti.pack()
-    entry_commenti = ctk.CTkTextbox(tabview.tab("Resoconto"), height=100, width=300, border_width=2, state='disabled')
+    entry_commenti = ctk.CTkTextbox(tabview.tab("Resoconto"), height=100, width=300, border_width=2)
     entry_commenti.pack()
     
 
@@ -3389,14 +3543,11 @@ def visualizzaProva():
         add_versamento.pack(padx=20, pady=(20,0))
         add_uscitamarchirolo.pack(padx=20, pady=(20,0))
     def setEnableDisable(new_state):
-        entry_incassi_vittoria.configure(state=new_state)
-        entry_incasso_conto.configure(state=new_state)
-        entry_incasso_das.configure(state=new_state)
-        entry_incasso_bonifici.configure(state=new_state)
-        entry_incasso_cartepos.configure(state=new_state)
+        entry_premio_lordo.configure(state=new_state)
+        entry_movimenti_bancari.configure(state=new_state)
+        entry_totale_carte_pos.configure(state=new_state)
+        entry_movimenti_bancari.configure(state=new_state)
         entry_abbuoni.configure(state=new_state)
-        entry_incasso_contante.configure(state=new_state)
-        entry_incasso_assegni.configure(state=new_state)
         entry_viva.configure(state=new_state)
         entry_commenti.configure(state=new_state)
         #Configura Entry all'interno di un frame
@@ -3406,6 +3557,10 @@ def visualizzaProva():
                     for child2 in child.winfo_children():
                         if isinstance(child2, (ctk.CTkEntry, ctk.CTkButton)):
                             child2.configure(state=new_state)
+        configureEntryInsideFrame(frame_das_contante)
+        configureEntryInsideFrame(frame_das_cartepos)
+        configureEntryInsideFrame(frame_das_bonifico)
+        configureEntryInsideFrame(frame_incasso_per_conto)
         configureEntryInsideFrame(frame_sospesi)
         configureEntryInsideFrame(frame_recuperosospesi_contante)
         configureEntryInsideFrame(frame_recuperosospesi_bonifici)
@@ -3415,6 +3570,10 @@ def visualizzaProva():
         configureEntryInsideFrame(frame_marchirolo)
 
     def removeButtons():
+        add_das_contante.pack_forget()
+        add_das_bonifico.pack_forget()
+        add_das_cartepos.pack_forget()
+        add_incasso_per_conto.pack_forget()
         addboxButton.pack_forget()
         add_contante_recuperato.pack_forget()
         add_cartapos_recuperato.pack_forget()
@@ -3475,36 +3634,35 @@ def visualizzaProva():
                 return output
             #Aggiungi tutte le entry
             c.execute("INSERT INTO prova VALUES ('"+data_converted_text+"', "
-                    +str(safeLoad(totale_incassi_vittoria))+", "
-                    +str(safeLoad(incasso_per_conto))+", "
-                    +str(safeLoad(incasso_das))+", "
-                    +str(safeLoad(totale_bonifici))+", "
+                    +str(safeLoad(premio_lordo))+", "
+                    +str(safeLoad(movimenti_bancari))+", "
                     +str(safeLoad(incasso_polizze_bonifici))+", "
                     +str(safeLoad(totale_carte_pos))+", "
                     +str(safeLoad(incasso_polizze_carte_pos))+", "
+                    +str(safeLoad(totale_das_contante))+", "
+                    +str(safeLoad(totale_das_bonifico))+", "
+                    +str(safeLoad(totale_das_cartepos))+", "
+                    +str(safeLoad(totale_das))+", "
+                    +str(safeLoad(totale_incassi_per_conto))+", "
                     +str(safeLoad(totale_sospesi))+", "
                     +str(safeLoad(totale_parziale_1))+", "
                     +str(safeLoad(fondo_cassa_precedente))+", "
-                    +str(safeLoad(incassi_contante))+", "
-                    +str(safeLoad(totale_parziale_2))+", "
                     +str(safeLoad(totale_recupero_sospesi_contanti))+", "
                     +str(safeLoad(totale_recupero_sospesi_carte_pos))+", "
                     +str(safeLoad(totale_recupero_sospesi_bonifici))+", "
-                    +str(safeLoad(totale_recupero_sospesi))+", "
-                    +str(safeLoad(totale_cassa_contante))+", "
                     +str(safeLoad(totale_abbuoni))+", "
                     +str(safeLoad(totale_uscite_varie))+", "
                     +str(safeLoad(totale_uscite_versamenti))+", "
                     +str(safeLoad(totale_generale_uscite))+", "
                     +str(safeLoad(fondo_cassa_da_riportare))+", "
                     +str(safeLoad(totale_marchirolo))+", "
-                    +str(safeLoad(saldo_cassa))+", '"
-                    +str(completato.get())+"', "
-                    +str(safeLoad(incasso_assegni))+", "
-                    +str(safeLoad(incasso_contante))+", "
+                    +str(safeLoad(saldo_cassa))+", "
                     +str(safeLoad(saldo_sospesi))+", "
                     +str(safeLoad(punti_viva))+", "
-                    +"'"+str(entry_commenti.get('0.0','end'))+"'"+")"
+                    +str(safeLoad(quadratura_contante_cassa_assegno))+", "
+                    +str(safeLoad(totale_entrate_cassa_contante))+", "
+                    +"'"+str(entry_commenti.get('0.0','end'))+"',"+
+                    " 'false')"
             )
             conn.commit()
             #Aggiungi liste
@@ -3518,7 +3676,7 @@ def visualizzaProva():
                                 "')"
                         )
                 except:
-                        print("Entries vuote non caricate")
+                    print("Entries vuote non caricate")
             conn.commit()
             for valore, causale in zip(new_lista_recupero_contanti, new_lista_recupero_contanti_causali):
                 try:
@@ -3593,6 +3751,55 @@ def visualizzaProva():
                     print("Entries vuote non caricate")
             conn.commit()
 
+            for valore, causale in zip(new_lista_das_contanti, new_lista_das_contanti_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'das_contanti', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
+                    print("Entries vuote non caricate")
+            conn.commit()
+            for valore, causale in zip(new_lista_das_cartepos, new_lista_das_cartepos_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'das_cartepos', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
+                    print("Entries vuote non caricate")
+            conn.commit()
+            for valore, causale in zip(new_lista_das_bonifico, new_lista_das_bonifico_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'das_bonifico', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
+                    print("Entries vuote non caricate")
+            conn.commit()
+            for valore, causale in zip(new_lista_incassi_per_conto, new_lista_incassi_per_conto_causali):
+                try:
+                    if valore.get() != "" and causale.get() != "":
+                        c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
+                                +"'incasso_per_conto', "
+                                +str(valore.get())+", '"
+                                +causale.get()+
+                                "')"
+                        )
+                except:
+                    print("Entries vuote non caricate")
+            conn.commit()
+
             conn.close()
             showConfirmMessage(visualizzaprova,"Caricamento completato", "Dati correttamente aggiunti al database", "check", False)
 
@@ -3612,6 +3819,10 @@ def visualizzaProva():
                 if isinstance(child, ctk.CTkFrame):
                     child.pack_forget()
                         
+        deleteEntryInsideFrame(frame_das_bonifico)
+        deleteEntryInsideFrame(frame_das_cartepos)
+        deleteEntryInsideFrame(frame_das_contante)
+        deleteEntryInsideFrame(frame_incasso_per_conto)
         deleteEntryInsideFrame(frame_sospesi)
         deleteEntryInsideFrame(frame_recuperosospesi_contante)
         deleteEntryInsideFrame(frame_recuperosospesi_bonifici)
