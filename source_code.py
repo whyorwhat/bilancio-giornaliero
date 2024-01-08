@@ -850,7 +850,7 @@ def createNuovaProvaView():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_das_contante = ctk.CTkButton(frame_das_contante, text='Aggiungi DAS contante', command=addDasContante)
+    add_das_contante = ctk.CTkButton(frame_das_contante, text='+ DAS contante', command=addDasContante)
     add_das_contante.pack(padx=20, pady=(20,0))
     #Totale contante das
     frame_totale_das_contante = ctk.CTkFrame(master=frame_das)
@@ -883,12 +883,12 @@ def createNuovaProvaView():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_das_cartepos = ctk.CTkButton(frame_das_cartepos, text='Aggiungi DAS carta/POS', command=addDasCartePOS)
+    add_das_cartepos = ctk.CTkButton(frame_das_cartepos, text='+ DAS carta/POS', command=addDasCartePOS)
     add_das_cartepos.pack(padx=20, pady=(20,0))
     #Totale carte/pos das
     frame_totale_das_cartepos = ctk.CTkFrame(master=frame_das)
     frame_totale_das_cartepos.pack()
-    label_totale_das_cartepos = ctk.CTkLabel(master=frame_totale_das_cartepos, text="Totale DAS contanti:", font=("Helvetica",14,"bold"))
+    label_totale_das_cartepos = ctk.CTkLabel(master=frame_totale_das_cartepos, text="Totale DAS carte/POS:", font=("Helvetica",14,"bold"))
     label_totale_das_cartepos.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
     entry_totale_das_cartepos = ctk.CTkEntry(frame_totale_das_cartepos, textvariable=totale_das_cartepos, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_totale_das_cartepos.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
@@ -916,7 +916,7 @@ def createNuovaProvaView():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_das_bonifico = ctk.CTkButton(frame_das_bonifico, text='Aggiungi DAS bonifico', command=addDasBonifico)
+    add_das_bonifico = ctk.CTkButton(frame_das_bonifico, text='+ DAS bonifico', command=addDasBonifico)
     add_das_bonifico.pack(padx=20, pady=(20,0))
     #Totale carte/pos das
     frame_totale_das_bonifico = ctk.CTkFrame(master=frame_das)
@@ -959,7 +959,7 @@ def createNuovaProvaView():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_incasso_per_conto = ctk.CTkButton(frame_incasso_per_conto, text='Aggiungi incasso per conto', command=addIncassoPerConto)
+    add_incasso_per_conto = ctk.CTkButton(frame_incasso_per_conto, text='+ Incasso per conto', command=addIncassoPerConto)
     add_incasso_per_conto.pack(padx=20, pady=(20,0))
 
     #Totale incassi per conto
@@ -998,7 +998,7 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-    addboxButton = ctk.CTkButton(frame_sospesi, text='Aggiungi sospeso', command=addSospeso)
+    addboxButton = ctk.CTkButton(frame_sospesi, text='+ Sospeso', command=addSospeso)
     addboxButton.pack(padx=20, pady=20)
 
     #Totale sospesi
@@ -1036,13 +1036,13 @@ def createNuovaProvaView():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_contante_recuperato = ctk.CTkButton(frame_recuperosospesi_contante, text='Aggiungi contante recuperato', command=addSospContante)
+    add_contante_recuperato = ctk.CTkButton(frame_recuperosospesi_contante, text='+ Recupero contante', command=addSospContante)
     add_contante_recuperato.pack(padx=20, pady=(20,0))
 
     #Totale contante recuperato
     frame_contanterecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_contanterecuperato.pack()
-    label_tot_contante_recuperato = ctk.CTkLabel(master=frame_contanterecuperato, text="Totale sospesi contanti recuperato:", font=("Helvetica",14,"bold"))
+    label_tot_contante_recuperato = ctk.CTkLabel(master=frame_contanterecuperato, text="Totale recupero sospesi contante:", font=("Helvetica",14,"bold"))
     label_tot_contante_recuperato.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
     entry_tot_contante_recuperato = ctk.CTkEntry(frame_contanterecuperato, textvariable=totale_recupero_sospesi_contanti, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_contante_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
@@ -1071,12 +1071,12 @@ def createNuovaProvaView():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_cartapos_recuperato = ctk.CTkButton(frame_recuperosospesi_cartapos, text='Aggiungi Carta/POS recuperato', command=addSospCartePOS)
+    add_cartapos_recuperato = ctk.CTkButton(frame_recuperosospesi_cartapos, text='+ Recupero carta/POS', command=addSospCartePOS)
     add_cartapos_recuperato.pack(pady=(25,0))
     #Totale carte/POS recuperato
     frame_carteposrecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_carteposrecuperato.pack()
-    label_tot_cartapos_recuperato = ctk.CTkLabel(master=frame_carteposrecuperato, text="Totale sospesi carte/POS recuperato:", font=("Helvetica",14,"bold"))
+    label_tot_cartapos_recuperato = ctk.CTkLabel(master=frame_carteposrecuperato, text="Totale recupero sospesi carte/POS:", font=("Helvetica",14,"bold"))
     label_tot_cartapos_recuperato.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
     entry_tot_cartapos_recuperato = ctk.CTkEntry(frame_carteposrecuperato, textvariable=totale_recupero_sospesi_carte_pos, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_cartapos_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
@@ -1105,12 +1105,12 @@ def createNuovaProvaView():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_bonifici_recuperato = ctk.CTkButton(frame_recuperosospesi_bonifici, text='Aggiungi bonifico recuperato', command=addSospBonifici)
+    add_bonifici_recuperato = ctk.CTkButton(frame_recuperosospesi_bonifici, text='+ Recupero bonifico', command=addSospBonifici)
     add_bonifici_recuperato.pack(pady=(25,0))
     #Totale bonifici recuperato
     frame_bonificirecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_bonificirecuperato.pack()
-    label_tot_bonifici_recuperato = ctk.CTkLabel(master=frame_bonificirecuperato, text="Totale sospesi bonifici recuperato:", font=("Helvetica",14,"bold"))
+    label_tot_bonifici_recuperato = ctk.CTkLabel(master=frame_bonificirecuperato, text="Totale recupero sospesi bonifici:", font=("Helvetica",14,"bold"))
     label_tot_bonifici_recuperato.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
     entry_tot_bonifici_recuperato = ctk.CTkEntry(frame_bonificirecuperato, textvariable=totale_recupero_sospesi_bonifici, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_bonifici_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
@@ -1164,7 +1164,7 @@ def createNuovaProvaView():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_versamento = ctk.CTkButton(frame_versamenti, text='Aggiungi versamento', command=addVersamento)
+    add_versamento = ctk.CTkButton(frame_versamenti, text='+ Versamento', command=addVersamento)
     add_versamento.pack(padx=20, pady=(20,0))
     #Totale versamenti
     frame_usciteversamenti = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
@@ -1197,12 +1197,12 @@ def createNuovaProvaView():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_uscite_varie = ctk.CTkButton(frame_uscite_varie, text='Aggiungi uscita extra', command=addUsciteVarie)
+    add_uscite_varie = ctk.CTkButton(frame_uscite_varie, text='+ Uscita extra', command=addUsciteVarie)
     add_uscite_varie.pack(padx=20, pady=(20,0))
     #Totale uscite varie
     frame_totaleuscitevarie = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
     frame_totaleuscitevarie.pack()
-    label_tot_uscite_varie = ctk.CTkLabel(master=frame_totaleuscitevarie, text="Totale uscite varie:", font=("Helvetica",14,"bold"))
+    label_tot_uscite_varie = ctk.CTkLabel(master=frame_totaleuscitevarie, text="Totale uscite extra:", font=("Helvetica",14,"bold"))
     label_tot_uscite_varie.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
     entry_tot_uscite_varie = ctk.CTkEntry(frame_totaleuscitevarie, textvariable=totale_uscite_varie, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_uscite_varie.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
@@ -1244,7 +1244,7 @@ def createNuovaProvaView():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_uscitamarchirolo = ctk.CTkButton(frame_marchirolo, text='Aggiungi uscita Marchirolo', command=addUscitaMarchirolo)
+    add_uscitamarchirolo = ctk.CTkButton(frame_marchirolo, text='+ Cassa Marchirolo', command=addUscitaMarchirolo)
     add_uscitamarchirolo.pack(padx=20, pady=(20,0))
 
     #Totale Marchirolo
@@ -1274,7 +1274,7 @@ def createNuovaProvaView():
     label_daybefore = ctk.CTkLabel(master=frame_resoconto, text="Non trovato", text_color="#969595", font=("Helvetica",13))
     label_daybefore.grid(row=1, column=2, pady=10, padx=20, sticky="nw")
     #Totale sospesi contante recuperato
-    label_tot_contante_recuperato_copia = ctk.CTkLabel(master=frame_resoconto, text="Totale sospesi contanti recuperato:", font=("Helvetica",14,"bold"))
+    label_tot_contante_recuperato_copia = ctk.CTkLabel(master=frame_resoconto, text="Totale recupero sospesi contante:", font=("Helvetica",14,"bold"))
     label_tot_contante_recuperato_copia.grid(row=2, column=0, pady=10, padx=20, sticky="ne")
     entry_tot_contante_recuperato_copia = ctk.CTkEntry(frame_resoconto, textvariable=totale_recupero_sospesi_contanti, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_contante_recuperato_copia.grid(row=2, column=1, pady=10, padx=20, sticky="nw")
@@ -1376,7 +1376,7 @@ def createNuovaProvaView():
         loadfile_button = ctk.CTkButton(frame, image=upload_icon, text="", width=30, command=loadFile)
         loadfile_button.grid(row=0, column=5)
 
-    carica_documento = ctk.CTkButton(tabview.tab("Documenti"), text='Carica documento', command=uploadFile)
+    carica_documento = ctk.CTkButton(tabview.tab("Documenti"), text='+ Documento', command=uploadFile)
     carica_documento.pack(padx=20, pady=(20,0))
     
 
@@ -2441,7 +2441,7 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_das_contante = ctk.CTkButton(frame_das_contante, text='Aggiungi DAS contante', command=addDasContante)
+    add_das_contante = ctk.CTkButton(frame_das_contante, text='+ DAS contante', command=addDasContante)
     #Totale contante das
     frame_totale_das_contante = ctk.CTkFrame(master=frame_das)
     frame_totale_das_contante.pack()
@@ -2473,11 +2473,11 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_das_cartepos = ctk.CTkButton(frame_das_cartepos, text='Aggiungi DAS carta/POS', command=addDasCartePOS)
+    add_das_cartepos = ctk.CTkButton(frame_das_cartepos, text='+ DAS carta/POS', command=addDasCartePOS)
     #Totale carte/pos das
     frame_totale_das_cartepos = ctk.CTkFrame(master=frame_das)
     frame_totale_das_cartepos.pack()
-    label_totale_das_cartepos = ctk.CTkLabel(master=frame_totale_das_cartepos, text="Totale DAS contanti:", font=("Helvetica",14,"bold"))
+    label_totale_das_cartepos = ctk.CTkLabel(master=frame_totale_das_cartepos, text="Totale DAS carte/POS:", font=("Helvetica",14,"bold"))
     label_totale_das_cartepos.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
     entry_totale_das_cartepos = ctk.CTkEntry(frame_totale_das_cartepos, textvariable=totale_das_cartepos, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_totale_das_cartepos.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
@@ -2505,7 +2505,7 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_das_bonifico = ctk.CTkButton(frame_das_bonifico, text='Aggiungi DAS bonifico', command=addDasBonifico)
+    add_das_bonifico = ctk.CTkButton(frame_das_bonifico, text='+ DAS bonifico', command=addDasBonifico)
     #Totale carte/pos das
     frame_totale_das_bonifico = ctk.CTkFrame(master=frame_das)
     frame_totale_das_bonifico.pack()
@@ -2547,7 +2547,7 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_incasso_per_conto = ctk.CTkButton(frame_incasso_per_conto, text='Aggiungi incasso per conto', command=addIncassoPerConto)
+    add_incasso_per_conto = ctk.CTkButton(frame_incasso_per_conto, text='+ Incasso per conto', command=addIncassoPerConto)
 
     #Totale incassi per conto
     frame_totale_incassi_per_conto=ctk.CTkFrame(master=tabview.tab("Altri incassi"))
@@ -2583,7 +2583,7 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    addboxButton = ctk.CTkButton(frame_sospesi, text='Aggiungi sospeso', command=addSospeso)
+    addboxButton = ctk.CTkButton(frame_sospesi, text='+ Sospeso', command=addSospeso)
 
     #Totale sospesi
     label_sospesi = ctk.CTkLabel(master=tabview.tab("Sospesi"), text="Totale sospesi:", font=("Helvetica",14,"bold"))
@@ -2620,12 +2620,12 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_contante_recuperato = ctk.CTkButton(frame_recuperosospesi_contante, text='Aggiungi contante recuperato', command=addSospContante)
+    add_contante_recuperato = ctk.CTkButton(frame_recuperosospesi_contante, text='+ Recupero contante', command=addSospContante)
 
     #Totale contante recuperato
     frame_contanterecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_contanterecuperato.pack()
-    label_tot_contante_recuperato = ctk.CTkLabel(master=frame_contanterecuperato, text="Totale sospesi contanti recuperato:", font=("Helvetica",14,"bold"))
+    label_tot_contante_recuperato = ctk.CTkLabel(master=frame_contanterecuperato, text="Totale recupero sospesi contante:", font=("Helvetica",14,"bold"))
     label_tot_contante_recuperato.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
     entry_tot_contante_recuperato = ctk.CTkEntry(frame_contanterecuperato, textvariable=totale_recupero_sospesi_contanti, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_contante_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
@@ -2654,11 +2654,11 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_cartapos_recuperato = ctk.CTkButton(frame_recuperosospesi_cartapos, text='Aggiungi Carta/POS recuperato', command=addSospCartePOS)
+    add_cartapos_recuperato = ctk.CTkButton(frame_recuperosospesi_cartapos, text='+ Recupero carta/POS', command=addSospCartePOS)
     #Totale carte/POS recuperato
     frame_carteposrecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_carteposrecuperato.pack()
-    label_tot_cartapos_recuperato = ctk.CTkLabel(master=frame_carteposrecuperato, text="Totale sospesi carte/POS recuperato:", font=("Helvetica",14,"bold"))
+    label_tot_cartapos_recuperato = ctk.CTkLabel(master=frame_carteposrecuperato, text="Totale recupero sospesi carte/POS:", font=("Helvetica",14,"bold"))
     label_tot_cartapos_recuperato.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
     entry_tot_cartapos_recuperato = ctk.CTkEntry(frame_carteposrecuperato, textvariable=totale_recupero_sospesi_carte_pos, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_cartapos_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
@@ -2687,11 +2687,11 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_bonifici_recuperato = ctk.CTkButton(frame_recuperosospesi_bonifici, text='Aggiungi bonifico recuperato', command=addSospBonifici)
+    add_bonifici_recuperato = ctk.CTkButton(frame_recuperosospesi_bonifici, text='+ Recupero bonifico', command=addSospBonifici)
     #Totale bonifici recuperato
     frame_bonificirecuperato = ctk.CTkFrame(master=frame_recuperosospesi)
     frame_bonificirecuperato.pack()
-    label_tot_bonifici_recuperato = ctk.CTkLabel(master=frame_bonificirecuperato, text="Totale sospesi bonifici recuperato:", font=("Helvetica",14,"bold"))
+    label_tot_bonifici_recuperato = ctk.CTkLabel(master=frame_bonificirecuperato, text="Totale recupero sospesi bonifici:", font=("Helvetica",14,"bold"))
     label_tot_bonifici_recuperato.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
     entry_tot_bonifici_recuperato = ctk.CTkEntry(frame_bonificirecuperato, textvariable=totale_recupero_sospesi_bonifici, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_bonifici_recuperato.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
@@ -2745,7 +2745,7 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_versamento = ctk.CTkButton(frame_versamenti, text='Aggiungi versamento', command=addVersamento)
+    add_versamento = ctk.CTkButton(frame_versamenti, text='+ Versamento', command=addVersamento)
     #Totale versamenti
     frame_usciteversamenti = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
     frame_usciteversamenti.pack()
@@ -2777,11 +2777,11 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_uscite_varie = ctk.CTkButton(frame_uscite_varie, text='Aggiungi uscita extra', command=addUsciteVarie)
+    add_uscite_varie = ctk.CTkButton(frame_uscite_varie, text='+ Uscita extra', command=addUsciteVarie)
     #Totale uscite varie
     frame_totaleuscitevarie = ctk.CTkFrame(master=frame_uscitevarieandversamenti)
     frame_totaleuscitevarie.pack()
-    label_tot_uscite_varie = ctk.CTkLabel(master=frame_totaleuscitevarie, text="Totale uscite varie:", font=("Helvetica",14,"bold"))
+    label_tot_uscite_varie = ctk.CTkLabel(master=frame_totaleuscitevarie, text="Totale uscite extra:", font=("Helvetica",14,"bold"))
     label_tot_uscite_varie.grid(row=0, column=0, pady=20, padx=10, sticky="ne")
     entry_tot_uscite_varie = ctk.CTkEntry(frame_totaleuscitevarie, textvariable=totale_uscite_varie, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_uscite_varie.grid(row=0, column=1, pady=20, padx=10, sticky="nw")
@@ -2823,7 +2823,7 @@ def visualizzaProva():
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
 
-    add_uscitamarchirolo = ctk.CTkButton(frame_marchirolo, text='Aggiungi uscita Marchirolo', command=addUscitaMarchirolo)
+    add_uscitamarchirolo = ctk.CTkButton(frame_marchirolo, text='+ Cassa Marchirolo', command=addUscitaMarchirolo)
 
     label_tot_marchirolo = ctk.CTkLabel(master=tabview.tab("Marchirolo"), text="Totale Marchirolo:", font=("Helvetica",14,"bold"))
     label_tot_marchirolo.pack(side="left", anchor="ne", pady=(25,0), padx=10, expand="True")
@@ -2849,7 +2849,7 @@ def visualizzaProva():
     label_daybefore = ctk.CTkLabel(master=frame_resoconto, text="Non trovato", text_color="#969595", font=("Helvetica",13))
     label_daybefore.grid(row=1, column=2, pady=10, padx=20, sticky="nw")
     #Totale sospesi contante recuperato
-    label_tot_contante_recuperato_copia = ctk.CTkLabel(master=frame_resoconto, text="Totale sospesi contanti recuperato:", font=("Helvetica",14,"bold"))
+    label_tot_contante_recuperato_copia = ctk.CTkLabel(master=frame_resoconto, text="Totale recupero sospesi contante:", font=("Helvetica",14,"bold"))
     label_tot_contante_recuperato_copia.grid(row=2, column=0, pady=10, padx=20, sticky="ne")
     entry_tot_contante_recuperato_copia = ctk.CTkEntry(frame_resoconto, textvariable=totale_recupero_sospesi_contanti, state='disabled', font=("Helvetica",15,"bold"), width=100)
     entry_tot_contante_recuperato_copia.grid(row=2, column=1, pady=10, padx=20, sticky="nw")
@@ -3003,7 +3003,7 @@ def visualizzaProva():
         loadfile_button = ctk.CTkButton(frame, image=upload_icon, text="", width=30, command=loadFile)
         loadfile_button.grid(row=0, column=5)
 
-    carica_documento = ctk.CTkButton(tabview.tab("Documenti"), text='Carica documento', command=uploadFile)
+    carica_documento = ctk.CTkButton(tabview.tab("Documenti"), text='+ Documento', command=uploadFile)
     carica_documento.pack(padx=20, pady=(20,0))
     
     #Bottone di conferma
