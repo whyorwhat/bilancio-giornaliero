@@ -165,8 +165,6 @@ def createNuovaProvaView():
 
 
     def destroyMarchirolo(nome_frame, posizione):
-        lista_marchirolo[posizione] = ""
-        lista_marchirolo_causali[posizione] = ""
         nome_frame.destroy()
         updateMarchirolo()
 
@@ -201,9 +199,6 @@ def createNuovaProvaView():
                 data_converted_text2=data_converted2[2]+"-"+data_converted2[1]+"-"+data_converted2[0]
                 label_daybefore.configure(text="Del "+data_converted_text2)
 
-        #Reset array Marchirolo
-        lista_marchirolo.clear()
-        lista_marchirolo_causali.clear()
         #Elimina entry all'interno ella lista marchirolo
         for child in frame_marchirolo.winfo_children():
             if isinstance(child, ctk.CTkFrame):
@@ -231,28 +226,10 @@ def createNuovaProvaView():
                 #ent2.configure(state='disabled')
                 delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=lambda f=nomeentry: destroyMarchirolo(frame, f))
                 delete_button.grid(row=1, column=2)
-                lista_marchirolo.append(var1)
-                lista_marchirolo_causali.append(ent2)
-
         for valore,causale in rows:
             createFrame(valore, causale)
             nomeentry = nomeentry + 1
         updateMarchirolo()
-        '''for valore,causale in rows:
-            frame = ctk.CTkFrame(frame_marchirolo)
-            frame.pack()
-            ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
-            var1 = ctk.DoubleVar(frame_marchirolo, valore)
-            var1.trace("w", updateMarchirolo)
-            ent1 = ctk.CTkEntry(frame, textvariable=var1)
-            ent1.grid(row=1, column=0)
-            ctk.CTkLabel(frame, text='Causale:').grid(row=0, column=1)
-            ent2 = ctk.CTkEntry(frame)
-            ent2.insert('end', causale)
-            ent2.grid(row=1, column=1)
-            lista_marchirolo.append(var1)
-            lista_marchirolo_causali.append(ent2)
-        updateMarchirolo()'''
 
         connection.close()
 
@@ -276,6 +253,25 @@ def createNuovaProvaView():
     tabview.add("Documenti")
 
     #CAMBIAMENTO DI VARIABILI: Le seguenti variabili sono associate ad una variabile. Quando questa cambia valore, permette di aggiornare altre entries, come specificato all'interno di ogni def
+    def updateLista(nome_frame, entry):
+        somma=0
+        isvalore = True
+        for child in nome_frame.winfo_children():           #Scorri ogni elemento nel frame-padre
+            if isinstance(child, ctk.CTkFrame):             #Se è un sotto-frame
+                for child2 in child.winfo_children():       #scorri ogni elemento nel sotto-frame
+                    if isinstance(child2, ctk.CTkEntry):    #se è una entry
+                        if isvalore==True:                  #ed è il valore, aggiorna somma. la prossima entry sarà la causale
+                            try: valore=float(child2.get())
+                            except: valore=0
+                            somma=somma+valore   
+                            isvalore=False
+                        else:                               #altrimenti è la causale: la prossima entry sarà il valore
+                            isvalore = True
+        entry.configure(state='normal')                     #Aggiorna la entry
+        entry.delete(0,'end')
+        entry.insert('end', "{:.2f}".format(somma))
+        entry.configure(state='disabled')
+    
     def updatePremioLordo(*args):
         #Aggiorna totale parziale 1
         try: a=premio_lordo.get()
@@ -296,15 +292,7 @@ def createNuovaProvaView():
         entry_tot_parziale_1.insert('end', "{:.2f}".format(result))
         entry_tot_parziale_1.configure(state='disabled')
     def updateIncassoPerConto(*args):
-        somma=0
-        for item in lista_incassi_per_conto:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_totale_incassi_per_conto.configure(state='normal')
-        entry_totale_incassi_per_conto.delete(0,'end')
-        entry_totale_incassi_per_conto.insert('end', "{:.2f}".format(somma))
-        entry_totale_incassi_per_conto.configure(state='disabled')
+        updateLista(frame_incasso_per_conto, entry_totale_incassi_per_conto)
     def updateTotaleIncassoPerConto(*args):
         #Aggiorna totale parziale 1
         try: a=premio_lordo.get()
@@ -551,113 +539,31 @@ def createNuovaProvaView():
         entry_saldocassa.insert('end', "{:.2f}".format(result))
         entry_saldocassa.configure(state='disabled')
     def updateSospesi(*args):
-        #print("Aggiorna totale sospesi:")
-        somma=0
-        for item in lista_sospesi_values:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_sospesi.configure(state='normal')
-        entry_sospesi.delete(0,'end')
-        entry_sospesi.insert('end', "{:.2f}".format(somma))
-        entry_sospesi.configure(state='disabled')
+        updateLista(frame_sospesi, entry_sospesi)
     def updateRecuperoContanti(*args):
         #Aggiorna totale recupero sospesi contanti
-        somma=0
-        for item in lista_recupero_contanti:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_contante_recuperato.configure(state='normal')
-        entry_tot_contante_recuperato.delete(0,'end')
-        entry_tot_contante_recuperato.insert('end', "{:.2f}".format(somma))
-        entry_tot_contante_recuperato.configure(state='disabled')
+        updateLista(frame_recuperosospesi_contante, entry_tot_contante_recuperato)
     def updateRecuperoCartePOS(*args):
         #Aggiorna totale recupero sospesi carte/pos
-        somma=0
-        for item in lista_recupero_cartepos:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_cartapos_recuperato.configure(state='normal')
-        entry_tot_cartapos_recuperato.delete(0,'end')
-        entry_tot_cartapos_recuperato.insert('end', "{:.2f}".format(somma))
-        entry_tot_cartapos_recuperato.configure(state='disabled')
+        updateLista(frame_recuperosospesi_cartapos, entry_tot_cartapos_recuperato)
     def updateRecuperoBonifici(*args):
         #Aggiorna totale recupero sospesi carte/pos
-        somma=0
-        for item in lista_recupero_bonifici:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_bonifici_recuperato.configure(state='normal')
-        entry_tot_bonifici_recuperato.delete(0,'end')
-        entry_tot_bonifici_recuperato.insert('end', "{:.2f}".format(somma))
-        entry_tot_bonifici_recuperato.configure(state='disabled')
+        updateLista(frame_recuperosospesi_bonifici, entry_tot_bonifici_recuperato)
     def updateUsciteVarie(*args):
         #Aggiorna totale uscite varie
-        somma=0
-        for item in lista_uscite_varie:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_uscite_varie.configure(state='normal')
-        entry_tot_uscite_varie.delete(0,'end')
-        entry_tot_uscite_varie.insert('end', "{:.2f}".format(somma))
-        entry_tot_uscite_varie.configure(state='disabled')
+        updateLista(frame_uscite_varie, entry_tot_uscite_varie)
     def updateVersamenti(*args):
         #Aggiorna totale versamenti
-        somma=0
-        for item in lista_versamenti:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_versamenti.configure(state='normal')
-        entry_tot_versamenti.delete(0,'end')
-        entry_tot_versamenti.insert('end', "{:.2f}".format(somma))
-        entry_tot_versamenti.configure(state='disabled')
+        updateLista(frame_versamenti, entry_tot_versamenti)
     def updateMarchirolo(*args):
         #Aggiorna totale marchirolo
-        somma=0
-        for item in lista_marchirolo:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_tot_marchirolo.configure(state='normal')
-        entry_tot_marchirolo.delete(0,'end')
-        entry_tot_marchirolo.insert('end', "{:.2f}".format(somma))
-        entry_tot_marchirolo.configure(state='disabled')
+        updateLista(frame_marchirolo, entry_tot_marchirolo)
     def updateDasContanti(*args):
-        somma=0
-        for item in lista_das_contanti:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_totale_das_contante.configure(state='normal')
-        entry_totale_das_contante.delete(0,'end')
-        entry_totale_das_contante.insert('end', "{:.2f}".format(somma))
-        entry_totale_das_contante.configure(state='disabled')
+        updateLista(frame_das_contante, entry_totale_das_contante)
     def updateDasCartePOS(*args):
-        somma=0
-        for item in lista_das_cartepos:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_totale_das_cartepos.configure(state='normal')
-        entry_totale_das_cartepos.delete(0,'end')
-        entry_totale_das_cartepos.insert('end', "{:.2f}".format(somma))
-        entry_totale_das_cartepos.configure(state='disabled')
+        updateLista(frame_das_cartepos, entry_totale_das_cartepos)
     def updateDasBonifici(*args):
-        somma=0
-        for item in lista_das_bonifico:
-            try: tmp=item.get()
-            except: tmp=0
-            somma = somma+tmp
-        entry_totale_das_bonifico.configure(state='normal')
-        entry_totale_das_bonifico.delete(0,'end')
-        entry_totale_das_bonifico.insert('end', "{:.2f}".format(somma))
-        entry_totale_das_bonifico.configure(state='disabled')
-
+        updateLista(frame_das_bonifico, entry_totale_das_bonifico)
     def updateTotaleMarchirolo(*args):
         #print("Aggiorna saldo cassa")
         try: a=fondo_cassa_da_riportare.get()
@@ -943,10 +849,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_das_contanti.append(var1)
-        lista_das_contanti_causali.append(ent2)
-    lista_das_contanti = []
-    lista_das_contanti_causali = []
 
     add_das_contante = ctk.CTkButton(frame_das_contante, text='Aggiungi DAS contante', command=addDasContante)
     add_das_contante.pack(padx=20, pady=(20,0))
@@ -980,10 +882,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_das_cartepos.append(var1)
-        lista_das_cartepos_causali.append(ent2)
-    lista_das_cartepos = []
-    lista_das_cartepos_causali = []
 
     add_das_cartepos = ctk.CTkButton(frame_das_cartepos, text='Aggiungi DAS carta/POS', command=addDasCartePOS)
     add_das_cartepos.pack(padx=20, pady=(20,0))
@@ -1017,10 +915,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_das_bonifico.append(var1)
-        lista_das_bonifico_causali.append(ent2)
-    lista_das_bonifico = []
-    lista_das_bonifico_causali = []
 
     add_das_bonifico = ctk.CTkButton(frame_das_bonifico, text='Aggiungi DAS bonifico', command=addDasBonifico)
     add_das_bonifico.pack(padx=20, pady=(20,0))
@@ -1064,10 +958,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_incassi_per_conto.append(var1)
-        lista_incassi_per_conto_causali.append(ent2)
-    lista_incassi_per_conto = []
-    lista_incassi_per_conto_causali = []
 
     add_incasso_per_conto = ctk.CTkButton(frame_incasso_per_conto, text='Aggiungi incasso per conto', command=addIncassoPerConto)
     add_incasso_per_conto.pack(padx=20, pady=(20,0))
@@ -1108,15 +998,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_sospesi_values.append(var1)
-    #Print all entries
-    #def showSospesi():
-    #    for number, (ent1, ent2) in enumerate(lista_sospesi_values):
-    #        print (number, ent1.get(), ent2.get())
-    #lista_sospesi = []
-    lista_sospesi_values = []
-    #showButton = ctk.CTkButton(frame_sospesi, text='Stampa tutti i sospesi', command=showSospesi)
-    #showButton.pack()
     addboxButton = ctk.CTkButton(frame_sospesi, text='Aggiungi sospeso', command=addSospeso)
     addboxButton.pack(padx=20, pady=20)
 
@@ -1154,10 +1035,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_recupero_contanti.append(var1)
-        lista_recupero_contanti_causali.append(ent2)
-    lista_recupero_contanti = []
-    lista_recupero_contanti_causali = []
 
     add_contante_recuperato = ctk.CTkButton(frame_recuperosospesi_contante, text='Aggiungi contante recuperato', command=addSospContante)
     add_contante_recuperato.pack(padx=20, pady=(20,0))
@@ -1193,10 +1070,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_recupero_cartepos.append(var1)
-        lista_recupero_cartepos_causali.append(ent2)
-    lista_recupero_cartepos = []
-    lista_recupero_cartepos_causali = []
 
     add_cartapos_recuperato = ctk.CTkButton(frame_recuperosospesi_cartapos, text='Aggiungi Carta/POS recuperato', command=addSospCartePOS)
     add_cartapos_recuperato.pack(pady=(25,0))
@@ -1231,10 +1104,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_recupero_bonifici.append(var1)
-        lista_recupero_bonifici_causali.append(ent2)
-    lista_recupero_bonifici = []
-    lista_recupero_bonifici_causali = []
 
     add_bonifici_recuperato = ctk.CTkButton(frame_recuperosospesi_bonifici, text='Aggiungi bonifico recuperato', command=addSospBonifici)
     add_bonifici_recuperato.pack(pady=(25,0))
@@ -1294,8 +1163,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_versamenti.append(var1)
-    lista_versamenti = []
 
     add_versamento = ctk.CTkButton(frame_versamenti, text='Aggiungi versamento', command=addVersamento)
     add_versamento.pack(padx=20, pady=(20,0))
@@ -1329,10 +1196,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_uscite_varie.append(var1)
-        lista_uscite_varie_causali.append(ent2)
-    lista_uscite_varie = []
-    lista_uscite_varie_causali = []
 
     add_uscite_varie = ctk.CTkButton(frame_uscite_varie, text='Aggiungi uscita extra', command=addUsciteVarie)
     add_uscite_varie.pack(padx=20, pady=(20,0))
@@ -1380,10 +1243,6 @@ def createNuovaProvaView():
         ent2.grid(row=1, column=1)
         delete_button = ctk.CTkButton(frame, image=bin_icon, text="", width=30, command=destroy)
         delete_button.grid(row=1, column=2)
-        lista_marchirolo.append(var1)
-        lista_marchirolo_causali.append(ent2)
-    lista_marchirolo = []
-    lista_marchirolo_causali = []
 
     add_uscitamarchirolo = ctk.CTkButton(frame_marchirolo, text='Aggiungi uscita Marchirolo', command=addUscitaMarchirolo)
     add_uscitamarchirolo.pack(padx=20, pady=(20,0))
