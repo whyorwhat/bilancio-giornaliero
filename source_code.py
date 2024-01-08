@@ -474,7 +474,7 @@ def createNuovaProvaView():
         entry_saldo_sospesi.insert('end', "{:.2f}".format(result))
         entry_saldo_sospesi.configure(state='disabled')
     def updateTotaleAbbuoni(*args):
-        #print("Aggiorna Totale generale uscite")
+        #Aggiorna Totale generale uscite
         try: a=totale_abbuoni.get()
         except: a=0
         try: b=totale_uscite_varie.get()
@@ -500,7 +500,7 @@ def createNuovaProvaView():
         entry_quadratura_contante_cassa_assegno.insert('end', "{:.2f}".format(result2))
         entry_quadratura_contante_cassa_assegno.configure(state='disabled')
     def updateTotaleUsciteVarie(*args):
-        #print("Aggiorna Totale generale uscite")
+        #Aggiorna Totale generale uscite
         try:a=totale_abbuoni.get()
         except:a=0
         try:b=totale_uscite_varie.get()
@@ -526,7 +526,7 @@ def createNuovaProvaView():
         entry_fondodariportare.insert('end', "{:.2f}".format(result))
         entry_fondodariportare.configure(state='disabled')
     def updateFondoCassaDaRiportare(*args):
-        #print("Aggiorna saldo cassa")
+        #Aggiorna saldo cassa
         try: a=fondo_cassa_da_riportare.get()
         except: a=0
         try: b=totale_marchirolo.get()
@@ -565,7 +565,7 @@ def createNuovaProvaView():
     def updateDasBonifici(*args):
         updateLista(frame_das_bonifico, entry_totale_das_bonifico)
     def updateTotaleMarchirolo(*args):
-        #print("Aggiorna saldo cassa")
+        #Aggiorna saldo cassa
         try: a=fondo_cassa_da_riportare.get()
         except: a=0
         try: b=totale_marchirolo.get()
@@ -609,7 +609,7 @@ def createNuovaProvaView():
         entry_saldo_sospesi.configure(state='disabled')
 
     def updateUsciteVersamenti(*args):
-        #print("Aggiorna Totale generale uscite")
+        #Aggiorna Totale generale uscite
         try: a=totale_abbuoni.get()
         except: a=0
         try: b=totale_uscite_varie.get()
@@ -624,7 +624,7 @@ def createNuovaProvaView():
         entry_totale_generale_uscite.insert('end', "{:.2f}".format(result))
         entry_totale_generale_uscite.configure(state='disabled')
     def updatePuntiViva(*args):
-        #print("Aggiorna Totale generale uscite")
+        #Aggiorna Totale generale uscite
         try: a=totale_abbuoni.get()
         except: a=0
         try: b=totale_uscite_varie.get()
@@ -901,8 +901,8 @@ def createNuovaProvaView():
         def destroy():
             var1.set(0)
             frame.destroy()
-            print("DAS carte/pos eliminato")
-        print ("DAS carte/pos aggiunto")
+            print("DAS bonifico eliminato")
+        print ("DAS bonifico aggiunto")
         frame = ctk.CTkFrame(frame_das_bonifico)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -944,8 +944,8 @@ def createNuovaProvaView():
         def destroy():
             var1.set(0)
             frame.destroy()
-            print("incasso x conto eliminato")
-        print ("incasso x conto aggiunta")
+            print("Incasso per conto eliminato")
+        print ("Incasso per conto aggiunto")
         frame = ctk.CTkFrame(frame_incasso_per_conto)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -1021,8 +1021,8 @@ def createNuovaProvaView():
         def destroy():
             var1.set(0)
             frame.destroy()
-            print("Sospeso contante eliminato")
-        print ("Sospeso recuperato contante aggiunto")
+            print("Recupero sospeso contante eliminato")
+        print ("Recupero sospeso contante aggiunto")
         frame = ctk.CTkFrame(frame_recuperosospesi_contante)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -1056,8 +1056,8 @@ def createNuovaProvaView():
         def destroy():
             var1.set(0)
             frame.destroy()
-            print("Sospeso carta/POS eliminato")
-        print ("Sospeso recuperato carta/POS aggiunto")
+            print("Recupero sospeso carta/POS eliminato")
+        print ("Recupero sospeso carta/POS aggiunto")
         frame = ctk.CTkFrame(frame_recuperosospesi_cartapos)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -1090,8 +1090,8 @@ def createNuovaProvaView():
         def destroy():
             var1.set(0)
             frame.destroy()
-            print("Sospeso bonifico eliminato")
-        print ("Sospeso recuperato bonifico aggiunto")
+            print("Recupero sospeso bonifico eliminato")
+        print ("Recupero sospeso bonifico aggiunto")
         frame = ctk.CTkFrame(frame_recuperosospesi_bonifici)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -1150,7 +1150,7 @@ def createNuovaProvaView():
             var1.set(0)
             frame.destroy()
             print("Versamento eliminato")
-        print ("Versamento aggiunta")
+        print ("Versamento aggiunto")
         frame = ctk.CTkFrame(frame_versamenti)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -1230,7 +1230,7 @@ def createNuovaProvaView():
             var1.set(0)
             frame.destroy()
             print("Marchirolo eliminato")
-        print ("Uscita marchirolo aggiunta")
+        print ("Marchirolo aggiunto")
         frame = ctk.CTkFrame(frame_marchirolo)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -1344,7 +1344,7 @@ def createNuovaProvaView():
             original_path = entry_inputfile.get()
             fullpath, file_extension = os.path.splitext(original_path)
             head, tail = os.path.split(original_path)
-            print(tail)
+            print("Aggiungo il file chiamato"+tail)
             dataperfile = (today_date_formatted.get()).split('-')
             #Se la cartella della categoria non esiste, creala
             if not os.path.exists(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()):     
@@ -1354,13 +1354,11 @@ def createNuovaProvaView():
                 #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
                 #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
                 shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
-                print("File caricato")
             #Altrimenti spostalo con lo stesso nome
             else:
                 #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
                 #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
                 shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
-                print("File caricato")
             showConfirmMessage(creaprova, "Successo","Documento correttamente caricato", "check", False)
             frame.destroy()
         frame = ctk.CTkFrame(tabview.tab("Documenti"))
@@ -1467,11 +1465,9 @@ def createNuovaProvaView():
                                 if isinstance(child2, ctk.CTkEntry):    #se è una entry
                                     if isvalore==True:                  #ed è il valore, salva il valore e la prossima entry sarà la causale
                                         valore=child2.get()
-                                        print(valore)
                                         isvalore=False
                                     else:                               #altrimenti è la causale, quindi salva la causale e la prossima entry sarà il valore
                                         causale=child2.get()
-                                        print(causale)
                                         isvalore = True
                             c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
                                     +"'"+categoria+"', "
@@ -1756,7 +1752,7 @@ def visualizzaProva():
         entry_saldo_sospesi.insert('end', "{:.2f}".format(result))
         entry_saldo_sospesi.configure(state='disabled')
     def updateTotaleAbbuoni(*args):
-        #print("Aggiorna Totale generale uscite")
+        #Aggiorna Totale generale uscite
         try: a=totale_abbuoni.get()
         except: a=0
         try: b=totale_uscite_varie.get()
@@ -1782,7 +1778,7 @@ def visualizzaProva():
         entry_quadratura_contante_cassa_assegno.insert('end', "{:.2f}".format(result2))
         entry_quadratura_contante_cassa_assegno.configure(state='disabled')
     def updateTotaleUsciteVarie(*args):
-        #print("Aggiorna Totale generale uscite")
+        #Aggiorna Totale generale uscite
         try:a=totale_abbuoni.get()
         except:a=0
         try:b=totale_uscite_varie.get()
@@ -1808,7 +1804,7 @@ def visualizzaProva():
         entry_fondodariportare.insert('end', "{:.2f}".format(result))
         entry_fondodariportare.configure(state='disabled')
     def updateFondoCassaDaRiportare(*args):
-        #print("Aggiorna saldo cassa")
+        #Aggiorna saldo cassa
         try: a=fondo_cassa_da_riportare.get()
         except: a=0
         try: b=totale_marchirolo.get()
@@ -1847,7 +1843,7 @@ def visualizzaProva():
     def updateDasBonifici(*args):
         updateLista(frame_das_bonifico, entry_totale_das_bonifico)
     def updateTotaleMarchirolo(*args):
-        #print("Aggiorna saldo cassa")
+        #Aggiorna saldo cassa
         try: a=fondo_cassa_da_riportare.get()
         except: a=0
         try: b=totale_marchirolo.get()
@@ -1891,7 +1887,7 @@ def visualizzaProva():
         entry_saldo_sospesi.configure(state='disabled')
 
     def updateUsciteVersamenti(*args):
-        #print("Aggiorna Totale generale uscite")
+        #Aggiorna Totale generale uscite
         try: a=totale_abbuoni.get()
         except: a=0
         try: b=totale_uscite_varie.get()
@@ -1906,7 +1902,7 @@ def visualizzaProva():
         entry_totale_generale_uscite.insert('end', "{:.2f}".format(result))
         entry_totale_generale_uscite.configure(state='disabled')
     def updatePuntiViva(*args):
-        #print("Aggiorna Totale generale uscite")
+        #Aggiorna Totale generale uscite
         try: a=totale_abbuoni.get()
         except: a=0
         try: b=totale_uscite_varie.get()
@@ -2532,8 +2528,8 @@ def visualizzaProva():
         def destroy():
             var1.set(0)
             frame.destroy()
-            print("incasso x conto eliminato")
-        print ("incasso x conto aggiunta")
+            print("Incasso per conto eliminato")
+        print ("Incasso per conto aggiunto")
         frame = ctk.CTkFrame(frame_incasso_per_conto)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -2605,8 +2601,8 @@ def visualizzaProva():
         def destroy():
             var1.set(0)
             frame.destroy()
-            print("Sospeso contante eliminato")
-        print ("Sospeso recuperato contante aggiunto")
+            print("Recupero sospeso contante eliminato")
+        print ("Recupero sospeso contante aggiunto")
         frame = ctk.CTkFrame(frame_recuperosospesi_contante)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -2639,8 +2635,8 @@ def visualizzaProva():
         def destroy():
             var1.set(0)
             frame.destroy()
-            print("Sospeso carta/POS eliminato")
-        print ("Sospeso recuperato carta/POS aggiunto")
+            print("Recupero sospeso carta/POS eliminato")
+        print ("Recupero sospeso carta/POS aggiunto")
         frame = ctk.CTkFrame(frame_recuperosospesi_cartapos)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -2672,8 +2668,8 @@ def visualizzaProva():
         def destroy():
             var1.set(0)
             frame.destroy()
-            print("Sospeso bonifico eliminato")
-        print ("Sospeso recuperato bonifico aggiunto")
+            print("Recupero sospeso bonifico eliminato")
+        print ("Recupero sospeso bonifico aggiunto")
         frame = ctk.CTkFrame(frame_recuperosospesi_bonifici)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -2731,7 +2727,7 @@ def visualizzaProva():
             var1.set(0)
             frame.destroy()
             print("Versamento eliminato")
-        print ("Versamento aggiunta")
+        print ("Versamento aggiunto")
         frame = ctk.CTkFrame(frame_versamenti)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -2809,7 +2805,7 @@ def visualizzaProva():
             var1.set(0)
             frame.destroy()
             print("Marchirolo eliminato")
-        print ("Uscita marchirolo aggiunta")
+        print ("Marchirolo aggiunto")
         frame = ctk.CTkFrame(frame_marchirolo)
         frame.pack()
         ctk.CTkLabel(frame, text='Valore in €:').grid(row=0, column=0)
@@ -2915,7 +2911,6 @@ def visualizzaProva():
         def chooseFile():
             inputfile_path = ""
             inputfile_path = ctk.filedialog.askopenfilename()
-            print(inputfile_path)
             entry_inputfile.delete(0, 'end')  # Remove current text in entry
             entry_inputfile.insert(0, inputfile_path)  # Insert the 'path'
         #Comando associato al tasto Carica
@@ -2962,11 +2957,9 @@ def visualizzaProva():
                             causale_trovata = True  
                     if causale_trovata == True:
                         shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
-                        print("File caricato")
                         showConfirmMessage(visualizzaprova,"Successo","Documento correttamente caricato", "check", False)
                         frame.destroy()
                     else:
-                        print("Attenzione: i nomi non combaciano")
                         showConfirmMessage(visualizzaprova,"Attenzione","Il nome non corrisponde a nessuna causale", "warning", False)
             else:
                 #Se dai un nuovo nome al file
@@ -2974,7 +2967,6 @@ def visualizzaProva():
                     #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
                     #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)
                     shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+new_filename+file_extension)    
-                    print("File caricato")
                     showConfirmMessage(visualizzaprova,"Successo","Documento correttamente caricato", "check", False)
                     frame.destroy()
                 #Altrimenti spostalo con lo stesso nome
@@ -2982,7 +2974,6 @@ def visualizzaProva():
                     #os.rename(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
                     #os.replace(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+filename+file_extension)
                     shutil.move(original_path, percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()+"/"+tail)    
-                    print("File caricato")
                     showConfirmMessage(visualizzaprova,"Successo","Documento correttamente caricato", "check", False)
                     frame.destroy()
 
@@ -3213,11 +3204,9 @@ def visualizzaProva():
                             if isinstance(child2, ctk.CTkEntry):    #se è una entry
                                 if isvalore==True:                  #ed è il valore, salva il valore e la prossima entry sarà la causale
                                     valore=child2.get()
-                                    print(valore)
                                     isvalore=False
                                 else:                               #altrimenti è la causale, quindi salva la causale e la prossima entry sarà il valore
                                     causale=child2.get()
-                                    print(causale)
                                     isvalore = True
                         c.execute("INSERT INTO liste VALUES ('"+data_converted_text+"', "
                                 +"'"+categoria+"', "
