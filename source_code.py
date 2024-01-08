@@ -72,7 +72,6 @@ c.execute("""CREATE TABLE IF NOT EXISTS prova(
     totale_incassi_per_conto DOUBLE,
     totale_sospesi DOUBLE,
     totale_parziale_1 DOUBLE,
-    fondo_cassa_precedente DOUBLE,
     totale_recupero_sospesi_contanti DOUBLE,
     totale_recupero_sospesi_carte_pos DOUBLE,
     totale_recupero_sospesi_bonifici DOUBLE,
@@ -1522,7 +1521,6 @@ def createNuovaProvaView():
                         +str(safeLoad(totale_incassi_per_conto))+", "
                         +str(safeLoad(totale_sospesi))+", "
                         +str(safeLoad(totale_parziale_1))+", "
-                        +str(safeLoad(fondo_cassa_precedente))+", "
                         +str(safeLoad(totale_recupero_sospesi_contanti))+", "
                         +str(safeLoad(totale_recupero_sospesi_carte_pos))+", "
                         +str(safeLoad(totale_recupero_sospesi_bonifici))+", "
@@ -2248,7 +2246,6 @@ def visualizzaProva():
         saveData("totale_incassi_per_conto", entry_totale_incassi_per_conto, totale_incassi_per_conto, c)
         saveData("totale_sospesi", entry_sospesi, totale_sospesi, c)
         saveData("totale_parziale_1", entry_tot_parziale_1, totale_parziale_1, c)
-        #saveData("fondo_cassa_precedente", entry_cassaprecedente, fondo_cassa_precedente, c)
         saveData("totale_recupero_sospesi_contanti", entry_tot_contante_recuperato, totale_recupero_sospesi_contanti, c)
         saveData("totale_recupero_sospesi_carte_pos", entry_tot_cartapos_recuperato, totale_recupero_sospesi_carte_pos, c)
         saveData("totale_recupero_sospesi_bonifici", entry_tot_bonifici_recuperato, totale_recupero_sospesi_bonifici, c)
@@ -3304,7 +3301,6 @@ def visualizzaProva():
                     +str(safeLoad(totale_incassi_per_conto))+", "
                     +str(safeLoad(totale_sospesi))+", "
                     +str(safeLoad(totale_parziale_1))+", "
-                    +str(safeLoad(fondo_cassa_precedente))+", "
                     +str(safeLoad(totale_recupero_sospesi_contanti))+", "
                     +str(safeLoad(totale_recupero_sospesi_carte_pos))+", "
                     +str(safeLoad(totale_recupero_sospesi_bonifici))+", "
