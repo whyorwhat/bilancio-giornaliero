@@ -1600,7 +1600,7 @@ def createNuovaProvaView():
                 conn.commit()
                 
                 #Scorri lista e aggiungi: is valore alterna 
-                def aggiungiLista(frame, categoria):
+                def listToDatabase(frame, categoria):
                     isvalore = True
                     for child in frame.winfo_children():                #Scorri ogni elemento nel frame-padre
                         if isinstance(child, ctk.CTkFrame):             #Se è un sotto-frame
@@ -1622,17 +1622,17 @@ def createNuovaProvaView():
                             )
                     conn.commit()
                 
-                aggiungiLista(frame_sospesi, "sospesi")
-                aggiungiLista(frame_recuperosospesi_contante, "recupero_contanti")
-                aggiungiLista(frame_recuperosospesi_cartapos, "recupero_cartepos")
-                aggiungiLista(frame_recuperosospesi_bonifici, "recupero_bonifici")
-                aggiungiLista(frame_versamenti, "uscite_versamenti")
-                aggiungiLista(frame_uscite_varie, "uscite_varie")
-                aggiungiLista(frame_marchirolo, "marchirolo")
-                aggiungiLista(frame_das_contante, "das_contanti")
-                aggiungiLista(frame_das_cartepos, "das_cartepos")
-                aggiungiLista(frame_das_bonifico, "das_bonifico")
-                aggiungiLista(frame_incasso_per_conto, "incasso_per_conto")
+                listToDatabase(frame_sospesi, "sospesi")
+                listToDatabase(frame_recuperosospesi_contante, "recupero_contanti")
+                listToDatabase(frame_recuperosospesi_cartapos, "recupero_cartepos")
+                listToDatabase(frame_recuperosospesi_bonifici, "recupero_bonifici")
+                listToDatabase(frame_versamenti, "uscite_versamenti")
+                listToDatabase(frame_uscite_varie, "uscite_varie")
+                listToDatabase(frame_marchirolo, "marchirolo")
+                listToDatabase(frame_das_contante, "das_contanti")
+                listToDatabase(frame_das_cartepos, "das_cartepos")
+                listToDatabase(frame_das_bonifico, "das_bonifico")
+                listToDatabase(frame_incasso_per_conto, "incasso_per_conto")
 
 
 
