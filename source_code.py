@@ -1344,7 +1344,7 @@ def createNuovaProvaView():
             original_path = entry_inputfile.get()
             fullpath, file_extension = os.path.splitext(original_path)
             head, tail = os.path.split(original_path)
-            print("Aggiungo il file chiamato"+tail)
+            print("Aggiungo il file chiamato: '"+tail+"'")
             dataperfile = (today_date_formatted.get()).split('-')
             #Se la cartella della categoria non esiste, creala
             if not os.path.exists(percorso_documenti+dataperfile[2]+"/"+dataperfile[1]+"/"+dataperfile[0]+"/"+entry_outputcategory.get()):     
