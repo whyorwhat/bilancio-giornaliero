@@ -1,5 +1,5 @@
 # Bilancio-giornaliero
-Il file .zip può essere scaricato da [qui](https://www.mediafire.com/file/u9iygsn034gcjel/Bilancio_giornaliero.zip/file).
+Il file .zip può essere scaricato da [qui](https://www.mediafire.com/file/p13tdqselnpa0d2/bilancio-giornaliero.zip/file).
 
 I percorsi alle cartelle di risorsa dell'app vanno definiti nel file esterno [posizioni.txt](posizioni.txt), <u>prima</u> di eseguire l'applicazione. Nota che va inserito "/" (macOS) oppure "\" (Windows) alla fine del percorso.
 
